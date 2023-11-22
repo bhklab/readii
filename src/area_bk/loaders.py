@@ -1,0 +1,110 @@
+import SimpleITK as sitk
+
+
+def loadDicomSITK(imgPath: str):
+    """Read DICOM series as SimpleITK Image.
+
+    Parameters
+    ----------
+    img_path
+        Path to directory containing the DICOM series to load.
+
+    Returns
+    -------
+    The loaded image. 
+
+    """
+    # Set up the reader for the DICOM series
+    reader = sitk.ImageSeriesReader()
+    dicomNames = reader.GetGDCMSeriesFileNames(imgPath)
+    reader.SetFileNames(dicomNames)
+    return reader.Execute()
+
+
+def loadRTSTRUCTSITK(rtstructPath: str,
+                     baseImageDirPath: str,
+                     roiNames:str = None):
+    """ Load RTSTRUCT into SimpleITK Image.
+
+    Parameters
+    ----------
+    rtstructPath
+        Path to the DICOM file containing the RTSTRUCT
+    baseImageDirPath
+        Path to the directory containing the DICOMS for the original image the segmentation 
+        was created from (e.g. CT). This is required to load the RTSTRUCT.
+    roiNames
+        Identifier for which region(s) of interest to load from the total segmentation file
+    
+    Returns
+    -------
+    The loaded RTSTRUCT image as a SimpleITK image object.
+    The segmentation label is set to 1.
+    """
+
+    # Set up segmentation loader
+    makeMask = StructureSetToSegmentation(roi_names=roiNames)
+    
+    # Read in the base image (CT) and segmentation DICOMs into SITK Images
+    baseImage = read_dicom_auto(baseImageDirPath)
+    segImage = read_dicom_auto(rtstructPath)
+
+    try:
+        # Get the individual ROI masks
+        segMasks = makeMask(segImage, baseImage.image, existing_roi_indices={"background":0}, ignore_missing_regex=False)
+    except ValueError:
+        return {}
+        
+    # Get list of ROIs present in this rtstruct
+    loadedROINames = segMasks.raw_roi_names
+    # Initialize dictionary to store ROI names and images
+    roiStructs = {}
+    # Get each roi and its label and store in dictionary
+    for roi in loadedROINames:
+        # Get the mask for this ROI
+        roiMask = segMasks.get_label(name=roi)
+        # Store the ROI name and image
+        roiStructs[roi] = roiMask
+    
+    return roiStructs
+
+
+def loadSegmentation(segImagePath: str,
+                     modality: str,
+                     baseImageDirPath: str = None,
+                     roiNames: str = None):
+    ''' Function to load a segmentation with the correct function.
+    
+    Parameters
+    ----------
+    imgPath
+        Path to the segmentation file to load
+    modality
+        Type of image that imgPath points to to load. If RTSTRUCT, must set originalImageDirPath
+    originalImageDirPath
+        Path to the directory containing the DICOMS for the original image the segmentation 
+        was created from. 
+    roiNames
+        Identifier for which region(s) of interest to load from the total segmentation file
+        
+    Returns
+    -------
+    A dictionary of each of the ROIs and their name in the segmentation image as sitk.Image objects.
+    '''
+
+    if modality in ['SEG', 'seg']:
+        # Loading SEG requires directory containing file, not the actual file path
+        imgFolder, _ = os.path.split(segImagePath)
+        segHeader = pydicom.dcmread(segImgPath, stop_before_pixels=True)
+        roiName = segHeader.SegmentSequence[0].SegmentLabel
+        return {roiName: loadDicomSITK(imgFolder)}
+    
+    elif modality in ['RTSTRUCT', 'rtstruct']:
+        if originalImageDirPath == None:
+            raise ValueError("Missing path to original image segmentation was taken from. RTSTRUCT loader requires original image.")
+        else:
+            return loadRTSTRUCTSITK(segImagePath, baseImageDirPath, roiNames)
+    
+    else:
+        raise ValueError('This segmentation modality is not supported. Must be one of RTSTRUCT or SEG')
+
