@@ -1,7 +1,7 @@
 import SimpleITK as sitk
 
 
-def loadDicomSITK(imgPath: str):
+def loadDicomSITK(imgDirPath: str) -> sitk.Image:
     """Read DICOM series as SimpleITK Image.
 
     Parameters
@@ -16,14 +16,14 @@ def loadDicomSITK(imgPath: str):
     """
     # Set up the reader for the DICOM series
     reader = sitk.ImageSeriesReader()
-    dicomNames = reader.GetGDCMSeriesFileNames(imgPath)
+    dicomNames = reader.GetGDCMSeriesFileNames(imgDirPath)
     reader.SetFileNames(dicomNames)
     return reader.Execute()
 
 
 def loadRTSTRUCTSITK(rtstructPath: str,
                      baseImageDirPath: str,
-                     roiNames:str = None):
+                     roiNames:str = None) -> dict:
     """ Load RTSTRUCT into SimpleITK Image.
 
     Parameters
@@ -38,7 +38,7 @@ def loadRTSTRUCTSITK(rtstructPath: str,
     
     Returns
     -------
-    The loaded RTSTRUCT image as a SimpleITK image object.
+    A dictionary of mask ROIs from the loaded RTSTRUCT image as a SimpleITK image objects.
     The segmentation label is set to 1.
     """
 
@@ -72,7 +72,7 @@ def loadRTSTRUCTSITK(rtstructPath: str,
 def loadSegmentation(segImagePath: str,
                      modality: str,
                      baseImageDirPath: str = None,
-                     roiNames: str = None):
+                     roiNames: str = None) -> dict:
     ''' Function to load a segmentation with the correct function.
     
     Parameters
@@ -80,8 +80,8 @@ def loadSegmentation(segImagePath: str,
     imgPath
         Path to the segmentation file to load
     modality
-        Type of image that imgPath points to to load. If RTSTRUCT, must set originalImageDirPath
-    originalImageDirPath
+        Type of image that imgPath points to to load. If RTSTRUCT, must set baseImageDirPath
+    baseImageDirPath
         Path to the directory containing the DICOMS for the original image the segmentation 
         was created from. 
     roiNames
