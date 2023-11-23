@@ -92,11 +92,14 @@ def padSegToMatchCT(ctDirPath:str,
 
     # Load in the segmentation image if not passed as argument
     if alignedSegImage == None:
-        segImage = loadSegmentation(segImagePath, modality="SEG")
-        # Segmentation contains extra axis, flatten to 3D by removing it
-        segImage = flattenImage(segImage)
-        # Segmentation has different origin, align it to the CT for proper feature extraction
-        alignedSegImage = alignImages(ctImage, segImage)
+        if segImagePath == None:
+            raise ValueError("Must pass either a loaded and aligned segmentation or the path to load the segmentation from.")
+        else:
+            segImage = loadSegmentation(segImagePath, modality="SEG")
+            # Segmentation contains extra axis, flatten to 3D by removing it
+            segImage = flattenImage(segImage)
+            # Segmentation has different origin, align it to the CT for proper feature extraction
+            alignedSegImage = alignImages(ctImage, segImage)
     
     # Load in header information for the CT and SEG files
     ctSeries = Series(ctFolderPath)
