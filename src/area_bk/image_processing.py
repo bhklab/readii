@@ -142,8 +142,8 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
         Value to use as max for cmap in display
     '''
     # If image is a simple ITK image, convert to array for display
-    if type(image) == sitk.Image:
-        image = sitk.GetArrayFromImage(image)
+    if type(image) == sitk.SimpleITK.Image:
+        imgArray = sitk.GetArrayFromImage(image)
  
     # Get min and max value from image to define range in display
     if dispMin == None:
