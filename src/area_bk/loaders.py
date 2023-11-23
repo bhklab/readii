@@ -83,7 +83,7 @@ def loadSegmentation(segImagePath: str,
     
     Parameters
     ----------
-    imgPath : str
+    segImagePath : str
         Path to the segmentation file to load
     modality : str
         Type of image that imgPath points to to load. If RTSTRUCT, must set baseImageDirPath
@@ -106,7 +106,7 @@ def loadSegmentation(segImagePath: str,
     if modality in ['SEG', 'seg']:
         # Loading SEG requires directory containing file, not the actual file path
         imgFolder, _ = os.path.split(segImagePath)
-        segHeader = pydicom.dcmread(segImgPath, stop_before_pixels=True)
+        segHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
         roiName = segHeader.SegmentSequence[0].SegmentLabel
         return {roiName: loadDicomSITK(imgFolder)}
     
