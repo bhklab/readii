@@ -11,13 +11,13 @@ def loadDicomSITK(imgDirPath: str) -> sitk.Image:
 
     Parameters
     ----------
-    img_path
+    img_path : str
         Path to directory containing the DICOM series to load.
 
     Returns
     -------
-    The loaded image. 
-
+    sitk.Image
+        The loaded image. 
     """
     # Set up the reader for the DICOM series
     reader = sitk.ImageSeriesReader()
@@ -33,18 +33,19 @@ def loadRTSTRUCTSITK(rtstructPath: str,
 
     Parameters
     ----------
-    rtstructPath
+    rtstructPath : str
         Path to the DICOM file containing the RTSTRUCT
-    baseImageDirPath
+    baseImageDirPath : str
         Path to the directory containing the DICOMS for the original image the segmentation 
         was created from (e.g. CT). This is required to load the RTSTRUCT.
-    roiNames
+    roiNames : str
         Identifier for which region(s) of interest to load from the total segmentation file
     
     Returns
     -------
-    A dictionary of mask ROIs from the loaded RTSTRUCT image as a SimpleITK image objects.
-    The segmentation label is set to 1.
+    dict
+        A dictionary of mask ROIs from the loaded RTSTRUCT image as a SimpleITK image objects.
+        The segmentation label is set to 1.
     """
 
     # Set up segmentation loader
@@ -82,19 +83,24 @@ def loadSegmentation(segImagePath: str,
     
     Parameters
     ----------
-    imgPath
+    imgPath : str
         Path to the segmentation file to load
-    modality
+    modality : str
         Type of image that imgPath points to to load. If RTSTRUCT, must set baseImageDirPath
-    baseImageDirPath
+    baseImageDirPath : str
         Path to the directory containing the DICOMS for the original image the segmentation 
         was created from. 
-    roiNames
+    roiNames : str
         Identifier for which region(s) of interest to load from the total segmentation file
         
     Returns
     -------
-    A dictionary of each of the ROIs and their name in the segmentation image as sitk.Image objects.
+    dict
+        A dictionary of each of the ROIs and their name in the segmentation image as sitk.Image objects.
+    
+    Examples
+    --------
+    >>> segImages = loadSegmentation("/path/to/segmentation/1.dcm", 'RTSTRUCT', '/path/to/CT', 'GTVp.*')
     '''
 
     if modality in ['SEG', 'seg']:

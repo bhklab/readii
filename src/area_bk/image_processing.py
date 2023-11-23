@@ -7,16 +7,17 @@ import SimpleITK as sitk
 from area_bk.loaders import *
 
 def flattenImage(image: sitk.Image) -> sitk.Image:
-    """Remove axes of image with length one. (ex. shape is [1, 100, 256, 256])
+    """Remove axes of image with size one. (ex. shape is [1, 100, 256, 256])
 
     Parameters
     ----------
-    image
-        sitk.Image to flatten.
+    image : sitk.Image
+        Image to remove axes with size one.
     
     Returns
     -------
-    A sitk.Image with axes of length one removed.
+    sitk.Image
+        image with axes of length one removed.
     """
     imageArr = sitk.GetArrayFromImage(image)
 
@@ -30,15 +31,16 @@ def alignImages(originImage: sitk.Image, movingImage: sitk.Image) -> sitk.Image:
 
     Parameters
     ----------
-    originImage
-        sitk.Image to use to set direction and origin for the moving image
+    originImage : sitk.Image
+        Image to use to set direction and origin for the movingImage
 
-    movingImage
-        sitk.Image to align to originImage
+    movingImage : sitk.Image
+        Image to align to originImage
     
     Returns
     -------
-    movingImage now aligned to originImage
+    sitk.Image
+        movingImage now aligned to originImage
     """
     movingImage.SetDirection(originImage.GetDirection())
     movingImage.SetOrigin(originImage.GetOrigin())
@@ -48,7 +50,7 @@ def alignImages(originImage: sitk.Image, movingImage: sitk.Image) -> sitk.Image:
 
 
 def padSegToMatchCT(ctDirPath:str,
-                    segImagePath:str,
+                    segImagePath:str = None,
                     ctImage:sitk.Image = None,
                     alignedSegImage:sitk.Image = None) -> sitk.Image:
     ''' Function to take a segmentation that doesn't have the same slice count as the CT image, maps it to the corresponding
@@ -56,23 +58,32 @@ def padSegToMatchCT(ctDirPath:str,
 
     Parameters
     ----------
-    ctDirPath
+    ctDirPath : str
         Path to DICOM series folder containing all CT image files. Must be a directory.
     
-    segImagePath
+    segImagePath : str
         Path to the DICOM SEG file that corresponds with CT in ctDirPath that has incorrect slice count.
 
-    ctImage
+    ctImage : sitk.Image
         Optional argument, base image to align the padded segmentation image to. If None is passed, will be loaded in from ctFolderPath.
     
-    alignedSegImage
+    alignedSegImage : sitk.Image
         Optional argument, if image has already been loaded it can be passed in to be adjusted.
         Assumes that flattenImage and alignImages has already been run.
         If not passed, will use segFilePath to load the image.
     
     Returns
     -------
-    Padded segmentation as a sitk.Image object. Will have the same dimensions as the CT.
+    sitk.Image
+    Padded segmentation with the same dimensions as the CT.
+
+    Examples
+    --------
+    >>> paddedSeg = padSegToMatchCT("/path/to/CT", "/path/to/segmentation/1.dcm")
+
+    >>> lungCT = loadDicomSITK("/path/to/CT")
+    >>> tumourSeg = loadSegmentation("/path/to/segmentation/1.dcm", 'SEG')
+    >>> paddedSeg = padSegToMatchCT("/path/to/CT", ctImage = lungCT, alignedSegImage = tumourSeg)
     '''
 
     # Load the CT image to align the segmentation to if not passed as argument
@@ -116,16 +127,16 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
 
     Parameters
     ----------
-    image
-        3D ndarray object OR sitk.Image, the complete image you'd like to display a slice of. If an array, must have slices as first dimension
-    sliceIdx
-        int, slice index from image you'd like to display
-    cmap
-        color map to use for plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options
-    dispMin
-        int, Value to use as min for cmap in display
-    dispMax
-        int, Value to use as max for cmap in display
+    image : sitk.Image or nd.array
+        The complete image you'd like to display a slice of. If an array, must have slices as first dimension
+    sliceIdx : int
+        Slice index from image to display
+    cmap : matplotlib.colormap
+        Color map to use for plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options
+    dispMin : int
+        Value to use as min for cmap in display
+    dispMax : int
+        Value to use as max for cmap in display
     '''
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.Image:
