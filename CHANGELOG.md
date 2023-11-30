@@ -4,4 +4,4 @@
 
 ## v0.1.0 (22/11/2023)
 
-- First release of `area_bk`!
+- First release of `yarea`!

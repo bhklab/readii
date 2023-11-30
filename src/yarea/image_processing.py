@@ -4,7 +4,7 @@ import numpy as np
 import pydicom
 import SimpleITK as sitk
 
-from area_bk.loaders import *
+from yarea.loaders import *
 
 def flattenImage(image: sitk.Image) -> sitk.Image:
     """Remove axes of image with size one. (ex. shape is [1, 100, 256, 256])

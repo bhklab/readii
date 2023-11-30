@@ -1,4 +1,4 @@
-from area_bk.loaders import *
+from yarea.loaders import *
 
 def test_loadDicomSITK():
     """Test loading DICOM from directory."""
