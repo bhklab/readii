@@ -6,7 +6,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u"area_bk"
+project = u"yarea"
 copyright = u"2023, Katy Scott"
 author = u"Katy Scott"
 

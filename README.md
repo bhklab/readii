@@ -1,11 +1,11 @@
-# area_bk
+# YAREA
 
 A package to extract radiomic features!
 
 ## Installation
 
 ```bash
-$ pip install area_bk
+$ pip install yarea
 ```
 
 ## Usage
@@ -18,8 +18,8 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 ## License
 
-`area_bk` was created by Katy Scott. It is licensed under the terms of the MIT license.
+`yarea` was created by Katy Scott. It is licensed under the terms of the MIT license.
 
 ## Credits
 
-`area_bk` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
+`yarea` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
