@@ -111,7 +111,7 @@ def loadSegmentation(segImagePath: str,
         return {roiName: loadDicomSITK(imgFolder)}
     
     elif modality in ['RTSTRUCT', 'rtstruct']:
-        if originalImageDirPath == None:
+        if baseImageDirPath == None:
             raise ValueError("Missing path to original image segmentation was taken from. RTSTRUCT loader requires original image.")
         else:
             return loadRTSTRUCTSITK(segImagePath, baseImageDirPath, roiNames)
