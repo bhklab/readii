@@ -1,5 +1,6 @@
 from yarea.loaders import *
 from yarea.image_processing import *
+import pytest
 
 @pytest.fixture
 def nsclcCTImage():
@@ -24,7 +25,7 @@ def test_flattenImage(nsclcSEGImage):
 def test_alignImages(nsclcCTImage, nsclcSEGImage):
     """Test setting segmentation origin, direction, and spacing to match the CT after flattening"""
     flattenedSEG = flattenImage(nsclcSEGImage)
-    actual = alignImages(nsclcCTImage, nsclcSEGImage)
+    actual = alignImages(nsclcCTImage, flattenedSEG)
     assert actual.GetSize() == (512, 512, 304), \
         "Wrong image size"
     assert actual.GetSpacing() == (0.693359375, 0.693359375, 1.0), \
