@@ -1,4 +1,5 @@
 from yarea.loaders import *
+import pytest
 
 @pytest.fixture
 def nsclcCTPath():
