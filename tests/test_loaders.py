@@ -1,8 +1,25 @@
 from yarea.loaders import *
 
-def test_loadDicomSITK():
+@pytest.fixture
+def nsclcCTPath():
+    return "tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/3.000000-THORAX_1.0_B45f-95741"
+
+@pytest.fixture
+def nsclcSEGPath():
+    return "tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/1000.000000-3D_Slicer_segmentation_result-67652/1-1.dcm"
+
+@pytest.fixture
+def lung4DCTPath():
+    return "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543"
+
+@pytest.fixture
+def lung4DRTSTRUCTPath():
+    return "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm"
+
+
+def test_loadDicomSITK(nsclcCTPath):
     """Test loading DICOM from directory."""
-    actual = loadDicomSITK("tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/3.000000-THORAX_1.0_B45f-95741")
+    actual = loadDicomSITK(nsclcCTPath)
     assert isinstance(actual, sitk.Image), \
         "Wrong object type"
     assert actual.GetSize() == (512, 512, 304), \
@@ -12,9 +29,10 @@ def test_loadDicomSITK():
     assert actual.GetOrigin() == (-182.1533203125, -314.1533203125, -305.0), \
         "Wrong origin"
 
-def test_loadSegmentationSEG():
+
+def test_loadSegmentationSEG(nsclcSEGPath):
     """Test loading a DICOM SEG file"""
-    actual = loadSegmentation(segImagePath = "tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/1000.000000-3D_Slicer_segmentation_result-67652/1-1.dcm",
+    actual = loadSegmentation(segImagePath = nsclcSEGPath,
                               modality = 'SEG')
 
     assert isinstance(actual, dict), \
@@ -34,11 +52,11 @@ def test_loadSegmentationSEG():
         "Wrong origin"
 
 
-def test_loadSegmentationRTSTRUCT():
+def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath):
     """Test loading a RTSTRUCT file"""
-    actual = loadSegmentation(segImagePath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
+    actual = loadSegmentation(segImagePath = lung4DRTSTRUCTPath,
                               modality = 'RTSTRUCT',
-                              baseImageDirPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543",
+                              baseImageDirPath = lung4DCTPath,
                               roiNames = 'Tumor_c.*')
 
     assert isinstance(actual, dict), \
@@ -57,3 +75,9 @@ def test_loadSegmentationRTSTRUCT():
     assert actualImage.GetOrigin() == (-250.0, -163.019, -1132.0), \
         "Wrong origin"
 
+
+def test_loadSegmentation_error(nsclcSEGPath):
+    """Check ValueError raised when wrong segmentation type is passed"""
+    with pytest.raises(ValueError):
+        loadSegmentation(segImagePath = nsclcSEGPath,
+                         modality = 'CT')
