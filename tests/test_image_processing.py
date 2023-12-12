@@ -13,6 +13,15 @@ def nsclcSEGImage():
     segDictionary = loadSegmentation(nsclcSEGPath, modality = 'SEG')
     return segDictionary['Heart']
 
+@pytest.fixture
+def lung4DRTSTRUCTImage():
+    lung4DRTSTRUCTPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm"
+    lung4DCTPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543"
+    segDictionary = loadSegmentation(lung4DRTSTRUCTPath, modality = 'RTSTRUCT',
+                                     baseImageDirPath = lung4DCTPath, roiNames = 'Tumor_c.*')
+    return segDictionary['Tumor_c40']
+
+
 def test_flattenImage(nsclcSEGImage):
     """Test removing extra dimension of image that has size 1"""
     actual = flattenImage(nsclcSEGImage)
@@ -32,3 +41,15 @@ def test_alignImages(nsclcCTImage, nsclcSEGImage):
         "Wrong spacing"
     assert actual.GetOrigin() == (-182.1533203125, -314.1533203125, -305.0), \
         "Wrong origin"
+
+@pytest.mark.parametrize(
+    "segImage, expected",
+    [
+        ("nsclcSEGImage", 255),
+        ("lung4DRTSTRUCTImage", 1)
+    ]
+)
+def test_getROIVoxelLabel(segImage, expected, request):
+    """Test getting the voxel value in the ROI in a segmentation for both SEG and RTSTRUCT images"""
+    segImage = request.getfixturevalue(segImage)
+    assert getROIVoxelLabel(segImage) == expected
