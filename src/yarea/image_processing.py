@@ -53,7 +53,7 @@ def padSegToMatchCT(ctDirPath:str,
                     segImagePath:str = None,
                     ctImage:sitk.Image = None,
                     alignedSegImage:sitk.Image = None) -> sitk.Image:
-    ''' Function to take a segmentation that doesn't have the same slice count as the CT image, maps it to the corresponding
+    """Function to take a segmentation that doesn't have the same slice count as the CT image, maps it to the corresponding
         CT slices, and pads it with slices containing 0s so it maps properly onto the original image.
 
     Parameters
@@ -84,7 +84,7 @@ def padSegToMatchCT(ctDirPath:str,
     >>> lungCT = loadDicomSITK("/path/to/CT")
     >>> tumourSeg = loadSegmentation("/path/to/segmentation/1.dcm", 'SEG')
     >>> paddedSeg = padSegToMatchCT("/path/to/CT", ctImage = lungCT, alignedSegImage = tumourSeg)
-    '''
+    """
 
     # Load the CT image to align the segmentation to if not passed as argument
     if ctImage == None:
@@ -125,7 +125,7 @@ def padSegToMatchCT(ctDirPath:str,
 
 
 def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, dispMax = None):
-    ''' Function to display a 2D slice from a 3D image
+    """Function to display a 2D slice from a 3D image
         By default, displays slice in greyscale with min and max range set to min and max value in the slice.
 
     Parameters
@@ -140,7 +140,7 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
         Value to use as min for cmap in display
     dispMax : int
         Value to use as max for cmap in display
-    '''
+    """
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.SimpleITK.Image:
         imgArray = sitk.GetArrayFromImage(image)
@@ -154,4 +154,30 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
     # Display the slice of the image
     plt.imshow(imgArray[sliceIdx,:,:], cmap=cmap, vmin=dispMin, vmax=dispMax)
     plt.axis('off')
+
+
+def getROIVoxelLabel(segImage:sitk.Image):
+    """A function to find the non-zero value that identifies segmentation voxels in a loaded RTSTRUCT or SEG file.
+    
+    Parameters
+    ----------
+    segImage
+        sitk.Image, a loaded segmentation image, should be binary with segmentation voxels as a non-zero value
+    
+    Returns
+    -------
+    labelValue
+        int, the label value for the segmentation voxels
+    """
+
+    # Convert segmentation image to a numpy array
+    arrSeg = sitk.GetArrayFromImage(segImage)
+    # Get all values that aren't 0 - these will identify the ROI
+    roiVoxels = arrSeg[arrSeg != 0]
+    # Confirm that all of these are the same value
+    if np.all(roiVoxels == roiVoxels[0]):
+        labelValue = roiVoxels[0]
+        return labelValue
+    else:
+        raise ValueError("Multiple label values present in this segmentation. Must all be the same.")
 
