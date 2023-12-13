@@ -11,7 +11,7 @@ from yarea.negative_controls import *
 
 def singleRadiomicFeatureExtraction(ctImage:sitk.Image,
                                     roiImage:sitk.Image,
-                                    pyradiomicsParamFilePath:str = "data/default_pyradiomics.yaml",
+                                    pyradiomicsParamFilePath:str = "./src/yarea/data/default_pyradiomics.yaml",
                                     negativeControl:str = None):
     """Function to perform radiomic feature extraction for a single CT image and its corresponding segmentation.
        CT and segmentation will be aligned and cropped prior to extraction. 
@@ -60,10 +60,8 @@ def singleRadiomicFeatureExtraction(ctImage:sitk.Image,
 
     if negativeControl != None:
         print("Generating ", negativeControl, "negative control for CT.")
+        # Make negative control version of ctImage
         croppedCT = applyNegativeControl(nc_type=negativeControl, baseImage=croppedCT, baseROI=croppedROI, roiLabel=segmentationLabel)
-
-    # Extract features listed in the parameter file
-    print("Calculating features for segmentation:", roi)
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
@@ -164,6 +162,9 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
 
                     # Exception catch for if the segmentation dimensions do not match that original image
                     try:
+                        # Extract features listed in the parameter file
+                        print("Calculating radiomic features for segmentation:", roiImageName)
+
                         # Extract radiomic features from this CT/segmentation pair
                         idFeatureVector = singleRadiomicFeatureExtraction(ctImage, roiImage = segImages[roiImageName],
                                                                           pyradiomicsParamFilePath = pyradiomicsParamFilePath,
