@@ -2,6 +2,7 @@ from yarea.loaders import *
 from yarea.feature_extraction import *
 
 import pytest
+import collections
 
 @pytest.fixture
 def nsclcCTImage():
@@ -29,14 +30,42 @@ def lung4DRTSTRUCTImage():
 
 @pytest.fixture
 def pyradiomicsParamFilePath():
-    return "../src/yarea/data/default_pyradiomics.yaml"
+    return "src/yarea/data/default_pyradiomics.yaml"
 
-def test_singleRadiomicFeatureExtraction(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
+def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
     """Test single image feature extraction with a CT and SEG"""
 
     actual = singleRadiomicFeatureExtraction(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath)
-    #TODO write assert statements
+    assert type(actual) == collections.OrderedDict, \
+        "Wrong return type, expect a collections.OrderedDict"
+    assert len(actual) == 1353, \
+        "Wrong return size, check pyradiomics parameter file is correct"
+    assert actual['diagnostics_Configuration_Settings']['label'] == 255, \
+        "Wrong label getting passed for ROI"
+    assert actual['diagnostics_Image-original_Size'] == (26, 21, 20), \
+        "Cropped CT image is incorrect size"
+    assert actual['diagnostics_Mask-original_Size'] == (26, 21, 20), \
+        "Cropped segmentation mask is incorrect size"
+    assert actual['diagnostics_Mask-original_Size'] == actual['diagnostics_Image-original_Size'], \
+        "Cropped CT and segmentation mask dimensions do not match"
+    assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(1273.7916666666667), \
+        "Volume feature is incorrect"
 
+def test_singleRadiomicFeatureExtraction_RTSTRUCT(lung4DCTImage, lung4DRTSTRUCTImage, pyradiomicsParamFilePath):
+    """Test single image feature extraction with a CT and RTSTRUCT"""
 
-# TODO: test RTSTRUCT, test the radiomicFeatureExtraction
-# Write the negative control tests after the test_negative_controls has been written
+    actual = singleRadiomicFeatureExtraction(lung4DCTImage, lung4DRTSTRUCTImage, pyradiomicsParamFilePath)
+    assert type(actual) == collections.OrderedDict, \
+        "Wrong return type, expect a collections.OrderedDict"
+    assert len(actual) == 1353, \
+        "Wrong return size, check pyradiomics parameter file is correct"
+    assert actual['diagnostics_Configuration_Settings']['label'] == 1, \
+        "Wrong label getting passed for ROI"
+    assert actual['diagnostics_Image-original_Size'] == (51, 92, 28), \
+        "Cropped CT image is incorrect size"
+    assert actual['diagnostics_Mask-original_Size'] == (51, 92, 28), \
+        "Cropped segmentation mask is incorrect size"
+    assert actual['diagnostics_Mask-original_Size'] == actual['diagnostics_Image-original_Size'], \
+        "Cropped CT and segmentation mask dimensions do not match"
+    assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(66346.66666666667), \
+        "Volume feature is incorrect"
