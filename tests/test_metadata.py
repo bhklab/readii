@@ -48,3 +48,14 @@ def test_matchCTtoSegmentation_error(nsclcSummaryFilePath, wrongSeg):
     with pytest.raises(ValueError):
         matchCTtoSegmentation(nsclcSummaryFilePath,
                               segType = wrongSeg)
+
+
+def test_saveDataframeCSV_outputFilePath_error(nsclcSummaryFilePath):
+    """Check ValueError is raised when incorrect outputFilePath is passed"""
+    testDataframe = matchCTtoSegmentation(nsclcSummaryFilePath, 
+                                   segType = "SEG")
+    badFilePath = "notacsv.xlsx"
+    with pytest.raises(ValueError):
+        matchCTtoSegmentation(nsclcSummaryFilePath, segType = 'SEG',
+                              outputFilePath = badFilePath)
+
