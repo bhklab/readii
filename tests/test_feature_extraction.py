@@ -1,6 +1,8 @@
 from yarea.loaders import *
 from yarea.feature_extraction import *
 
+import pytest
+
 @pytest.fixture
 def nsclcCTImage():
     nsclcCTPath = "tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/3.000000-THORAX_1.0_B45f-95741"
