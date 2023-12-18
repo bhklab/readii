@@ -14,7 +14,7 @@ def saveDataframeCSV(dataframe: pd.DataFrame,
         Full file path to save the dataframe out to.
     """
     if not outputFilePath.endswith('.csv'):
-            raise ValueError("This function saves .csv files, so outputFilePath must end in .csv")
+        raise ValueError("This function saves .csv files, so outputFilePath must end in .csv")
 
     # Make directory if it doesn't exist
     if not os.path.exists(os.path.dirname(outputFilePath)):
