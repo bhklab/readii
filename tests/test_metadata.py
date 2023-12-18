@@ -56,6 +56,18 @@ def test_saveDataframeCSV_outputFilePath_error(nsclcSummaryFilePath):
                                    segType = "SEG")
     badFilePath = "notacsv.xlsx"
     with pytest.raises(ValueError):
-        matchCTtoSegmentation(nsclcSummaryFilePath, segType = 'SEG',
-                              outputFilePath = badFilePath)
+        saveDataframeCSV(testDataframe, badFilePath)
 
+@pytest.mark.parametrize(
+    "notADataFrame",
+    [
+        ['list', 'of', 'features'],
+        "Just a string",
+        {"feat1": 34, "feat2": 10000, "feat3": 3.141592}
+    ]
+)
+def test_saveDataframeCSV_dataframe_error(notADataFrame):
+    """Check ValueError is raised when something other than pd.DataFrame is passed"""
+    goodFilePath = "tests/output/badDataframeExample.csv"
+    with pytest.raises(ValueError):
+        saveDataframeCSV(notADataFrame, goodFilePath)
