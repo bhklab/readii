@@ -15,6 +15,9 @@ def saveDataframeCSV(dataframe: pd.DataFrame,
     """
     if not outputFilePath.endswith('.csv'):
         raise ValueError("This function saves .csv files, so outputFilePath must end in .csv")
+    
+    if not isinstance(dataframe, pd.DataFrame):
+        raise ValueError("Function expects a pandas DataFrame to save out.")
 
     # Make directory if it doesn't exist
     if not os.path.exists(os.path.dirname(outputFilePath)):
