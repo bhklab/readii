@@ -32,6 +32,11 @@ def lung4DRTSTRUCTImage():
 def pyradiomicsParamFilePath():
     return "src/yarea/data/default_pyradiomics.yaml"
 
+@pytest.fixture
+def nsclcMetadataPath():
+    return "tests/output/NSCLC_Radiogenomics_ct_to_seg_match_list.csv"
+
+
 def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
     """Test single image feature extraction with a CT and SEG"""
 
@@ -51,6 +56,7 @@ def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradi
     assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(1273.7916666666667), \
         "Volume feature is incorrect"
 
+
 def test_singleRadiomicFeatureExtraction_RTSTRUCT(lung4DCTImage, lung4DRTSTRUCTImage, pyradiomicsParamFilePath):
     """Test single image feature extraction with a CT and RTSTRUCT"""
 
@@ -68,4 +74,23 @@ def test_singleRadiomicFeatureExtraction_RTSTRUCT(lung4DCTImage, lung4DRTSTRUCTI
     assert actual['diagnostics_Mask-original_Size'] == actual['diagnostics_Image-original_Size'], \
         "Cropped CT and segmentation mask dimensions do not match"
     assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(66346.66666666667), \
+        "Volume feature is incorrect"
+
+
+def test_radiomicFeatureExtraction(nsclcMetadataPath, pyradiomicsParamFilePath):
+    actual = radiomicFeatureExtraction(nsclcMetadataPath,
+                                       imageDirPath="tests/",
+                                       roiNames = None,
+                                       pyradiomicsParamFilePath=pyradiomicsParamFilePath)
+    assert type(actual) == pd.core.frame.DataFrame, \
+        "Wrong return type, expect a pandas DataFrame"
+    assert actual.shape[1] == 1365, \
+        "Wrong return size, should include image metadata, diagnostics, and pyradiomics features"
+    assert actual['diagnostics_Configuration_Settings'][0]['label'] == 255, \
+        "Wrong label getting passed for ROI"
+    assert actual['diagnostics_Image-original_Size'][0] == (26, 21, 20), \
+        "Cropped CT image is incorrect size"
+    assert actual['diagnostics_Mask-original_Size'][0] == (26, 21, 20), \
+        "Cropped segmentation mask is incorrect size"
+    assert actual['original_shape_MeshVolume'][0].tolist()== pytest.approx(1273.7916666666667), \
         "Volume feature is incorrect"
