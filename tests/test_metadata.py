@@ -1,5 +1,6 @@
 from yarea.metadata import *
 import pytest
+import os
 
 @pytest.fixture
 def nsclcSummaryFilePath():
@@ -8,6 +9,7 @@ def nsclcSummaryFilePath():
 @pytest.fixture
 def lung4DSummaryFilePath():
     return "tests/.imgtools/imgtools_4D-Lung.csv"
+
 
 def test_matchCTtoSEG(nsclcSummaryFilePath):
     """Test generating matched summary file for CT and DICOM SEG"""
@@ -21,7 +23,8 @@ def test_matchCTtoSEG(nsclcSummaryFilePath):
         "Segmentation reference ID does not match CT series ID"
     assert actual['modality_seg'][0] == 'SEG', \
         "Incorrect segmentation type has been found"
-    
+
+
 def test_matchCTtoRTSTRUCT(lung4DSummaryFilePath):
     """Test generating matched summary file for CT and RTSTRUCT"""
     actual = matchCTtoSegmentation(lung4DSummaryFilePath, 
@@ -34,6 +37,17 @@ def test_matchCTtoRTSTRUCT(lung4DSummaryFilePath):
         "Segmentation reference ID does not match CT series ID"
     assert actual['modality_seg'][0] == 'RTSTRUCT', \
         "Incorrect segmentation type has been found"
+
+
+def test_matchCTtoSegmentation_output(nsclcSummaryFilePath):
+    """Test saving output of summary file"""
+    actual = matchCTtoSegmentation(nsclcSummaryFilePath, 
+                                   segType = "SEG",
+                                   outputDirPath = "tests/output/")
+    assert os.path.exists("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv") == True, \
+        "Output does not exist, double check output file is named correctly."
+
+
 
 @pytest.mark.parametrize(
     "wrongSeg",
@@ -57,6 +71,7 @@ def test_saveDataframeCSV_outputFilePath_error(nsclcSummaryFilePath):
     badFilePath = "notacsv.xlsx"
     with pytest.raises(ValueError):
         saveDataframeCSV(testDataframe, badFilePath)
+
 
 @pytest.mark.parametrize(
     "notADataFrame",
