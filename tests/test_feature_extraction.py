@@ -34,7 +34,7 @@ def pyradiomicsParamFilePath():
 
 @pytest.fixture
 def nsclcMetadataPath():
-    return "tests/output/NSCLC_Radiogenomics_ct_to_seg_match_list.csv"
+    return "tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv"
 
 
 def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
@@ -98,3 +98,10 @@ def test_radiomicFeatureExtraction(nsclcMetadataPath):
         "Volume feature is incorrect"
 
 
+def test_radiomicFeatureExtraction_output(nsclcMetadataPath):
+    """Test output creation from radiomic feature extraction"""
+    actual = radiomicFeatureExtraction(nsclcMetadataPath,
+                                       imageDirPath = "tests/",
+                                       roiNames = None,
+                                       outputDirPath = "tests/output/")
+    assert os.path.exists("tests/output/features/radfeatures_NSCLC_Radiogenomics.csv")
