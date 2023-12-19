@@ -114,13 +114,13 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
     pdImageInfo = pd.read_csv(imageMetadataPath, header=0)
 
     # Get array of unique CT series' IDs to iterate over
-    ctSeriesIDList = pdSummaryFile["series_CT"].unique()
+    ctSeriesIDList = pdImageInfo["series_CT"].unique()
 
     def featureExtraction(ctSeriesID):
         ''' Function to extract PyRadiomics features for all ROIs present in a CT. Inner function so it can be run in parallel with joblib.'''
         # Get all info rows for this ctSeries
         ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
-        patID = seriesInfo.iloc[0][idColumnName]
+        patID = ctSeriesInfo.iloc[0]["patient_ID"]
 
         print("Processing ", patID)
 
@@ -140,15 +140,16 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
             segSeriesInfo = ctSeriesInfo.loc[ctSeriesInfo['series_seg'] == segSeriesID]
 
             # Check that a single segmentation file is being processed
-            if len(segRow) > 1:
+            if len(segSeriesInfo) > 1:
                 # Check that if there are multiple rows that it's not due to a CT with subseries (this is fine, the whole series is loaded)
-                if not segRow.duplicated(subset=['series_CT'], keep=False).all():
+                if not segSeriesInfo.duplicated(subset=['series_CT'], keep=False).all():
                     raise RuntimeError("Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in radiogenomic_output.")
             
             # Get absolute path to segmentation image file
             segFilePath = os.path.join(imageDirPath, segSeriesInfo.iloc[0]['file_path_seg'])
             # Get dictionary of ROI sitk Images for this segmentation file
-            segImages = loadSegmentation(segFilePath, modality = segSeriesInfo.iloc[0]['modality_seg'], originalImageDirPath=ctFolderPath, roiNames=roiNames)
+            segImages = loadSegmentation(segFilePath, modality = segSeriesInfo.iloc[0]['modality_seg'], 
+                                         baseImageDirPath = ctFolderPath, roiNames = roiNames)
             
             # Check that this series has ROIs to extract from (dictionary isn't empty)
             if not segImages:
@@ -172,18 +173,17 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
 
                         # Create dictionary of image metadata to append to front of output table
                         sampleROIData = {"patient_ID": patID,
-                                        "study_UID": segRow.iloc[0]['study_CT'],
-                                        "study_description": segRow.iloc[0]['study_description_CT'],
-                                        "series_UID": segRow.iloc[0]['series_CT'],
-                                        "series_description": segRow.iloc[0]['series_description_CT'],
-                                        "image_modality": segRow.iloc[0]['modality_CT'],
-                                        "instances": segRow.iloc[0]['instances_CT'],
-                                        "seg_series_UID": segRow.iloc[0]['series_seg'],
-                                        "seg_modality": segRow.iloc[0]['modality_seg'],
-                                        "seg_ref_image": segRow.iloc[0]['reference_ct_seg'],
-                                        "roi": roi,
+                                        "study_description": segSeriesInfo.iloc[0]['study_description_CT'],
+                                        "series_UID": segSeriesInfo.iloc[0]['series_CT'],
+                                        "series_description": segSeriesInfo.iloc[0]['series_description_CT'],
+                                        "image_modality": segSeriesInfo.iloc[0]['modality_CT'],
+                                        "instances": segSeriesInfo.iloc[0]['instances_CT'],
+                                        "seg_series_UID": segSeriesInfo.iloc[0]['series_seg'],
+                                        "seg_modality": segSeriesInfo.iloc[0]['modality_seg'],
+                                        "seg_ref_image": segSeriesInfo.iloc[0]['reference_ct_seg'],
+                                        "roi": roiImageName,
                                         "roi_number": roiNum,
-                                        "negative_control": nc_type}
+                                        "negative_control": negativeControl}
 
                         # Concatenate image metadata with PyRadiomics features
                         sampleROIData.update(idFeatureVector)
