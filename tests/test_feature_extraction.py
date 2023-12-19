@@ -77,11 +77,13 @@ def test_singleRadiomicFeatureExtraction_RTSTRUCT(lung4DCTImage, lung4DRTSTRUCTI
         "Volume feature is incorrect"
 
 
-def test_radiomicFeatureExtraction(nsclcMetadataPath, pyradiomicsParamFilePath):
+def test_radiomicFeatureExtraction(nsclcMetadataPath):
+    """Test full radiomicFeatureExtraction function with CT and SEG and default PyRadiomics 
+       parameter file and no output"""
+    
     actual = radiomicFeatureExtraction(nsclcMetadataPath,
                                        imageDirPath="tests/",
-                                       roiNames = None,
-                                       pyradiomicsParamFilePath=pyradiomicsParamFilePath)
+                                       roiNames = None)
     assert type(actual) == pd.core.frame.DataFrame, \
         "Wrong return type, expect a pandas DataFrame"
     assert actual.shape[1] == 1365, \
@@ -94,3 +96,5 @@ def test_radiomicFeatureExtraction(nsclcMetadataPath, pyradiomicsParamFilePath):
         "Cropped segmentation mask is incorrect size"
     assert actual['original_shape_MeshVolume'][0].tolist()== pytest.approx(1273.7916666666667), \
         "Volume feature is incorrect"
+
+
