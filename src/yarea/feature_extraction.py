@@ -76,7 +76,7 @@ def singleRadiomicFeatureExtraction(ctImage:sitk.Image,
 def radiomicFeatureExtraction(imageMetadataPath:str,
                               imageDirPath:str,
                               roiNames:str = None,
-                              pyradiomicsParamFilePath:str = "data/default_pyradiomics.yaml",
+                              pyradiomicsParamFilePath:str = "src/yarea/data/default_pyradiomics.yaml",
                               outputFilePath:str = None,
                               negativeControl:str = None,
                               parallel:bool = False,):
