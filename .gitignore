@@ -140,6 +140,3 @@ dmypy.json
 
 # MacOS
 .DS_Store
-
-# Test outputs
-tests/output/*
