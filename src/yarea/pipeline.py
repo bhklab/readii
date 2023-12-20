@@ -11,7 +11,7 @@ def parser():
 
     # arguments
     parser.add_argument("data_directory", type=str,
-                        help="Path to top-lvel directory of image dataset. Same as med-imagetools.")
+                        help="Path to top-level directory of image dataset. Same as med-imagetools.")
     
     parser.add_argument("output_directory", type=str,
                        help="Path to output directory to save radiomic features and metadata.")
