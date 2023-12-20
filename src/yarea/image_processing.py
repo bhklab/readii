@@ -88,7 +88,7 @@ def padSegToMatchCT(ctDirPath:str,
 
     # Load the CT image to align the segmentation to if not passed as argument
     if ctImage == None:
-        ctImage = loadDicomSITK(ctFolderPath)
+        ctImage = loadDicomSITK(ctDirPath)
 
     # Load in the segmentation image if not passed as argument
     if alignedSegImage == None:
@@ -102,8 +102,8 @@ def padSegToMatchCT(ctDirPath:str,
             alignedSegImage = alignImages(ctImage, segImage)
     
     # Load in header information for the CT and SEG files
-    ctSeries = Series(ctFolderPath)
-    segWithHeader = pydicom.dcmread(segFilePath, stop_before_pixels=True)
+    ctSeries = Series(ctDirPath)
+    segWithHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
 
     # Get the first and last reference ID for the slices of the CT that are in the SEG file
     lastSliceRef = segWithHeader.ReferencedSeriesSequence[0].ReferencedInstanceSequence[0].ReferencedSOPInstanceUID
