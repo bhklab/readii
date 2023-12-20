@@ -128,9 +128,9 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
         print("Processing ", patID)
 
         # Get absolute path to CT image files 
-        ctFolderPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]['folder_CT'])
+        ctDirPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]['folder_CT'])
         # Load CT by passing in specific series to find in a directory
-        ctImage = read_dicom_series(path = ctFolderPath, series_id = ctSeriesID)
+        ctImage = read_dicom_series(path = ctDirPath, series_id = ctSeriesID)
 
         # Get list of segmentations to iterate over
         segSeriesIDList = ctSeriesInfo['series_seg'].unique()
@@ -152,7 +152,7 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
             segFilePath = os.path.join(imageDirPath, segSeriesInfo.iloc[0]['file_path_seg'])
             # Get dictionary of ROI sitk Images for this segmentation file
             segImages = loadSegmentation(segFilePath, modality = segSeriesInfo.iloc[0]['modality_seg'], 
-                                         baseImageDirPath = ctFolderPath, roiNames = roiNames)
+                                         baseImageDirPath = ctDirPath, roiNames = roiNames)
             
             # Check that this series has ROIs to extract from (dictionary isn't empty)
             if not segImages:
@@ -181,7 +181,7 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
                             # Checking if number of segmentation slices is less than CT 
                             if ctImage.GetSize()[2] > roiImage.GetSize()[2]:  
                                 print("Slice number mismatch between CT and segmentation for", patID, ". Padding segmentation to match.")
-                                roiImage = padSEGtoMatchCT(ctFolderPath, segFilePath, ctImage, roiImage)
+                                roiImage = padSEGtoMatchCT(ctDirPath, segFilePath, ctImage, roiImage)
                             else:
                                 raise RuntimeError("CT and ROI dimensions do not match.")
 
