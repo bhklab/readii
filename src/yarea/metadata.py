@@ -57,6 +57,10 @@ def matchCTtoSegmentation(imgFileListPath: str,
     if segType != "RTSTRUCT" and segType != "SEG":
         raise ValueError("Incorrect segmentation file type. Must be RTSTRUCT or SEG.")
 
+    # Check that imgFileListPath is a csv file to properly be loaded in
+    if not imgFileListPath.endswith('.csv'):
+        raise ValueError("This function expects to load in a .csv file, so imgFileListPath must end in .csv")
+
     # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
     fullDicomList = pd.read_csv(imgFileListPath, index_col=0)
 
@@ -103,6 +107,10 @@ def getSegmentationType(imgFileListPath: str):
     str
         Segmentation type (RTSTRUCT or SEG)
     """
+    # Check that imgFileListPath is a csv file to properly be loaded in
+    if not imgFileListPath.endswith('.csv'):
+        raise ValueError("This function expects to load in a .csv file, so imgFileListPath must end in .csv")
+
     # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
     fullDicomList = pd.read_csv(imgFileListPath, index_col=0)
 
