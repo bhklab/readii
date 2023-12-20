@@ -222,10 +222,10 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
         datasetName = imageMetadataPath.partition("match_list_")[2]
         # Setup output file name with the dataset name as a suffix
         if negativeControl == None:
-            outFileName = "radfeatures_" + datasetName
+            outFileName = "radiomicfeatures_" + datasetName
         else:
             # Add negative control identifier to output file name
-            outFileName = "radfeatures_" + negativeControl + "_" + datasetName
+            outFileName = "radiomicfeatures_" + negativeControl + "_" + datasetName
 
         # Join outputDirPath, a features directory, and the output file name
         outputFilePath = os.path.join(outputDirPath, "features/", outFileName)

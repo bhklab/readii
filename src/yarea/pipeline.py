@@ -93,7 +93,7 @@ def main():
 
         # Perform feature extraction for each negative control type
         for negativeControl in negativeControlList:
-            ncRadFeatOutPath = os.path.join(outputDir, "features/", "radfeatures_" + negativeControl + "_" + datasetName + ".csv")
+            ncRadFeatOutPath = os.path.join(outputDir, "features/", "radiomicfeatures_" + negativeControl + "_" + datasetName + ".csv")
             if not os.path.exists(ncRadFeatOutPath) or args.update:
                 print("Starting radiomic feature extraction for negative control: ", negativeControl)
                 ncRadiomicFeatures = radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,
