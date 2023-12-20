@@ -43,20 +43,6 @@ def singleRadiomicFeatureExtraction(ctImage:sitk.Image,
 
     # Get pixel value for the segmentation
     segmentationLabel = getROIVoxelLabel(alignedROIImage)
-
-    # Exception catch for if the segmentation dimensions do not match that original image
-    try:
-        # Check that image and segmentation mask have the same dimensions
-        if ctImage.GetSize() != alignedROIImage.GetSize():
-            # Checking if number of segmentation slices is less than CT 
-            if ctImage.GetSize()[2] > alignedROIImage.GetSize()[2]:  
-                print("Slice number mismatch between CT and segmentation for", patID, ". Padding segmentation to match.")
-                alignedROIImage = padSEGtoMatchCT(ctFolderPath, segFilePath, ctImage, alignedROIImage)
-            else:
-                raise RuntimeError("CT and ROI dimensions do not match.")
-    # Catching CT and segmentation size mismatch error
-    except RuntimeError as e:
-        print(str(e))
     
     # Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
     segBoundingBox, correctedROIImage = imageoperations.checkMask(ctImage, alignedROIImage, label=segmentationLabel)
@@ -181,10 +167,33 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
                     # Extract features listed in the parameter file
                     print("Calculating radiomic features for segmentation:", roiImageName)
 
+                    # Get sitk Image object for this ROI
+                    roiImage = segImages[roiImageName]
+
+                    # Exception catch for if the segmentation dimensions do not match that original image
+                    try:
+                        # Check if segmentation just has an extra axis with a size of 1 and remove it
+                        if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:
+                            roiImage = flattenImage(roiImage)
+                            
+                        # Check that image and segmentation mask have the same dimensions
+                        if ctImage.GetSize() != roiImage.GetSize():
+                            # Checking if number of segmentation slices is less than CT 
+                            if ctImage.GetSize()[2] > roiImage.GetSize()[2]:  
+                                print("Slice number mismatch between CT and segmentation for", patID, ". Padding segmentation to match.")
+                                roiImage = padSEGtoMatchCT(ctFolderPath, segFilePath, ctImage, roiImage)
+                            else:
+                                raise RuntimeError("CT and ROI dimensions do not match.")
+
+                    # Catching CT and segmentation size mismatch error
+                    except RuntimeError as e:
+                        print(str(e))
+
+
                     # Extract radiomic features from this CT/segmentation pair
-                    idFeatureVector = singleRadiomicFeatureExtraction(ctImage, roiImage = segImages[roiImageName],
-                                                                        pyradiomicsParamFilePath = pyradiomicsParamFilePath,
-                                                                        negativeControl = negativeControl)
+                    idFeatureVector = singleRadiomicFeatureExtraction(ctImage, roiImage = roiImage,
+                                                                      pyradiomicsParamFilePath = pyradiomicsParamFilePath,
+                                                                      negativeControl = negativeControl)
 
                     # Create dictionary of image metadata to append to front of output table
                     sampleROIData = {"patient_ID": patID,
