@@ -87,3 +87,33 @@ def matchCTtoSegmentation(imgFileListPath: str,
         saveDataframeCSV(samplesWSeg, outputFilePath)
     
     return samplesWSeg
+
+
+def getSegmentationType(imgFileListPath: str):
+    """Find the segmentation type from the full list of image files.
+
+    Parameters
+    ----------
+    imgFileListPath : str
+        Path to csv containing list of image directories/paths in the dataset. 
+        Expecting output from med-imagetools autopipeline .imgtools_[dataset]
+
+    Returns
+    -------
+    str
+        Segmentation type (RTSTRUCT or SEG)
+    """
+    # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
+    fullDicomList = pd.read_csv(imgFileListPath, index_col=0)
+
+    # Get list of unique modalities 
+    modalities = list(fullDicomList['modality'].unique())
+
+    if "RTSTRUCT" in modalities:
+        segType = "RTSTRUCT"
+    elif "SEG" in modalities:
+        segType = "SEG"
+    else:
+        raise RuntimeError("No suitable segmentation type found. YAREA can only use RTSTRUCTs and DICOM-SEG segmentations.")
+
+    return segType
