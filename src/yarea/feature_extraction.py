@@ -44,14 +44,19 @@ def singleRadiomicFeatureExtraction(ctImage:sitk.Image,
     # Get pixel value for the segmentation
     segmentationLabel = getROIVoxelLabel(alignedROIImage)
 
-    # Check that image and segmentation mask have the same dimensions
-    if ctImage.GetSize() != alignedROIImage.GetSize():
-        # Checking if number of segmentation slices is less than CT 
-        if ctImage.GetSize()[2] > alignedROIImage.GetSize()[2]:  
-            print("Slice number mismatch between CT and segmentation for", patID, ". Padding segmentation to match.")
-            alignedROIImage = padSEGtoMatchCT(ctFolderPath, segFilePath, ctImage, alignedROIImage)
-        else:
-            raise RuntimeError()
+    # Exception catch for if the segmentation dimensions do not match that original image
+    try:
+        # Check that image and segmentation mask have the same dimensions
+        if ctImage.GetSize() != alignedROIImage.GetSize():
+            # Checking if number of segmentation slices is less than CT 
+            if ctImage.GetSize()[2] > alignedROIImage.GetSize()[2]:  
+                print("Slice number mismatch between CT and segmentation for", patID, ". Padding segmentation to match.")
+                alignedROIImage = padSEGtoMatchCT(ctFolderPath, segFilePath, ctImage, alignedROIImage)
+            else:
+                raise RuntimeError("CT and ROI dimensions do not match.")
+    # Catching CT and segmentation size mismatch error
+    except RuntimeError as e:
+        print(str(e))
     
     # Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
     segBoundingBox, correctedROIImage = imageoperations.checkMask(ctImage, alignedROIImage, label=segmentationLabel)
@@ -69,7 +74,11 @@ def singleRadiomicFeatureExtraction(ctImage:sitk.Image,
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
-    featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
+    try:
+        featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
+    except OSError as e:
+        print("ERROR: Supplied pyradiomics parameter file does not exist or is not at that location.")
+        raise
 
     # Extract radiomic features from CT with segmentation as mask
     idFeatureVector = featureExtractor.execute(croppedCT, croppedROI, label=segmentationLabel)
@@ -169,38 +178,33 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
                     # ROI counter for image metadata output
                     roiNum = roiCount + 1
 
-                    # Exception catch for if the segmentation dimensions do not match that original image
-                    try:
-                        # Extract features listed in the parameter file
-                        print("Calculating radiomic features for segmentation:", roiImageName)
+                    # Extract features listed in the parameter file
+                    print("Calculating radiomic features for segmentation:", roiImageName)
 
-                        # Extract radiomic features from this CT/segmentation pair
-                        idFeatureVector = singleRadiomicFeatureExtraction(ctImage, roiImage = segImages[roiImageName],
-                                                                          pyradiomicsParamFilePath = pyradiomicsParamFilePath,
-                                                                          negativeControl = negativeControl)
+                    # Extract radiomic features from this CT/segmentation pair
+                    idFeatureVector = singleRadiomicFeatureExtraction(ctImage, roiImage = segImages[roiImageName],
+                                                                        pyradiomicsParamFilePath = pyradiomicsParamFilePath,
+                                                                        negativeControl = negativeControl)
 
-                        # Create dictionary of image metadata to append to front of output table
-                        sampleROIData = {"patient_ID": patID,
-                                        "study_description": segSeriesInfo.iloc[0]['study_description_CT'],
-                                        "series_UID": segSeriesInfo.iloc[0]['series_CT'],
-                                        "series_description": segSeriesInfo.iloc[0]['series_description_CT'],
-                                        "image_modality": segSeriesInfo.iloc[0]['modality_CT'],
-                                        "instances": segSeriesInfo.iloc[0]['instances_CT'],
-                                        "seg_series_UID": segSeriesInfo.iloc[0]['series_seg'],
-                                        "seg_modality": segSeriesInfo.iloc[0]['modality_seg'],
-                                        "seg_ref_image": segSeriesInfo.iloc[0]['reference_ct_seg'],
-                                        "roi": roiImageName,
-                                        "roi_number": roiNum,
-                                        "negative_control": negativeControl}
+                    # Create dictionary of image metadata to append to front of output table
+                    sampleROIData = {"patient_ID": patID,
+                                    "study_description": segSeriesInfo.iloc[0]['study_description_CT'],
+                                    "series_UID": segSeriesInfo.iloc[0]['series_CT'],
+                                    "series_description": segSeriesInfo.iloc[0]['series_description_CT'],
+                                    "image_modality": segSeriesInfo.iloc[0]['modality_CT'],
+                                    "instances": segSeriesInfo.iloc[0]['instances_CT'],
+                                    "seg_series_UID": segSeriesInfo.iloc[0]['series_seg'],
+                                    "seg_modality": segSeriesInfo.iloc[0]['modality_seg'],
+                                    "seg_ref_image": segSeriesInfo.iloc[0]['reference_ct_seg'],
+                                    "roi": roiImageName,
+                                    "roi_number": roiNum,
+                                    "negative_control": negativeControl}
 
-                        # Concatenate image metadata with PyRadiomics features
-                        sampleROIData.update(idFeatureVector)
-                        # Store this ROI's info in the segmentation level list
-                        ctAllData.append(sampleROIData)
-
-                    except Exception as e:
-                        print(str(e))
-
+                    # Concatenate image metadata with PyRadiomics features
+                    sampleROIData.update(idFeatureVector)
+                    # Store this ROI's info in the segmentation level list
+                    ctAllData.append(sampleROIData)
+                    
         return ctAllData
         ###### END featureExtraction #######
 
