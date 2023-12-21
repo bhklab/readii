@@ -151,35 +151,31 @@ def shuffleROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
         Image with all pixel values in the Region of Interest randomly shuffled with same dimensions as input image
     """
 
-    # A collection of all the pixels in the ROI and their corresponding value in the BaseImage
-    count = {}
+    # A collection of corresponding value in the BaseImage of all the pixels in the ROI
+    count = []
     # Iterate through baseROI to store the corresponding value in the baseImage of all the pixels in the ROI
     baseROISize = baseROI.GetSize()
     for x in range(baseROISize[0]):
         for y in range(baseROISize[1]):
             for z in range(baseROISize[2]):
                 if baseROI.GetPixel(x, y, z) == roiLabel:
-                    # Here tthe key is the pixel coordinate and the value is the value of the pixel in the base image
-                    count[str(x) + str(y) + str(z)] = baseImage.GetPixel(x, y, z)
+                    # append the ROI corresponding pixel values to the list
+                    count.append(baseImage.GetPixel(x, y, z))
 
     # Create a new base image so we are not directly editing the input image
     new_base = baseImage.__copy__()
     # Delete the input image to save space
     del (baseImage)
 
-    # A list of all the values in the base image of the pixels in the ROI
-    voxelVals = list(count.values())
-    # Randomly shuffling the pixel values
-    random.shuffle(voxelVals)
+    # # Randomly shuffling the pixel values
+    random.shuffle(count)
 
-    # Combine the pixels with randomly shuffled values, so each pixel has a new randomly shuffled value
-    new_count = zip(count.keys(), voxelVals)
-    # Deleting the cound map to save on memory
-    del (count)
-
-    # Iterating over the pixels and their new shuffled value and assigning it in the image
-    for coord, shuffled_value in new_count:
-        new_base.SetPixel(int(coord[0]), int(coord[1]), int(coord[2]), shuffled_value)
+    for x in range(baseROISize[0]):
+        for y in range(baseROISize[1]):
+            for z in range(baseROISize[2]):
+                if baseROI.GetPixel(x, y, z) == roiLabel:
+                    # Set the value of a pixel in the ROI to be a shuffled value
+                    new_base.SetPixel(x, y, z, count.pop())
 
     return new_base
 
@@ -258,8 +254,8 @@ def shuffleNonROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1)
         Image with all pixel values outside the Region of Interest randomly shuffled with same dimensions as input image
     """
 
-    # A collection of all the pixels outside the ROI and their corresponding value in the BaseImage
-    count = {}
+    # A collection of corresponding value in the BaseImage of all the pixels not in the ROI
+    count = []
     # Iterate through baseImage to store the corresponding value in the baseImage of all the pixels outside the ROI
     baseImageSize = baseImage.GetSize()
     baseROISize = baseROI.GetSize()
@@ -269,26 +265,23 @@ def shuffleNonROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1)
                 if x > baseROISize[0] or y > baseROISize[1] or z > baseROISize[2] or baseROI.GetPixel(x, y,
                                                                                                       z) != roiLabel:
                     # Here the key is the pixel coordinate and the value is the value of the pixel in the base image
-                    count[str(x) + str(y) + str(z)] = baseImage.GetPixel(x, y, z)
+                    count.append(baseImage.GetPixel(x, y, z))
 
     # Create a new base image so we are not directly editing the input image
     new_base = baseImage.__copy__()
     # Delete the input image to save space
     del (baseImage)
 
-    # A list of all the values in the base image of the pixels outside the ROI
-    voxelVals = list(count.values())
     # Randomly shuffling the pixel values
-    random.shuffle(voxelVals)
+    random.shuffle(count)
 
-    # Combine the pixels with randomly shuffled values, so each pixel has a new randomly shuffled value
-    new_count = zip(count.keys(), voxelVals)
-    # Deleting the count map to save on memory
-    del (count)
-
-    # Iterating over the pixels and their new shuffled value and assigning it in the image
-    for coord, shuffled_value in new_count:
-        new_base.SetPixel(int(coord[0]), int(coord[1]), int(coord[2]), shuffled_value)
+    for x in range(baseImageSize[0]):
+        for y in range(baseImageSize[1]):
+            for z in range(baseImageSize[2]):
+                if x > baseROISize[0] or y > baseROISize[1] or z > baseROISize[2] or baseROI.GetPixel(x, y,
+                                                                                                      z) != roiLabel:
+                    # Set the value of a pixel outside the ROI to be a shuffled value
+                    new_base.SetPixel(x, y, z, count.pop())
 
     return new_base
 
