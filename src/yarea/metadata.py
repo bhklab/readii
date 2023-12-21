@@ -57,6 +57,10 @@ def matchCTtoSegmentation(imgFileListPath: str,
     if segType != "RTSTRUCT" and segType != "SEG":
         raise ValueError("Incorrect segmentation file type. Must be RTSTRUCT or SEG.")
 
+    # Check that imgFileListPath is a csv file to properly be loaded in
+    if not imgFileListPath.endswith('.csv'):
+        raise ValueError("This function expects to load in a .csv file, so imgFileListPath must end in .csv")
+
     # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
     fullDicomList = pd.read_csv(imgFileListPath, index_col=0)
 
@@ -87,3 +91,37 @@ def matchCTtoSegmentation(imgFileListPath: str,
         saveDataframeCSV(samplesWSeg, outputFilePath)
     
     return samplesWSeg
+
+
+def getSegmentationType(imgFileListPath: str):
+    """Find the segmentation type from the full list of image files.
+
+    Parameters
+    ----------
+    imgFileListPath : str
+        Path to csv containing list of image directories/paths in the dataset. 
+        Expecting output from med-imagetools autopipeline .imgtools_[dataset]
+
+    Returns
+    -------
+    str
+        Segmentation type (RTSTRUCT or SEG)
+    """
+    # Check that imgFileListPath is a csv file to properly be loaded in
+    if not imgFileListPath.endswith('.csv'):
+        raise ValueError("This function expects to load in a .csv file, so imgFileListPath must end in .csv")
+
+    # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
+    fullDicomList = pd.read_csv(imgFileListPath, index_col=0)
+
+    # Get list of unique modalities 
+    modalities = list(fullDicomList['modality'].unique())
+
+    if "RTSTRUCT" in modalities:
+        segType = "RTSTRUCT"
+    elif "SEG" in modalities:
+        segType = "SEG"
+    else:
+        raise RuntimeError("No suitable segmentation type found. YAREA can only use RTSTRUCTs and DICOM-SEG segmentations.")
+
+    return segType

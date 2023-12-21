@@ -86,3 +86,31 @@ def test_saveDataframeCSV_dataframe_error(notADataFrame):
     goodFilePath = "tests/output/badDataframeExample.csv"
     with pytest.raises(ValueError):
         saveDataframeCSV(notADataFrame, goodFilePath)
+
+
+def test_getSegmentationType_SEG(nsclcSummaryFilePath):
+    """Test getting segmentation type from summary file with SEG and CT"""
+    actual = getSegmentationType(nsclcSummaryFilePath)
+    assert actual == "SEG", \
+        "Wrong segmentation type found"
+
+
+def test_getSegmentationType_RTSTRUCT(lung4DSummaryFilePath):
+    """Test getting segmentation type from summary file with RTSTRUCT and CT"""
+    actual = getSegmentationType(lung4DSummaryFilePath)
+    assert actual == "RTSTRUCT", \
+        "Wrong segmentation type found"
+
+
+@pytest.mark.parametrize(
+    "notACSV",
+    [
+        "tests/.imgtools/imgtools_NSCLC_Radiogenomics.json",
+        "Just a string",
+        "tests/.imgtools/imgtools_4D-Lung.json"
+    ]
+)
+def test_getSegmentation_dataframe_error(notACSV):
+    """Check ValueError is raised when something other than a csv file is passed"""
+    with pytest.raises(ValueError):
+        getSegmentationType(notACSV)
