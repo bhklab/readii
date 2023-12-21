@@ -2,7 +2,64 @@
 
 
 
-## v0.2.0 (2023-12-19)
+## v0.3.0 (2023-12-21)
+
+### Build
+
+* build: updated semantic release variables ([`5e24044`](https://github.com/bhklab/yarea/commit/5e240446bc561cc34640a24d315edaf376cd244f))
+
+* build: updated semantic release and added package build steps ([`5a51e07`](https://github.com/bhklab/yarea/commit/5a51e078a8fbf3c0f14c7d0b429d14b830097142))
+
+* build: remove publish to PyPI ([`f276b76`](https://github.com/bhklab/yarea/commit/f276b767ae452eb7aceb702f607100e1c925c1c8))
+
+### Documentation
+
+* docs(pipeline): fixed typo in data directory help message ([`7a19b5a`](https://github.com/bhklab/yarea/commit/7a19b5a3d53ff24a6a800a7bcd75add2aff2d741))
+
+### Feature
+
+* feat: add ability to run pipeline using poetry run ([`ced5e67`](https://github.com/bhklab/yarea/commit/ced5e6771e3f7b688f2f394f0ec0f8b4ff92bf7a))
+
+* feat(gitignore): ignore vscode directory with configurations ([`7e30be2`](https://github.com/bhklab/yarea/commit/7e30be22e0a56c6f5f438e7ff51ebc9ba2b900f3))
+
+* feat(pipeline): main pipeline function to run radiomic feature extraction ([`929573d`](https://github.com/bhklab/yarea/commit/929573d50a22746fae29beceacd8d0169cd3dde3))
+
+* feat(metadata): added check for csv type on imgFileListPath argument ([`ac09625`](https://github.com/bhklab/yarea/commit/ac09625fd36622e5a0388ce8e4e74209ed4c9c4c))
+
+* feat(metadata): made function to find the segmentation type from the list of image files ([`8dd4ddf`](https://github.com/bhklab/yarea/commit/8dd4ddf858c47377d6bac0e9853282772d15dd43))
+
+### Fix
+
+* fix(test_feature_extraction): fixed expected output path for radiomicFeatureExtraction ([`53c9db3`](https://github.com/bhklab/yarea/commit/53c9db3bc31a35e332f9eeda35b82f42c84f5ab1))
+
+* fix(image_processing): fixed usage of ctDirPath variable in padSegToMatchCT ([`892c8d7`](https://github.com/bhklab/yarea/commit/892c8d7629595ce89f2893b004f6f7bc585bab21))
+
+* fix: move size mismatch handling back to radiomicFeatureExtraction because image file paths are available in that function ([`ccbe852`](https://github.com/bhklab/yarea/commit/ccbe8524fa69a2334b499512a541c3afa13b430a))
+
+* fix(feature_extraction): moved error handling into singleRadiomicFeatureExtraction and added catch for wrong pyradiomics parameter file ([`41a3901`](https://github.com/bhklab/yarea/commit/41a39018becde60091ffb113640e180a162d536f))
+
+* fix: change radiomic features file output name ([`ea0b963`](https://github.com/bhklab/yarea/commit/ea0b963c7c7caa0a39ab6149fa86d8783717bc32))
+
+* fix(feature_extraction): add check for None in pyradiomics parameter file spot, use default if that&#39;s the case ([`5340f57`](https://github.com/bhklab/yarea/commit/5340f57c8ab18818e6bb45cecda96fcb7aba4f5a))
+
+* fix(yarea): renamed this file because it had import issues being named the same as the package ([`833c5b4`](https://github.com/bhklab/yarea/commit/833c5b460140783d0292b7a1991bca7cbd0e5c64))
+
+### Style
+
+* style(feature_extraction): changed ctFolderPath to ctDirPath for consistency ([`b7b452e`](https://github.com/bhklab/yarea/commit/b7b452ea2d0c6f930cc727ec026b03de5d539121))
+
+### Test
+
+* test(test_metadata): testing for getSegmentationType function ([`57768cf`](https://github.com/bhklab/yarea/commit/57768cfe22fa0a7a3a59b65e25fe768848025ce0))
+
+### Unknown
+
+* remove files from tutorial ([`5afac9a`](https://github.com/bhklab/yarea/commit/5afac9af90c7112c18acf2c3ce6f22a617c1cf86))
+
+* updated version ([`3a063cf`](https://github.com/bhklab/yarea/commit/3a063cf057fdfe3c056ca86af325f060c3c65cf3))
+
+
+## v0.2.0 (2023-12-20)
 
 ### Build
 
