@@ -181,7 +181,7 @@ def radiomicFeatureExtraction(imageMetadataPath:str,
                             # Checking if number of segmentation slices is less than CT 
                             if ctImage.GetSize()[2] > roiImage.GetSize()[2]:  
                                 print("Slice number mismatch between CT and segmentation for", patID, ". Padding segmentation to match.")
-                                roiImage = padSEGtoMatchCT(ctDirPath, segFilePath, ctImage, roiImage)
+                                roiImage = padSegToMatchCT(ctDirPath, segFilePath, ctImage, roiImage)
                             else:
                                 raise RuntimeError("CT and ROI dimensions do not match.")
 
