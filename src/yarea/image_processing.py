@@ -103,7 +103,7 @@ def padSegToMatchCT(ctDirPath:str,
     
     # Load in header information for the CT and SEG files
     ctSeries = Series(ctDirPath)
-    segWithHeader = pydicom.dcmread(segFilePath, stop_before_pixels=True)
+    segWithHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
 
     # Get the first and last reference ID for the slices of the CT that are in the SEG file
     lastSliceRef = segWithHeader.ReferencedSeriesSequence[0].ReferencedInstanceSequence[0].ReferencedSOPInstanceUID
