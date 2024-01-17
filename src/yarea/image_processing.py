@@ -157,6 +157,23 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
 
 
 def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, cmapSeg=plt.cm.brg, alpha=0.3):
+    """Function to display a 2D slice from a CT with the ROI from a segmentation image overlaid in green
+    Parameters
+    ----------
+    ctImage : sitk.Image or nd.array
+        CT image to display a slice of. If an array, must have slices as first dimension.
+    segImage : sitk.Image or nd.array
+        Segmentation image containing a ROI to overlay with CT. Must be aligned to CT. If an array, must have slices as first dimension
+        and have background labeled as 0s.
+    sliceIdx : int
+        Slice index from image to display. If not provided, will get center slice of ROI to plot.
+    cmapCT : matplotlib.colormap
+        Color map to use for CT plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options. Is greyscale by default.
+    cmapSeg: matplotlib.colormap
+        Color map to use for ROI plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options. Is green by default.
+    alpha : float
+        Value between 0 and 1 indicating transparency of ROI overtop of CT. Default is 0.3
+    """
     # If slice index is not provided, get the center slice for the ROI in segImage
     if sliceIdx == -1:
         sliceIdx, _, _ = getROICenterCoords(segImage)
