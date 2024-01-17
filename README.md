@@ -1,6 +1,8 @@
 # YAREA
 
-A package to extract radiomic features!
+Yet Another Radiomic Extraction and Analysis pipeline
+
+A package to extract radiomic features from DICOM CT images.
 
 ## Installation
 
@@ -8,9 +10,25 @@ A package to extract radiomic features!
 $ pip install yarea
 ```
 
-## Usage
+### (recommended) Create new conda virtual environment
+```
+conda create -n yarea
+conda activate yarea
+pip install yarea
+```
 
-- TODO
+## Usage
+`yarea` is a tool to perform radiomic feature extraction on DICOM CT images with region of interest (ROI) segmentations as either DICOM SEG or RTSTRUCT.
+
+```bash
+$ yarea [INPUT DIRECTORY] [OUTPUT DIRECTORY] \
+  --roi_names [str] \
+  --pyradiomics_setting [str] \
+  --negative_controls [str: randomized_full,randomized_roi,randomized_non_roi,shuffled_full,shuffled_roi,shuffled_non_roi] \
+  --parallel [flag]
+  --update [flag]
+```
+
 
 ## Contributing
 
