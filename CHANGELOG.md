@@ -2,6 +2,45 @@
 
 
 
+## v0.5.0 (2024-01-17)
+
+### Build
+
+* build: updated dependency versions ([`44de606`](https://github.com/bhklab/yarea/commit/44de60655fef29716ef5d4edbd6e1e18f8e508d1))
+
+### Documentation
+
+* docs(pipeline): indicate whether flags are true or false by default in help message of parallel and update ([`311dd5e`](https://github.com/bhklab/yarea/commit/311dd5e4f946ba78caaf7c1f0d1ed6dceecd5dcb))
+
+* docs(image_processing): wrote docstring for displayCTSegOverlay ([`2f69dab`](https://github.com/bhklab/yarea/commit/2f69dab8f8d7b7b46f7fbe2175b356a4fb28baf7))
+
+### Feature
+
+* feat(image_processing): add function to display CT slice with segmentation overlaid ([`73342ef`](https://github.com/bhklab/yarea/commit/73342efbd24757ac349124ba332dc26f89544ae9))
+
+* feat(image_processing): add function to find center slice and coordinates of ROI in image ([`78d69b2`](https://github.com/bhklab/yarea/commit/78d69b227ab1e2006ce46badd2b0a37384f45f40))
+
+### Fix
+
+* fix(image_processing): fixed remaining instances of imgArray variable ([`84de500`](https://github.com/bhklab/yarea/commit/84de5003d65c8726d925108f087cdba3be9288ad))
+
+* fix(image_processing): fixed image vs. imgArray variable mixup in displayImageSlice ([`c9ea3d6`](https://github.com/bhklab/yarea/commit/c9ea3d6f1ae6637139c41651a3c66d133b6d6c5f))
+
+### Test
+
+* test(test_image_processing): added test for getROICenterCoords ([`8745fe7`](https://github.com/bhklab/yarea/commit/8745fe752a27204eed7359aed4525c962481d2db))
+
+### Unknown
+
+* Merge pull request #3 from bhklab/development_katy
+
+Added some new functions focused on displaying the CT with a segmentation overlaid and fixed a variable name in image_processing ([`04f42a4`](https://github.com/bhklab/yarea/commit/04f42a40c7475499094e65ec55639a91b0da629f))
+
+* Merge pull request #2 from bhklab/development_katy
+
+docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhklab/yarea/commit/390d6e6f094968d0d19191484e14da16294e046e))
+
+
 ## v0.4.0 (2024-01-17)
 
 ### Build
@@ -9,6 +48,8 @@
 * build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/yarea/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
 
 ### Documentation
+
+* docs: require python 3.9 in conda env setup ([`480b199`](https://github.com/bhklab/yarea/commit/480b1997788be447a53a2699a952df076b7b5262))
 
 * docs: add installation and usage details to README ([`4281620`](https://github.com/bhklab/yarea/commit/4281620f5f791030a020cb4fe91b08318d63426b))
 

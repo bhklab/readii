@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "yarea"
-version = "0.4.0"
+version = "0.5.0"
 description = "A package to extract radiomic features!"
 authors = ["Katy Scott"]
 license = "MIT"
