@@ -147,9 +147,9 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
  
     # Get min and max value from image to define range in display
     if dispMin == None:
-        dispMin = imgArray.min()
+        dispMin = image.min()
     if dispMax == None:
-        dispMax = imgArray.max()
+        dispMax = image.max()
 
     # Display the slice of the image
     plt.imshow(image[sliceIdx,:,:], cmap=cmap, vmin=dispMin, vmax=dispMax)
