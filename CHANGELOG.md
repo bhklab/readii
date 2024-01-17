@@ -2,6 +2,43 @@
 
 
 
+## v0.4.0 (2024-01-17)
+
+### Build
+
+* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/yarea/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
+
+### Documentation
+
+* docs: add installation and usage details to README ([`4281620`](https://github.com/bhklab/yarea/commit/4281620f5f791030a020cb4fe91b08318d63426b))
+
+### Feature
+
+* feat: added command line example runs to notebook ([`48d8d40`](https://github.com/bhklab/yarea/commit/48d8d40e24796491cb6491046b3f12f2424df128))
+
+### Unknown
+
+* add tests/output/ to gitignore to not commit output files ([`fa713ff`](https://github.com/bhklab/yarea/commit/fa713ff38977b1d2758aae32bde5fa07f0500931))
+
+* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`1327e22`](https://github.com/bhklab/yarea/commit/1327e22ab994212e24e4658313897791bef39c82))
+
+* Add ci pass requirement back in ([`b678d4a`](https://github.com/bhklab/yarea/commit/b678d4afb2c9818c07d0f8165f8b5baf3426e11c))
+
+* Fixed error with the path for CT and SEG files in the tests for negative controls ([`5ea6e2c`](https://github.com/bhklab/yarea/commit/5ea6e2caa601f3aa3eefd806c1c09cdbef0c6e23))
+
+* Fixed feature_extraction error where padSegToMatchCT function was being called incorrectly ([`82ad022`](https://github.com/bhklab/yarea/commit/82ad0228bae60a5d800e15f77a9e6cad487e8c23))
+
+* Merge pull request #1 from bhklab/negative_control_tests
+
+Created testing suite for negative controls and fixed errors in image_processing.py and negative_controls.py ([`f0fdd02`](https://github.com/bhklab/yarea/commit/f0fdd028e167d78b371fc2ff73bff1328a271e54))
+
+* merged conflicts ([`d78fb5f`](https://github.com/bhklab/yarea/commit/d78fb5f101d3532b656a63f5134ac05d281f0bcf))
+
+* Finished testing suite for the negative controls ([`6d81739`](https://github.com/bhklab/yarea/commit/6d81739841318c201508eb787f46d1024f78039b))
+
+* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/yarea/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
+
+
 ## v0.3.0 (2023-12-21)
 
 ### Build
@@ -53,6 +90,12 @@
 * test(test_metadata): testing for getSegmentationType function ([`57768cf`](https://github.com/bhklab/yarea/commit/57768cfe22fa0a7a3a59b65e25fe768848025ce0))
 
 ### Unknown
+
+* Merge branch &#39;main&#39; into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/yarea/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
+
+* Fixed issue with shuffleROI and shuffleNonROI, where some pixels with duplicate values were ignored ([`e812bcc`](https://github.com/bhklab/yarea/commit/e812bccacaf5ad9f37d62811e6644dc2f6128159))
+
+* Fixed error with wrong variable names, for CT folder path ([`302a284`](https://github.com/bhklab/yarea/commit/302a284b904ceee539fee64b52b22c1e03f28fe1))
 
 * remove files from tutorial ([`5afac9a`](https://github.com/bhklab/yarea/commit/5afac9af90c7112c18acf2c3ce6f22a617c1cf86))
 
