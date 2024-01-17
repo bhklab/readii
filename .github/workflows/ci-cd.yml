@@ -36,7 +36,7 @@ jobs:
 
   cd:
     # Only run this job if the "ci" job passes
-    # needs: ci
+    needs: ci
 
     # Only run this job if new work is pushed to "main"
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
