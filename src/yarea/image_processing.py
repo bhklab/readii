@@ -143,7 +143,7 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
     """
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.SimpleITK.Image:
-        imgArray = sitk.GetArrayFromImage(image)
+        image = sitk.GetArrayFromImage(image)
  
     # Get min and max value from image to define range in display
     if dispMin == None:
@@ -152,7 +152,7 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
         dispMax = imgArray.max()
 
     # Display the slice of the image
-    plt.imshow(imgArray[sliceIdx,:,:], cmap=cmap, vmin=dispMin, vmax=dispMax)
+    plt.imshow(image[sliceIdx,:,:], cmap=cmap, vmin=dispMin, vmax=dispMax)
     plt.axis('off')
 
 
