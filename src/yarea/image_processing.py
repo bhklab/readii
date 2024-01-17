@@ -143,17 +143,88 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
     """
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.SimpleITK.Image:
-        imgArray = sitk.GetArrayFromImage(image)
+        image = sitk.GetArrayFromImage(image)
  
     # Get min and max value from image to define range in display
     if dispMin == None:
-        dispMin = imgArray.min()
+        dispMin = image.min()
     if dispMax == None:
-        dispMax = imgArray.max()
+        dispMax = image.max()
 
     # Display the slice of the image
-    plt.imshow(imgArray[sliceIdx,:,:], cmap=cmap, vmin=dispMin, vmax=dispMax)
+    plt.imshow(image[sliceIdx,:,:], cmap=cmap, vmin=dispMin, vmax=dispMax)
     plt.axis('off')
+
+
+def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, cmapSeg=plt.cm.brg, alpha=0.3):
+    """Function to display a 2D slice from a CT with the ROI from a segmentation image overlaid in green
+    Parameters
+    ----------
+    ctImage : sitk.Image or nd.array
+        CT image to display a slice of. If an array, must have slices as first dimension.
+    segImage : sitk.Image or nd.array
+        Segmentation image containing a ROI to overlay with CT. Must be aligned to CT. If an array, must have slices as first dimension
+        and have background labeled as 0s.
+    sliceIdx : int
+        Slice index from image to display. If not provided, will get center slice of ROI to plot.
+    cmapCT : matplotlib.colormap
+        Color map to use for CT plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options. Is greyscale by default.
+    cmapSeg: matplotlib.colormap
+        Color map to use for ROI plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options. Is green by default.
+    alpha : float
+        Value between 0 and 1 indicating transparency of ROI overtop of CT. Default is 0.3
+    """
+    # If slice index is not provided, get the center slice for the ROI in segImage
+    if sliceIdx == -1:
+        sliceIdx, _, _ = getROICenterCoords(segImage)
+
+     # If image is a simple ITK image, convert to array for display
+    if type(ctImage) == sitk.SimpleITK.Image:
+        ctImage = sitk.GetArrayFromImage(ctImage)
+     # If segmentation is a simple ITK image, convert to array for display
+    if type(segImage) == sitk.SimpleITK.Image:
+        segImage = sitk.GetArrayFromImage(segImage)
+    
+    # Make mask of ROI to ignore background in overlaid plot
+    maskSeg = np.ma.masked_where(segImage == 0, segImage)
+
+    # Plot slice of CT
+    plt.imshow(ctImage[sliceIdx,:,:], cmap=cmapCT, vmin=ctImage.min(), vmax=ctImage.max())
+    # Plot mask of ROI overtop
+    plt.imshow(maskSeg[sliceIdx,:,:], cmap=cmapSeg, vmin=segImage.min(), vmax=segImage.max(), alpha=alpha)
+    plt.axis('off')
+
+
+def getROICenterCoords(segImage:sitk.Image):
+    """A function to find the slice number and coordinates for the center of an ROI in a loaded RTSTRUCT or SEG file.
+
+    Parameters
+    ----------
+    segImage
+        sitk.Image, a loaded segmentation image, should be binary with segmentation voxels as a non-zero value
+    
+    Returns
+    -------
+    centerSliceIdx : int
+        Index of the centermost slice of the ROI in the image
+    centerColumnPixelIdx : int
+        Column index of the centermost point in the ROI in the center slice.
+    centerRowPixelIdx : int
+        Row index of the centermost point in the ROI in the center slice.
+    """
+    # Convert segmentation image to a numpy array
+    arrSeg = sitk.GetArrayFromImage(segImage)
+    
+    nonZeroIndices = np.nonzero(arrSeg)
+    nzSliceIndices = nonZeroIndices[0]
+    nzColumnIndices = nonZeroIndices[1]
+    nzRowIndices = nonZeroIndices[2]
+
+    centerSliceIdx = nzSliceIndices[int(len(nzSliceIndices) / 2)]
+    centerColumnPixelIdx = nzColumnIndices[int(len(nzColumnIndices) / 2)]
+    centerRowPixelIdx = nzRowIndices[int(len(nzRowIndices) / 2)]
+
+    return centerSliceIdx, centerColumnPixelIdx, centerRowPixelIdx
 
 
 def getROIVoxelLabel(segImage:sitk.Image):
