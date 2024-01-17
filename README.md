@@ -12,7 +12,7 @@ $ pip install yarea
 
 ### (recommended) Create new conda virtual environment
 ```
-conda create -n yarea
+conda create -n yarea python=3.9
 conda activate yarea
 pip install yarea
 ```
