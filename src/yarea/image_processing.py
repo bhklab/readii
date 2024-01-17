@@ -156,6 +156,38 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
     plt.axis('off')
 
 
+def getROICenterCoords(segImage:sitk.Image):
+    """A function to find the slice number and coordinates for the center of an ROI in a loaded RTSTRUCT or SEG file.
+
+    Parameters
+    ----------
+    segImage
+        sitk.Image, a loaded segmentation image, should be binary with segmentation voxels as a non-zero value
+    
+    Returns
+    -------
+    centerSliceIdx : int
+        Index of the centermost slice of the ROI in the image
+    centerColumnPixelIdx : int
+        Column index of the centermost point in the ROI in the center slice.
+    centerRowPixelIdx : int
+        Row index of the centermost point in the ROI in the center slice.
+    """
+    # Convert segmentation image to a numpy array
+    arrSeg = sitk.GetArrayFromImage(segImage)
+    
+    nonZeroIndices = np.nonzero(arrSeg)
+    nzSliceIndices = nonZeroIndices[0]
+    nzColumnIndices = nonZeroIndices[1]
+    nzRowIndices = nonZeroIndices[2]
+
+    centerSliceIdx = nzSliceIndices[int(len(nzSliceIndices) / 2)]
+    centerColumnPixelIdx = nzColumnIndices[int(len(nzColumnIndices) / 2)]
+    centerRowPixelIdx = nzRowIndices[int(len(nzRowIndices) / 2)]
+
+    return centerSliceIdx, centerColumnPixelIdx, centerRowPixelIdx
+
+
 def getROIVoxelLabel(segImage:sitk.Image):
     """A function to find the non-zero value that identifies segmentation voxels in a loaded RTSTRUCT or SEG file.
     
