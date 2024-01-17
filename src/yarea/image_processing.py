@@ -156,6 +156,28 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
     plt.axis('off')
 
 
+def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, cmapSeg=plt.cm.brg, alpha=0.3):
+    # If slice index is not provided, get the center slice for the ROI in segImage
+    if sliceIdx == -1:
+        sliceIdx, _, _ = getROICenterCoords(segImage)
+
+     # If image is a simple ITK image, convert to array for display
+    if type(ctImage) == sitk.SimpleITK.Image:
+        ctImage = sitk.GetArrayFromImage(ctImage)
+     # If segmentation is a simple ITK image, convert to array for display
+    if type(segImage) == sitk.SimpleITK.Image:
+        segImage = sitk.GetArrayFromImage(segImage)
+    
+    # Make mask of ROI to ignore background in overlaid plot
+    maskSeg = np.ma.masked_where(segImage == 0, segImage)
+
+    # Plot slice of CT
+    plt.imshow(ctImage[sliceIdx,:,:], cmap=cmapCT, vmin=ctImage.min(), vmax=ctImage.max())
+    # Plot mask of ROI overtop
+    plt.imshow(maskSeg[sliceIdx,:,:], cmap=cmapSeg, vmin=segImage.min(), vmax=segImage.max(), alpha=alpha)
+    plt.axis('off')
+
+
 def getROICenterCoords(segImage:sitk.Image):
     """A function to find the slice number and coordinates for the center of an ROI in a loaded RTSTRUCT or SEG file.
 
