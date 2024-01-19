@@ -2,7 +2,20 @@
 
 
 
-## v0.5.0 (2024-01-17)
+## v0.6.0 (2024-01-19)
+
+### Feature
+
+* feat(pipeline): change parallel input argument to be false by default ([`3f8c46a`](https://github.com/bhklab/yarea/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
+
+### Unknown
+
+* Merge pull request #4 from bhklab/development_katy
+
+feat(pipeline): change parallel input argument to be false by default ([`8d0626d`](https://github.com/bhklab/yarea/commit/8d0626d08acad7f9e2ca3d31560ea4d532f86e2e))
+
+
+## v0.5.0 (2024-01-18)
 
 ### Build
 
