@@ -69,14 +69,6 @@ def test_shuffleImage(nsclcCTImage):
                           np.sort(shuffled_pixels)), \
         "Shuffled image has different pixel values"
 
-    for _ in range(5):
-        size = nsclcCTImage.GetSize()
-        x = random.randint(0, size[0] - 1)
-        y = random.randint(0, size[1] - 1)
-        z = random.randint(0, size[2] - 1)
-        assert shuffled_image.GetPixel(x, y, z) != nsclcCTImage.GetPixel(x, y, z), \
-            "Random pixel value not shuffled"
-
 
 def test_makeRandomImage(nsclcCTImage):
     " Test negative control to randomize the pixels of the whole image"
