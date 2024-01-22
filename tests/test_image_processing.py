@@ -53,3 +53,22 @@ def test_getROIVoxelLabel(segImage, expected, request):
     """Test getting the voxel value in the ROI in a segmentation for both SEG and RTSTRUCT images"""
     segImage = request.getfixturevalue(segImage)
     assert getROIVoxelLabel(segImage) == expected
+
+@pytest.mark.parametrize(
+    "segImage, expected",
+    [
+        ("nsclcSEGImage", (238, 252, 124)),
+        ("lung4DRTSTRUCTImage", (63, 314, 318))
+    ]
+)
+def test_getROICenterCoords(segImage, expected, request):
+    """Test getting the center slice and coordinates for an ROI in both SEG and RTSTRUCT images"""
+    segImage = request.getfixturevalue(segImage)
+    flatSegImage = flattenImage(segImage)
+    centerSliceIdx, centerColumnPixelIdx, centerRowPixelIdx = getROICenterCoords(flatSegImage)
+    assert centerSliceIdx == expected[0], \
+        "Slice number is wrong"
+    assert centerColumnPixelIdx == expected[1], \
+        "Center column pixel value is wrong"
+    assert centerRowPixelIdx == expected[2], \
+        "Center row pixel value is wrong"
