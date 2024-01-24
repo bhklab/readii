@@ -1,6 +1,6 @@
 # READII
 
-Yet Another Radiomic Extraction and Analysis pipeline
+**R**adiomic **E**xtraction and **A**nalysis for **DI**COM **I**mages
 
 A package to extract radiomic features from DICOM CT images.
 
