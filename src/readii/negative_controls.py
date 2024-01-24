@@ -2,7 +2,7 @@ import SimpleITK as sitk
 import numpy as np
 import random
 
-from yarea.image_processing import alignImages
+from readii.image_processing import alignImages
 
 
 def shuffleImage(imageToShuffle: sitk.Image):

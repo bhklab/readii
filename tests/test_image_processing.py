@@ -1,5 +1,5 @@
-from yarea.loaders import *
-from yarea.image_processing import *
+from readii.loaders import *
+from readii.image_processing import *
 import pytest
 
 @pytest.fixture

@@ -1,13 +1,13 @@
 from argparse import ArgumentParser
 import os
 
-from yarea.metadata import *
-from yarea.feature_extraction import *
+from readii.metadata import *
+from readii.feature_extraction import *
 
 def parser():
     """Function to take command-line arguments and set them up for the pipeline run
     """
-    parser = ArgumentParser("YAREA Feature Extraction Pipeline")
+    parser = ArgumentParser("READII Feature Extraction Pipeline")
 
     # arguments
     parser.add_argument("data_directory", type=str,
@@ -21,7 +21,7 @@ def parser():
     
     parser.add_argument("--pyradiomics_setting", type=str, default=None,
                         help="Path to PyRadiomics configuration YAML file. If none provided, will use \
-                              default in src/yarea/data/.")
+                              default in src/readii/data/.")
     
     parser.add_argument("--negative_controls", type=str, default=None,
                         help="List of negative control types to run feature extraction on. Input as comma-separated list with no spaces.  \
@@ -36,15 +36,15 @@ def parser():
     
 
 def main():
-    """Function to run YAREA radiomic feature extraction pipeline.
+    """Function to run READII radiomic feature extraction pipeline.
     """
     args = parser()
     args_dict = vars(args)
 
-    print("Starting yarea pipeline...")
+    print("Starting readii pipeline...")
 
     # Set up output directory
-    outputDir = os.path.join(args.output_directory, "yarea_outputs")
+    outputDir = os.path.join(args.output_directory, "readii_outputs")
     if not os.path.exists(outputDir):
         print("Creating output directory:", outputDir)
         os.makedirs(outputDir)
