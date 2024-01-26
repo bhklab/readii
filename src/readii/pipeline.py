@@ -27,8 +27,8 @@ def parser():
                         help="List of negative control types to run feature extraction on. Input as comma-separated list with no spaces.  \
                               Options: randomized_full,randomized_roi,randomized_non_roi,shuffled_full,shuffled_roi,shuffled_non_roi")
 
-    parser.add_argument("--parallel", action="store_false",
-                        help="Whether to run feature extraction in a parallel process. True by default.")
+    parser.add_argument("--parallel", action="store_true",
+                        help="Whether to run feature extraction in a parallel process. False by default.")
 
     parser.add_argument("--update", action="store_true", help="Flag to force rerun all steps of pipeline. False by default.")
 
