@@ -199,7 +199,6 @@ def test_shuffleNonROI(nsclcCropped):
                         "Pixel values within ROI have changed"
 
 
-
 def test_makeRandomNonRoi(nsclcCropped):
     " Test negative control to randomize the pixels outside the ROI of the image"
 
@@ -213,9 +212,9 @@ def test_makeRandomNonRoi(nsclcCropped):
                                                                                                              z) != segmentationLabel]
 
     randomized_pixels = [randomized_image.GetPixel(x, y, z) for x in range(croppedCT.GetSize()[0]) \
-                       for y in range(croppedCT.GetSize()[1]) for z in range(croppedCT.GetSize()[2]) \
-                       if x > croppedROI[0] or y > croppedROI[1] or z > croppedROI[2] or croppedROI.GetPixel(x, y,
-                                                                                                             z) != segmentationLabel]
+                         for y in range(croppedCT.GetSize()[1]) for z in range(croppedCT.GetSize()[2]) \
+                         if x > croppedROI[0] or y > croppedROI[1] or z > croppedROI[2] or croppedROI.GetPixel(x, y,
+                                                                                                               z) != segmentationLabel]
 
     assert croppedCT.GetSize() == randomized_image.GetSize(), \
         "Randomized image size not same as input image"
@@ -227,6 +226,104 @@ def test_makeRandomNonRoi(nsclcCropped):
         "Returned object is not a sitk.Image"
     assert max(randomized_pixels) <= max(original_pixels) and min(randomized_pixels) >= min(original_pixels), \
         "Pixel values outside ROI are not within the expected range"
+
+    for x in range(croppedROI.GetSize()[0]):
+        for y in range(croppedROI.GetSize()[1]):
+            for z in range(croppedROI.GetSize()[2]):
+                if croppedROI.GetPixel(x, y, z) == segmentationLabel:
+                    assert croppedCT.GetPixel(x, y, z) == randomized_image.GetPixel(x, y, z), \
+                        "Pixel values within ROI have changed"
+
+
+def test_randomizeImageFromDistribtutionSampling(nsclcCTImage):
+    " Test negative control to uniformly sample the pixels of the whole image from the images pixel distribution"
+
+    randomized_sampled_image = randomizeImageFromDistribtutionSampling(nsclcCTImage)
+    original_arr_image = sitk.GetArrayFromImage(nsclcCTImage)
+    flatten_org_arr_image = original_arr_image.flatten()
+
+    randomized_arr_image = sitk.GetArrayFromImage(randomized_sampled_image)
+    flattened_randomized_arr_image = randomized_arr_image.flatten()
+
+    assert nsclcCTImage.GetSize() == randomized_sampled_image.GetSize(), \
+        "Randomized sampled image size not same as input image"
+    assert nsclcCTImage.GetSpacing() == randomized_sampled_image.GetSpacing(), \
+        "Randomized sampled image spacing not same as input image"
+    assert nsclcCTImage.GetOrigin() == randomized_sampled_image.GetOrigin(), \
+        "Randomized sampled image origin not same as input image"
+    assert isinstance(randomized_sampled_image, sitk.Image), \
+        "Returned object is not a sitk.Image"
+    assert np.all(np.isin(flattened_randomized_arr_image, flatten_org_arr_image)), \
+        "Retuned object has values not sampled from original image"
+
+    for _ in range(5):
+        size = nsclcCTImage.GetSize()
+        x = random.randint(0, size[0] - 1)
+        y = random.randint(0, size[1] - 1)
+        z = random.randint(0, size[2] - 1)
+        assert randomized_sampled_image.GetPixel(x, y, z) in flattened_randomized_arr_image, \
+            "Random pixel value not sampled correctly"
+
+
+def test_makeRandomFromRoiDistribution(nsclcCropped):
+    " Test negative control to uniformly sample the pixels of the ROI of the image randomly"
+
+    croppedCT, croppedROI, segmentationLabel = nsclcCropped
+
+    randomized_image = makeRandomFromRoiDistribution(croppedCT, croppedROI, segmentationLabel)
+    original_arr_image = sitk.GetArrayFromImage(croppedCT)
+    flatten_org_arr_image = original_arr_image.flatten()
+
+    randomized_arr_image = sitk.GetArrayFromImage(randomized_image)
+    flattened_randomized_arr_image = randomized_arr_image.flatten()
+
+    assert croppedCT.GetSize() == randomized_image.GetSize(), \
+        "Randomized ROI Sampled image size not same as input image"
+    assert croppedCT.GetSpacing() == randomized_image.GetSpacing(), \
+        "Randomized ROI Sampled image spacing not same as input image"
+    assert croppedCT.GetOrigin() == randomized_image.GetOrigin(), \
+        "Randomized ROI Sampled image origin not same as input image"
+    assert isinstance(randomized_image, sitk.Image), \
+        "Returned object is not a sitk.Image"
+    assert np.all(np.isin(flattened_randomized_arr_image, flatten_org_arr_image)), \
+        "Retuned object has values not sampled from original image"
+
+    size = croppedROI.GetSize()
+    for _ in range(5):
+        x = random.randint(0, size[0] - 1)
+        y = random.randint(0, size[1] - 1)
+        z = random.randint(0, size[2] - 1)
+        if croppedROI.GetPixel(x, y, z) == segmentationLabel:
+            assert randomized_image.GetPixel(x, y, z) in flatten_org_arr_image, \
+                "Pixel value not sampled correctly"
+
+def test_makeRandomNonRoiFromDistribution(nsclcCropped):
+    " Test negative control to randomize the pixels outside the ROI of the image"
+
+    croppedCT, croppedROI, segmentationLabel = nsclcCropped
+
+    randomized_image = makeRandomNonRoiFromDistribution(croppedCT, croppedROI, segmentationLabel)
+
+    original_pixels = [croppedCT.GetPixel(x, y, z) for x in range(croppedCT.GetSize()[0]) \
+                       for y in range(croppedCT.GetSize()[1]) for z in range(croppedCT.GetSize()[2]) \
+                       if x > croppedROI[0] or y > croppedROI[1] or z > croppedROI[2] or croppedROI.GetPixel(x, y,
+                                                                                                             z) != segmentationLabel]
+
+    randomized_pixels = [randomized_image.GetPixel(x, y, z) for x in range(croppedCT.GetSize()[0]) \
+                         for y in range(croppedCT.GetSize()[1]) for z in range(croppedCT.GetSize()[2]) \
+                         if x > croppedROI[0] or y > croppedROI[1] or z > croppedROI[2] or croppedROI.GetPixel(x, y,
+                                                                                                               z) != segmentationLabel]
+
+    assert croppedCT.GetSize() == randomized_image.GetSize(), \
+        "Randomized image size not same as input image"
+    assert croppedCT.GetSpacing() == randomized_image.GetSpacing(), \
+        "Randomized image spacing not same as input image"
+    assert croppedCT.GetOrigin() == randomized_image.GetOrigin(), \
+        "Randomized image origin not same as input image"
+    assert isinstance(randomized_image, sitk.Image), \
+        "Returned object is not a sitk.Image"
+    assert np.all(np.isin(randomized_pixels, original_pixels)), \
+        "Retuned object has values outside ROI not sampled from original image"
 
     for x in range(croppedROI.GetSize()[0]):
         for y in range(croppedROI.GetSize()[1]):
