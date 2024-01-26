@@ -2,6 +2,37 @@
 
 
 
+## v1.0.0 (2024-01-26)
+
+### Breaking
+
+* build: changed package name from YAREA to READII
+
+BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhklab/yarea/commit/3bcb4f9d9b1666f4fb3c3f66b4e4913358db25d7))
+
+### Documentation
+
+* docs(README): update package headline for READII acronym ([`1294d44`](https://github.com/bhklab/yarea/commit/1294d44ed87a45567e6a957db77f9738817b37b4))
+
+### Unknown
+
+* Merge pull request #6 from bhklab/name_change
+
+Name change from yarea to readii ([`2374af4`](https://github.com/bhklab/yarea/commit/2374af46b6522ef617f6366a5b4d4d7e442a5d2c))
+
+* Merge branch &#39;main&#39; into name_change ([`480b596`](https://github.com/bhklab/yarea/commit/480b59601294bd1a298fda026b6ebaecd570dfd1))
+
+* Merge pull request #5 from bhklab/development_mogtaba
+
+Created 3 new negative controls by sampling original image and tests ([`2f95cf7`](https://github.com/bhklab/yarea/commit/2f95cf7d82c334e34611325c36ea0c1f0a881fbe))
+
+* Created 3 new negative controls by sampling original image and added tests for them ([`ec3dd21`](https://github.com/bhklab/yarea/commit/ec3dd21f3100ea22bcccd846020f55c052e204ad))
+
+* merged changes ([`db63a6c`](https://github.com/bhklab/yarea/commit/db63a6c766b1bd6e98dd10369336128038c2b7a1))
+
+* Removed test that doesn&#39;t take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/yarea/commit/28ab19e652531095338935d9b6b655f7c3508d02))
+
+
 ## v0.6.0 (2024-01-19)
 
 ### Feature
