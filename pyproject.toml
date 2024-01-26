@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "yarea"
+name = "readii"
 version = "0.6.0"
 description = "A package to extract radiomic features!"
 authors = ["Katy Scott"]
@@ -36,7 +36,7 @@ remove_dist = false                         # don't remove dists
 patch_without_tag = true                    # patch release by default
 
 [tool.poetry.scripts]
-yarea = "yarea.pipeline:main"
+readii = "readii.pipeline:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

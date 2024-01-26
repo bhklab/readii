@@ -1,4 +1,4 @@
-from yarea.loaders import *
+from readii.loaders import *
 import pytest
 
 @pytest.fixture

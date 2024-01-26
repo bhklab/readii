@@ -40,10 +40,10 @@ If you are proposing a feature:
 
 ## Get Started!
 
-Ready to contribute? Here's how to set up `yarea` for local development.
+Ready to contribute? Here's how to set up `readii` for local development.
 
-1. Download a copy of `yarea` locally.
-2. Install `yarea` using `poetry`:
+1. Download a copy of `readii` locally.
+2. Install `readii` using `poetry`:
 
     ```console
     $ poetry install
@@ -69,5 +69,5 @@ Before you submit a pull request, check that it meets these guidelines:
 
 ## Code of Conduct
 
-Please note that the `yarea` project is released with a
+Please note that the `readii` project is released with a
 Code of Conduct. By contributing to this project you agree to abide by its terms.

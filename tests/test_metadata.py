@@ -1,4 +1,4 @@
-from yarea.metadata import *
+from readii.metadata import *
 import pytest
 import os
 

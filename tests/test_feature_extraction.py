@@ -1,5 +1,5 @@
-from yarea.loaders import *
-from yarea.feature_extraction import *
+from readii.loaders import *
+from readii.feature_extraction import *
 
 import pytest
 import collections
@@ -30,7 +30,7 @@ def lung4DRTSTRUCTImage():
 
 @pytest.fixture
 def pyradiomicsParamFilePath():
-    return "src/yarea/data/default_pyradiomics.yaml"
+    return "src/readii/data/default_pyradiomics.yaml"
 
 @pytest.fixture
 def nsclcMetadataPath():

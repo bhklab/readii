@@ -1,27 +1,27 @@
-# YAREA
+# READII
 
-Yet Another Radiomic Extraction and Analysis pipeline
+**R**adiomic **E**xtraction and **A**nalysis for **DI**COM **I**mages
 
 A package to extract radiomic features from DICOM CT images.
 
 ## Installation
 
 ```bash
-$ pip install yarea
+$ pip install readii
 ```
 
 ### (recommended) Create new conda virtual environment
 ```
-conda create -n yarea python=3.9
-conda activate yarea
-pip install yarea
+conda create -n readii python=3.9
+conda activate readii
+pip install readii
 ```
 
 ## Usage
-`yarea` is a tool to perform radiomic feature extraction on DICOM CT images with region of interest (ROI) segmentations as either DICOM SEG or RTSTRUCT.
+`readii` is a tool to perform radiomic feature extraction on DICOM CT images with region of interest (ROI) segmentations as either DICOM SEG or RTSTRUCT.
 
 ```bash
-$ yarea [INPUT DIRECTORY] [OUTPUT DIRECTORY] \
+$ readii [INPUT DIRECTORY] [OUTPUT DIRECTORY] \
   --roi_names [str] \
   --pyradiomics_setting [str] \
   --negative_controls [str: randomized_full,randomized_roi,randomized_non_roi,shuffled_full,shuffled_roi,shuffled_non_roi] \
@@ -36,8 +36,8 @@ Interested in contributing? Check out the contributing guidelines. Please note t
 
 ## License
 
-`yarea` was created by Katy Scott. It is licensed under the terms of the MIT license.
+`readii` was created by Katy Scott. It is licensed under the terms of the MIT license.
 
 ## Credits
 
-`yarea` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
+`readii` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).

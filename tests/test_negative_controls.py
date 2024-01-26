@@ -1,7 +1,7 @@
 import numpy as np
 
-from yarea.negative_controls import *
-from yarea.image_processing import *
+from readii.negative_controls import *
+from readii.image_processing import *
 from radiomics import imageoperations
 
 import pytest
