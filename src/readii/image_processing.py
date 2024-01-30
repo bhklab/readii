@@ -2,6 +2,7 @@ from dicom_parser import Series
 import matplotlib.pyplot as plt
 import numpy as np
 import pydicom
+from radiomics import imageoperations
 import SimpleITK as sitk
 
 from readii.loaders import *
@@ -156,7 +157,7 @@ def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin = None, disp
     plt.axis('off')
 
 
-def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, cmapSeg=plt.cm.brg, alpha=0.3):
+def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, cmapSeg=plt.cm.brg, alpha=0.3, crop=False):
     """Function to display a 2D slice from a CT with the ROI from a segmentation image overlaid in green
     Parameters
     ----------
@@ -173,6 +174,8 @@ def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, c
         Color map to use for ROI plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options. Is green by default.
     alpha : float
         Value between 0 and 1 indicating transparency of ROI overtop of CT. Default is 0.3
+    crop : bool
+        Whether to crop the output image to the ROI in the segmentation.
     """
     # If slice index is not provided, get the center slice for the ROI in segImage
     if sliceIdx == -1:
@@ -185,6 +188,10 @@ def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, c
     if type(segImage) == sitk.SimpleITK.Image:
         segImage = sitk.GetArrayFromImage(segImage)
     
+    if crop:
+        segmentationLabel = getROIVoxelLabel(alignedROIImage)
+        ctImage, segImage = imageoperations.cropToTumorMask(ctImage, alignedROIImage, label=segmentationLabel)
+
     # Make mask of ROI to ignore background in overlaid plot
     maskSeg = np.ma.masked_where(segImage == 0, segImage)
 
