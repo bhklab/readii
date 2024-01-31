@@ -177,6 +177,10 @@ def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, c
     crop : bool
         Whether to crop the output image to the ROI in the segmentation.
     """
+    # If crop indicated, crop the CT and segmentation to just around the ROI
+    if crop:
+        ctImage, segImage = getCroppedImages(ctImage, segImage)
+
     # If slice index is not provided, get the center slice for the ROI in segImage
     if sliceIdx == -1:
         sliceIdx, _, _ = getROICenterCoords(segImage)
@@ -187,10 +191,6 @@ def displayCTSegOverlay(ctImage, segImage, sliceIdx=-1, cmapCT=plt.cm.Greys_r, c
      # If segmentation is a simple ITK image, convert to array for display
     if type(segImage) == sitk.SimpleITK.Image:
         segImage = sitk.GetArrayFromImage(segImage)
-
-    # If crop indicated, crop the CT and segmentation to just around the ROI
-    if crop:
-        ctImage, segImage = getCroppedImages(ctImage, alignedROIImage)
 
     # Make mask of ROI to ignore background in overlaid plot
     maskSeg = np.ma.masked_where(segImage == 0, segImage)
