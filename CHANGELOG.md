@@ -2,348 +2,381 @@
 
 
 
+## v1.1.0 (2024-01-31)
+
+### Feature
+
+* feat(image_processing): made cropping CT and segmentation its own function ([`5202cc2`](https://github.com/bhklab/readii/commit/5202cc2113f392a0fce92c555bf58ff3085d3d97))
+
+* feat(image_processing): add option to display CT and segmentation cropped to ROI ([`120524c`](https://github.com/bhklab/readii/commit/120524c17d89d3a2cee0c168b16243b385217cc2))
+
+### Fix
+
+* fix(pipeline): fixed check for existing radiomic features file, had incorrect file name ([`1819d3d`](https://github.com/bhklab/readii/commit/1819d3d1e45132c195fed8e06c301005d05e18bf))
+
+* fix(negative_controls): fixed function call for randomized_sample_full in applyNegativeControl ([`06a2f9c`](https://github.com/bhklab/readii/commit/06a2f9cf14be028ea46e8f29c371fbc7770791e6))
+
+* fix(image_processing): moved crop to top of displayOverlay function to get correct centre slice index and array conversion happens after crop ([`c1037d9`](https://github.com/bhklab/readii/commit/c1037d9c7a353ab689b5688780a872d18184e2cd))
+
+### Unknown
+
+* Merge pull request #8 from bhklab/development_katy
+
+Added display functions for CT and CT with segmentation overlaid
+Fixed function call for randomized sample full image
+Fixed check for existing radiomic features file ([`ba4a9fe`](https://github.com/bhklab/readii/commit/ba4a9fe1d80fad9a9f407ec0e36185af400584e9))
+
+* Merge pull request #7 from bhklab/development_mogtaba
+
+Fixed CTtoSegmentation merge issue and fixed negative control settings ([`7bbf3b7`](https://github.com/bhklab/readii/commit/7bbf3b7ff835df15ffea1e5cb561d2c1a15b168e))
+
+* fixed merge between SEGs and CTs, in matchCTtoSegmentation ([`fc1dda1`](https://github.com/bhklab/readii/commit/fc1dda13ded85440c7d2b4ced3ccb86f9f028649))
+
+* added new negative controls to --negative_control flag ([`9aaf76c`](https://github.com/bhklab/readii/commit/9aaf76c9c1f5edc968734fde5d03e86f2aa988c3))
+
+
 ## v1.0.0 (2024-01-26)
 
 ### Breaking
 
 * build: changed package name from YAREA to READII
 
-BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhklab/yarea/commit/3bcb4f9d9b1666f4fb3c3f66b4e4913358db25d7))
+BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhklab/readii/commit/3bcb4f9d9b1666f4fb3c3f66b4e4913358db25d7))
 
 ### Documentation
 
-* docs(README): update package headline for READII acronym ([`1294d44`](https://github.com/bhklab/yarea/commit/1294d44ed87a45567e6a957db77f9738817b37b4))
+* docs(README): update package headline for READII acronym ([`1294d44`](https://github.com/bhklab/readii/commit/1294d44ed87a45567e6a957db77f9738817b37b4))
 
 ### Unknown
 
 * Merge pull request #6 from bhklab/name_change
 
-Name change from yarea to readii ([`2374af4`](https://github.com/bhklab/yarea/commit/2374af46b6522ef617f6366a5b4d4d7e442a5d2c))
+Name change from yarea to readii ([`2374af4`](https://github.com/bhklab/readii/commit/2374af46b6522ef617f6366a5b4d4d7e442a5d2c))
 
-* Merge branch &#39;main&#39; into name_change ([`480b596`](https://github.com/bhklab/yarea/commit/480b59601294bd1a298fda026b6ebaecd570dfd1))
+* Merge branch &#39;main&#39; into name_change ([`480b596`](https://github.com/bhklab/readii/commit/480b59601294bd1a298fda026b6ebaecd570dfd1))
 
 * Merge pull request #5 from bhklab/development_mogtaba
 
-Created 3 new negative controls by sampling original image and tests ([`2f95cf7`](https://github.com/bhklab/yarea/commit/2f95cf7d82c334e34611325c36ea0c1f0a881fbe))
+Created 3 new negative controls by sampling original image and tests ([`2f95cf7`](https://github.com/bhklab/readii/commit/2f95cf7d82c334e34611325c36ea0c1f0a881fbe))
 
-* Created 3 new negative controls by sampling original image and added tests for them ([`ec3dd21`](https://github.com/bhklab/yarea/commit/ec3dd21f3100ea22bcccd846020f55c052e204ad))
+* Created 3 new negative controls by sampling original image and added tests for them ([`ec3dd21`](https://github.com/bhklab/readii/commit/ec3dd21f3100ea22bcccd846020f55c052e204ad))
 
-* merged changes ([`db63a6c`](https://github.com/bhklab/yarea/commit/db63a6c766b1bd6e98dd10369336128038c2b7a1))
+* merged changes ([`db63a6c`](https://github.com/bhklab/readii/commit/db63a6c766b1bd6e98dd10369336128038c2b7a1))
 
-* Removed test that doesn&#39;t take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/yarea/commit/28ab19e652531095338935d9b6b655f7c3508d02))
+* Removed test that doesn&#39;t take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/readii/commit/28ab19e652531095338935d9b6b655f7c3508d02))
 
 
 ## v0.6.0 (2024-01-19)
 
 ### Feature
 
-* feat(pipeline): change parallel input argument to be false by default ([`3f8c46a`](https://github.com/bhklab/yarea/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
+* feat(pipeline): change parallel input argument to be false by default ([`3f8c46a`](https://github.com/bhklab/readii/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
 
 ### Unknown
 
 * Merge pull request #4 from bhklab/development_katy
 
-feat(pipeline): change parallel input argument to be false by default ([`8d0626d`](https://github.com/bhklab/yarea/commit/8d0626d08acad7f9e2ca3d31560ea4d532f86e2e))
+feat(pipeline): change parallel input argument to be false by default ([`8d0626d`](https://github.com/bhklab/readii/commit/8d0626d08acad7f9e2ca3d31560ea4d532f86e2e))
 
 
 ## v0.5.0 (2024-01-18)
 
 ### Build
 
-* build: updated dependency versions ([`44de606`](https://github.com/bhklab/yarea/commit/44de60655fef29716ef5d4edbd6e1e18f8e508d1))
+* build: updated dependency versions ([`44de606`](https://github.com/bhklab/readii/commit/44de60655fef29716ef5d4edbd6e1e18f8e508d1))
 
 ### Documentation
 
-* docs(pipeline): indicate whether flags are true or false by default in help message of parallel and update ([`311dd5e`](https://github.com/bhklab/yarea/commit/311dd5e4f946ba78caaf7c1f0d1ed6dceecd5dcb))
+* docs(pipeline): indicate whether flags are true or false by default in help message of parallel and update ([`311dd5e`](https://github.com/bhklab/readii/commit/311dd5e4f946ba78caaf7c1f0d1ed6dceecd5dcb))
 
-* docs(image_processing): wrote docstring for displayCTSegOverlay ([`2f69dab`](https://github.com/bhklab/yarea/commit/2f69dab8f8d7b7b46f7fbe2175b356a4fb28baf7))
+* docs(image_processing): wrote docstring for displayCTSegOverlay ([`2f69dab`](https://github.com/bhklab/readii/commit/2f69dab8f8d7b7b46f7fbe2175b356a4fb28baf7))
 
 ### Feature
 
-* feat(image_processing): add function to display CT slice with segmentation overlaid ([`73342ef`](https://github.com/bhklab/yarea/commit/73342efbd24757ac349124ba332dc26f89544ae9))
+* feat(image_processing): add function to display CT slice with segmentation overlaid ([`73342ef`](https://github.com/bhklab/readii/commit/73342efbd24757ac349124ba332dc26f89544ae9))
 
-* feat(image_processing): add function to find center slice and coordinates of ROI in image ([`78d69b2`](https://github.com/bhklab/yarea/commit/78d69b227ab1e2006ce46badd2b0a37384f45f40))
+* feat(image_processing): add function to find center slice and coordinates of ROI in image ([`78d69b2`](https://github.com/bhklab/readii/commit/78d69b227ab1e2006ce46badd2b0a37384f45f40))
 
 ### Fix
 
-* fix(image_processing): fixed remaining instances of imgArray variable ([`84de500`](https://github.com/bhklab/yarea/commit/84de5003d65c8726d925108f087cdba3be9288ad))
+* fix(image_processing): fixed remaining instances of imgArray variable ([`84de500`](https://github.com/bhklab/readii/commit/84de5003d65c8726d925108f087cdba3be9288ad))
 
-* fix(image_processing): fixed image vs. imgArray variable mixup in displayImageSlice ([`c9ea3d6`](https://github.com/bhklab/yarea/commit/c9ea3d6f1ae6637139c41651a3c66d133b6d6c5f))
+* fix(image_processing): fixed image vs. imgArray variable mixup in displayImageSlice ([`c9ea3d6`](https://github.com/bhklab/readii/commit/c9ea3d6f1ae6637139c41651a3c66d133b6d6c5f))
 
 ### Test
 
-* test(test_image_processing): added test for getROICenterCoords ([`8745fe7`](https://github.com/bhklab/yarea/commit/8745fe752a27204eed7359aed4525c962481d2db))
+* test(test_image_processing): added test for getROICenterCoords ([`8745fe7`](https://github.com/bhklab/readii/commit/8745fe752a27204eed7359aed4525c962481d2db))
 
 ### Unknown
 
 * Merge pull request #3 from bhklab/development_katy
 
-Added some new functions focused on displaying the CT with a segmentation overlaid and fixed a variable name in image_processing ([`04f42a4`](https://github.com/bhklab/yarea/commit/04f42a40c7475499094e65ec55639a91b0da629f))
+Added some new functions focused on displaying the CT with a segmentation overlaid and fixed a variable name in image_processing ([`04f42a4`](https://github.com/bhklab/readii/commit/04f42a40c7475499094e65ec55639a91b0da629f))
 
 * Merge pull request #2 from bhklab/development_katy
 
-docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhklab/yarea/commit/390d6e6f094968d0d19191484e14da16294e046e))
+docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhklab/readii/commit/390d6e6f094968d0d19191484e14da16294e046e))
 
 
 ## v0.4.0 (2024-01-17)
 
 ### Build
 
-* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/yarea/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
+* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/readii/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
 
 ### Documentation
 
-* docs: require python 3.9 in conda env setup ([`480b199`](https://github.com/bhklab/yarea/commit/480b1997788be447a53a2699a952df076b7b5262))
+* docs: require python 3.9 in conda env setup ([`480b199`](https://github.com/bhklab/readii/commit/480b1997788be447a53a2699a952df076b7b5262))
 
-* docs: add installation and usage details to README ([`4281620`](https://github.com/bhklab/yarea/commit/4281620f5f791030a020cb4fe91b08318d63426b))
+* docs: add installation and usage details to README ([`4281620`](https://github.com/bhklab/readii/commit/4281620f5f791030a020cb4fe91b08318d63426b))
 
 ### Feature
 
-* feat: added command line example runs to notebook ([`48d8d40`](https://github.com/bhklab/yarea/commit/48d8d40e24796491cb6491046b3f12f2424df128))
+* feat: added command line example runs to notebook ([`48d8d40`](https://github.com/bhklab/readii/commit/48d8d40e24796491cb6491046b3f12f2424df128))
 
 ### Unknown
 
-* add tests/output/ to gitignore to not commit output files ([`fa713ff`](https://github.com/bhklab/yarea/commit/fa713ff38977b1d2758aae32bde5fa07f0500931))
+* add tests/output/ to gitignore to not commit output files ([`fa713ff`](https://github.com/bhklab/readii/commit/fa713ff38977b1d2758aae32bde5fa07f0500931))
 
-* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`1327e22`](https://github.com/bhklab/yarea/commit/1327e22ab994212e24e4658313897791bef39c82))
+* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`1327e22`](https://github.com/bhklab/readii/commit/1327e22ab994212e24e4658313897791bef39c82))
 
-* Add ci pass requirement back in ([`b678d4a`](https://github.com/bhklab/yarea/commit/b678d4afb2c9818c07d0f8165f8b5baf3426e11c))
+* Add ci pass requirement back in ([`b678d4a`](https://github.com/bhklab/readii/commit/b678d4afb2c9818c07d0f8165f8b5baf3426e11c))
 
-* Fixed error with the path for CT and SEG files in the tests for negative controls ([`5ea6e2c`](https://github.com/bhklab/yarea/commit/5ea6e2caa601f3aa3eefd806c1c09cdbef0c6e23))
+* Fixed error with the path for CT and SEG files in the tests for negative controls ([`5ea6e2c`](https://github.com/bhklab/readii/commit/5ea6e2caa601f3aa3eefd806c1c09cdbef0c6e23))
 
-* Fixed feature_extraction error where padSegToMatchCT function was being called incorrectly ([`82ad022`](https://github.com/bhklab/yarea/commit/82ad0228bae60a5d800e15f77a9e6cad487e8c23))
+* Fixed feature_extraction error where padSegToMatchCT function was being called incorrectly ([`82ad022`](https://github.com/bhklab/readii/commit/82ad0228bae60a5d800e15f77a9e6cad487e8c23))
 
 * Merge pull request #1 from bhklab/negative_control_tests
 
-Created testing suite for negative controls and fixed errors in image_processing.py and negative_controls.py ([`f0fdd02`](https://github.com/bhklab/yarea/commit/f0fdd028e167d78b371fc2ff73bff1328a271e54))
+Created testing suite for negative controls and fixed errors in image_processing.py and negative_controls.py ([`f0fdd02`](https://github.com/bhklab/readii/commit/f0fdd028e167d78b371fc2ff73bff1328a271e54))
 
-* merged conflicts ([`d78fb5f`](https://github.com/bhklab/yarea/commit/d78fb5f101d3532b656a63f5134ac05d281f0bcf))
+* merged conflicts ([`d78fb5f`](https://github.com/bhklab/readii/commit/d78fb5f101d3532b656a63f5134ac05d281f0bcf))
 
-* Finished testing suite for the negative controls ([`6d81739`](https://github.com/bhklab/yarea/commit/6d81739841318c201508eb787f46d1024f78039b))
+* Finished testing suite for the negative controls ([`6d81739`](https://github.com/bhklab/readii/commit/6d81739841318c201508eb787f46d1024f78039b))
 
-* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/yarea/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
+* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/readii/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
 
 
 ## v0.3.0 (2023-12-21)
 
 ### Build
 
-* build: updated semantic release variables ([`5e24044`](https://github.com/bhklab/yarea/commit/5e240446bc561cc34640a24d315edaf376cd244f))
+* build: updated semantic release variables ([`5e24044`](https://github.com/bhklab/readii/commit/5e240446bc561cc34640a24d315edaf376cd244f))
 
-* build: updated semantic release and added package build steps ([`5a51e07`](https://github.com/bhklab/yarea/commit/5a51e078a8fbf3c0f14c7d0b429d14b830097142))
+* build: updated semantic release and added package build steps ([`5a51e07`](https://github.com/bhklab/readii/commit/5a51e078a8fbf3c0f14c7d0b429d14b830097142))
 
-* build: remove publish to PyPI ([`f276b76`](https://github.com/bhklab/yarea/commit/f276b767ae452eb7aceb702f607100e1c925c1c8))
+* build: remove publish to PyPI ([`f276b76`](https://github.com/bhklab/readii/commit/f276b767ae452eb7aceb702f607100e1c925c1c8))
 
 ### Documentation
 
-* docs(pipeline): fixed typo in data directory help message ([`7a19b5a`](https://github.com/bhklab/yarea/commit/7a19b5a3d53ff24a6a800a7bcd75add2aff2d741))
+* docs(pipeline): fixed typo in data directory help message ([`7a19b5a`](https://github.com/bhklab/readii/commit/7a19b5a3d53ff24a6a800a7bcd75add2aff2d741))
 
 ### Feature
 
-* feat: add ability to run pipeline using poetry run ([`ced5e67`](https://github.com/bhklab/yarea/commit/ced5e6771e3f7b688f2f394f0ec0f8b4ff92bf7a))
+* feat: add ability to run pipeline using poetry run ([`ced5e67`](https://github.com/bhklab/readii/commit/ced5e6771e3f7b688f2f394f0ec0f8b4ff92bf7a))
 
-* feat(gitignore): ignore vscode directory with configurations ([`7e30be2`](https://github.com/bhklab/yarea/commit/7e30be22e0a56c6f5f438e7ff51ebc9ba2b900f3))
+* feat(gitignore): ignore vscode directory with configurations ([`7e30be2`](https://github.com/bhklab/readii/commit/7e30be22e0a56c6f5f438e7ff51ebc9ba2b900f3))
 
-* feat(pipeline): main pipeline function to run radiomic feature extraction ([`929573d`](https://github.com/bhklab/yarea/commit/929573d50a22746fae29beceacd8d0169cd3dde3))
+* feat(pipeline): main pipeline function to run radiomic feature extraction ([`929573d`](https://github.com/bhklab/readii/commit/929573d50a22746fae29beceacd8d0169cd3dde3))
 
-* feat(metadata): added check for csv type on imgFileListPath argument ([`ac09625`](https://github.com/bhklab/yarea/commit/ac09625fd36622e5a0388ce8e4e74209ed4c9c4c))
+* feat(metadata): added check for csv type on imgFileListPath argument ([`ac09625`](https://github.com/bhklab/readii/commit/ac09625fd36622e5a0388ce8e4e74209ed4c9c4c))
 
-* feat(metadata): made function to find the segmentation type from the list of image files ([`8dd4ddf`](https://github.com/bhklab/yarea/commit/8dd4ddf858c47377d6bac0e9853282772d15dd43))
+* feat(metadata): made function to find the segmentation type from the list of image files ([`8dd4ddf`](https://github.com/bhklab/readii/commit/8dd4ddf858c47377d6bac0e9853282772d15dd43))
 
 ### Fix
 
-* fix(test_feature_extraction): fixed expected output path for radiomicFeatureExtraction ([`53c9db3`](https://github.com/bhklab/yarea/commit/53c9db3bc31a35e332f9eeda35b82f42c84f5ab1))
+* fix(test_feature_extraction): fixed expected output path for radiomicFeatureExtraction ([`53c9db3`](https://github.com/bhklab/readii/commit/53c9db3bc31a35e332f9eeda35b82f42c84f5ab1))
 
-* fix(image_processing): fixed usage of ctDirPath variable in padSegToMatchCT ([`892c8d7`](https://github.com/bhklab/yarea/commit/892c8d7629595ce89f2893b004f6f7bc585bab21))
+* fix(image_processing): fixed usage of ctDirPath variable in padSegToMatchCT ([`892c8d7`](https://github.com/bhklab/readii/commit/892c8d7629595ce89f2893b004f6f7bc585bab21))
 
-* fix: move size mismatch handling back to radiomicFeatureExtraction because image file paths are available in that function ([`ccbe852`](https://github.com/bhklab/yarea/commit/ccbe8524fa69a2334b499512a541c3afa13b430a))
+* fix: move size mismatch handling back to radiomicFeatureExtraction because image file paths are available in that function ([`ccbe852`](https://github.com/bhklab/readii/commit/ccbe8524fa69a2334b499512a541c3afa13b430a))
 
-* fix(feature_extraction): moved error handling into singleRadiomicFeatureExtraction and added catch for wrong pyradiomics parameter file ([`41a3901`](https://github.com/bhklab/yarea/commit/41a39018becde60091ffb113640e180a162d536f))
+* fix(feature_extraction): moved error handling into singleRadiomicFeatureExtraction and added catch for wrong pyradiomics parameter file ([`41a3901`](https://github.com/bhklab/readii/commit/41a39018becde60091ffb113640e180a162d536f))
 
-* fix: change radiomic features file output name ([`ea0b963`](https://github.com/bhklab/yarea/commit/ea0b963c7c7caa0a39ab6149fa86d8783717bc32))
+* fix: change radiomic features file output name ([`ea0b963`](https://github.com/bhklab/readii/commit/ea0b963c7c7caa0a39ab6149fa86d8783717bc32))
 
-* fix(feature_extraction): add check for None in pyradiomics parameter file spot, use default if that&#39;s the case ([`5340f57`](https://github.com/bhklab/yarea/commit/5340f57c8ab18818e6bb45cecda96fcb7aba4f5a))
+* fix(feature_extraction): add check for None in pyradiomics parameter file spot, use default if that&#39;s the case ([`5340f57`](https://github.com/bhklab/readii/commit/5340f57c8ab18818e6bb45cecda96fcb7aba4f5a))
 
-* fix(yarea): renamed this file because it had import issues being named the same as the package ([`833c5b4`](https://github.com/bhklab/yarea/commit/833c5b460140783d0292b7a1991bca7cbd0e5c64))
+* fix(yarea): renamed this file because it had import issues being named the same as the package ([`833c5b4`](https://github.com/bhklab/readii/commit/833c5b460140783d0292b7a1991bca7cbd0e5c64))
 
 ### Style
 
-* style(feature_extraction): changed ctFolderPath to ctDirPath for consistency ([`b7b452e`](https://github.com/bhklab/yarea/commit/b7b452ea2d0c6f930cc727ec026b03de5d539121))
+* style(feature_extraction): changed ctFolderPath to ctDirPath for consistency ([`b7b452e`](https://github.com/bhklab/readii/commit/b7b452ea2d0c6f930cc727ec026b03de5d539121))
 
 ### Test
 
-* test(test_metadata): testing for getSegmentationType function ([`57768cf`](https://github.com/bhklab/yarea/commit/57768cfe22fa0a7a3a59b65e25fe768848025ce0))
+* test(test_metadata): testing for getSegmentationType function ([`57768cf`](https://github.com/bhklab/readii/commit/57768cfe22fa0a7a3a59b65e25fe768848025ce0))
 
 ### Unknown
 
-* Merge branch &#39;main&#39; into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/yarea/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
+* Merge branch &#39;main&#39; into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/readii/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
 
-* Fixed issue with shuffleROI and shuffleNonROI, where some pixels with duplicate values were ignored ([`e812bcc`](https://github.com/bhklab/yarea/commit/e812bccacaf5ad9f37d62811e6644dc2f6128159))
+* Fixed issue with shuffleROI and shuffleNonROI, where some pixels with duplicate values were ignored ([`e812bcc`](https://github.com/bhklab/readii/commit/e812bccacaf5ad9f37d62811e6644dc2f6128159))
 
-* Fixed error with wrong variable names, for CT folder path ([`302a284`](https://github.com/bhklab/yarea/commit/302a284b904ceee539fee64b52b22c1e03f28fe1))
+* Fixed error with wrong variable names, for CT folder path ([`302a284`](https://github.com/bhklab/readii/commit/302a284b904ceee539fee64b52b22c1e03f28fe1))
 
-* remove files from tutorial ([`5afac9a`](https://github.com/bhklab/yarea/commit/5afac9af90c7112c18acf2c3ce6f22a617c1cf86))
+* remove files from tutorial ([`5afac9a`](https://github.com/bhklab/readii/commit/5afac9af90c7112c18acf2c3ce6f22a617c1cf86))
 
-* updated version ([`3a063cf`](https://github.com/bhklab/yarea/commit/3a063cf057fdfe3c056ca86af325f060c3c65cf3))
+* updated version ([`3a063cf`](https://github.com/bhklab/readii/commit/3a063cf057fdfe3c056ca86af325f060c3c65cf3))
 
 
 ## v0.2.0 (2023-12-20)
 
 ### Build
 
-* build: add PSR as dev dependency ([`17cb2da`](https://github.com/bhklab/yarea/commit/17cb2da3352995c9e716733c79fb1bb8f09de23f))
+* build: add PSR as dev dependency ([`17cb2da`](https://github.com/bhklab/readii/commit/17cb2da3352995c9e716733c79fb1bb8f09de23f))
 
-* build: add pyradiomics dependency ([`cb11289`](https://github.com/bhklab/yarea/commit/cb11289446aad3d1f0b7d874af0b17189fce0959))
+* build: add pyradiomics dependency ([`cb11289`](https://github.com/bhklab/readii/commit/cb11289446aad3d1f0b7d874af0b17189fce0959))
 
-* build: add med-imagetools as a dependency ([`84aef0f`](https://github.com/bhklab/yarea/commit/84aef0fe589a1177e8145e30f7b6df15b79de140))
+* build: add med-imagetools as a dependency ([`84aef0f`](https://github.com/bhklab/readii/commit/84aef0fe589a1177e8145e30f7b6df15b79de140))
 
 ### Feature
 
-* feat: changed outputFilePath to outputDirPath so output files can be standardized ([`d3ad8e8`](https://github.com/bhklab/yarea/commit/d3ad8e8312dacb2315aace95722da777c3013e14))
+* feat: changed outputFilePath to outputDirPath so output files can be standardized ([`d3ad8e8`](https://github.com/bhklab/readii/commit/d3ad8e8312dacb2315aace95722da777c3013e14))
 
-* feat: changed input variable to outputDirPath to have consistent output file name ([`a0b3336`](https://github.com/bhklab/yarea/commit/a0b33368c983b5f62993d46e0a06f295ac9951a4))
+* feat: changed input variable to outputDirPath to have consistent output file name ([`a0b3336`](https://github.com/bhklab/readii/commit/a0b33368c983b5f62993d46e0a06f295ac9951a4))
 
-* feat: check that output file is a csv before starting any feature extraction ([`d2390f5`](https://github.com/bhklab/yarea/commit/d2390f50c0bd0f14b13e1eda1729f20c0ca4f9b4))
+* feat: check that output file is a csv before starting any feature extraction ([`d2390f5`](https://github.com/bhklab/readii/commit/d2390f50c0bd0f14b13e1eda1729f20c0ca4f9b4))
 
-* feat: ignore unit test output files ([`a3fd21e`](https://github.com/bhklab/yarea/commit/a3fd21eaacc43d7d1b8571c71f91b4bde0e8a530))
+* feat: ignore unit test output files ([`a3fd21e`](https://github.com/bhklab/readii/commit/a3fd21eaacc43d7d1b8571c71f91b4bde0e8a530))
 
-* feat: added check for input not being a dataframe for saveDataframeCSV ([`69a0d84`](https://github.com/bhklab/yarea/commit/69a0d84c1ab83487b059cf72d3d523d22cc37dc9))
+* feat: added check for input not being a dataframe for saveDataframeCSV ([`69a0d84`](https://github.com/bhklab/readii/commit/69a0d84c1ab83487b059cf72d3d523d22cc37dc9))
 
-* feat: function for extraction of radiomic features from a single CT and segmentation pair ([`ecb5d5b`](https://github.com/bhklab/yarea/commit/ecb5d5bd4c5ba143622f4db9bfff350a5dc70e05))
+* feat: function for extraction of radiomic features from a single CT and segmentation pair ([`ecb5d5b`](https://github.com/bhklab/readii/commit/ecb5d5bd4c5ba143622f4db9bfff350a5dc70e05))
 
-* feat: added example pyradiomics config ([`2dee2eb`](https://github.com/bhklab/yarea/commit/2dee2eb6ad5c355dec80ec8a72de7ff988077dbb))
+* feat: added example pyradiomics config ([`2dee2eb`](https://github.com/bhklab/readii/commit/2dee2eb6ad5c355dec80ec8a72de7ff988077dbb))
 
-* feat: function to run radiomic feature extraction, including negative control and parallel options ([`aeb6efd`](https://github.com/bhklab/yarea/commit/aeb6efdcdea607738efe33437e443d5bc92d59c7))
+* feat: function to run radiomic feature extraction, including negative control and parallel options ([`aeb6efd`](https://github.com/bhklab/readii/commit/aeb6efdcdea607738efe33437e443d5bc92d59c7))
 
-* feat: add negative control generator functions ([`da6d9c0`](https://github.com/bhklab/yarea/commit/da6d9c01275d399cb27191dc5eff21165107336b))
+* feat: add negative control generator functions ([`da6d9c0`](https://github.com/bhklab/readii/commit/da6d9c01275d399cb27191dc5eff21165107336b))
 
-* feat: add function to match CTs and segmentations in medimagetools output and function to save out dataframe as csv ([`2f169e9`](https://github.com/bhklab/yarea/commit/2f169e9eadae4f6a8fb73d34c48f03c7e652f991))
+* feat: add function to match CTs and segmentations in medimagetools output and function to save out dataframe as csv ([`2f169e9`](https://github.com/bhklab/readii/commit/2f169e9eadae4f6a8fb73d34c48f03c7e652f991))
 
-* feat: add seg label finder function ([`d575dee`](https://github.com/bhklab/yarea/commit/d575dee223c8908eaedaa41312d361f113c9f768))
+* feat: add seg label finder function ([`d575dee`](https://github.com/bhklab/readii/commit/d575dee223c8908eaedaa41312d361f113c9f768))
 
 ### Fix
 
-* fix: need to see test outputs for actions ([`6e95d0e`](https://github.com/bhklab/yarea/commit/6e95d0e287a105c9f71d2f245fcdf10719913daf))
+* fix: need to see test outputs for actions ([`6e95d0e`](https://github.com/bhklab/readii/commit/6e95d0e287a105c9f71d2f245fcdf10719913daf))
 
-* fix: fixed default Pyradiomics parameter file path ([`84f16db`](https://github.com/bhklab/yarea/commit/84f16db1d0032fa81dbf7b30422a74a0ec386984))
+* fix: fixed default Pyradiomics parameter file path ([`84f16db`](https://github.com/bhklab/readii/commit/84f16db1d0032fa81dbf7b30422a74a0ec386984))
 
-* fix: fixed inconsistencies and mistakes in variable names ([`7dd0d30`](https://github.com/bhklab/yarea/commit/7dd0d3050916b4c2b1945ca772342f9599cc1b03))
+* fix: fixed inconsistencies and mistakes in variable names ([`7dd0d30`](https://github.com/bhklab/readii/commit/7dd0d3050916b4c2b1945ca772342f9599cc1b03))
 
-* fix: incorrect indent in saveDataframeCSV ([`dd6d2f5`](https://github.com/bhklab/yarea/commit/dd6d2f51bb55ae5bf5940b511862a7800c4a4fe1))
+* fix: incorrect indent in saveDataframeCSV ([`dd6d2f5`](https://github.com/bhklab/readii/commit/dd6d2f51bb55ae5bf5940b511862a7800c4a4fe1))
 
-* fix: forgot to import pytest ([`6e978ca`](https://github.com/bhklab/yarea/commit/6e978ca088971fe2ef80be629dcc6d7556c7cbd7))
+* fix: forgot to import pytest ([`6e978ca`](https://github.com/bhklab/readii/commit/6e978ca088971fe2ef80be629dcc6d7556c7cbd7))
 
-* fix: fixed pyradiomics parameter file path and moved print statement of which ROI is processed back to radiomicFeatureExtraction ([`427eff7`](https://github.com/bhklab/yarea/commit/427eff77663c66f919cfe239ae10b9080e4b0ef1))
+* fix: fixed pyradiomics parameter file path and moved print statement of which ROI is processed back to radiomicFeatureExtraction ([`427eff7`](https://github.com/bhklab/readii/commit/427eff77663c66f919cfe239ae10b9080e4b0ef1))
 
-* fix: missing pytest import and passing flattened SEG to alignImages ([`bab47e4`](https://github.com/bhklab/yarea/commit/bab47e48a1f71d2ad8cde43ab9640c83b1337e00))
+* fix: missing pytest import and passing flattened SEG to alignImages ([`bab47e4`](https://github.com/bhklab/readii/commit/bab47e48a1f71d2ad8cde43ab9640c83b1337e00))
 
-* fix: was missing pytest import ([`b38e7a4`](https://github.com/bhklab/yarea/commit/b38e7a492a2bfd435ce21c4755268006cb226c44))
+* fix: was missing pytest import ([`b38e7a4`](https://github.com/bhklab/readii/commit/b38e7a492a2bfd435ce21c4755268006cb226c44))
 
-* fix: updated image file paths ([`588ba46`](https://github.com/bhklab/yarea/commit/588ba465ce459c64a62857ca97830def18a8f4cf))
+* fix: updated image file paths ([`588ba46`](https://github.com/bhklab/readii/commit/588ba465ce459c64a62857ca97830def18a8f4cf))
 
-* fix: RTSTRUCT loader had incorrect variable for baseImageDirPath ([`6cfb08c`](https://github.com/bhklab/yarea/commit/6cfb08cb52314931e98a71e3e9de5e0906debeb3))
+* fix: RTSTRUCT loader had incorrect variable for baseImageDirPath ([`6cfb08c`](https://github.com/bhklab/readii/commit/6cfb08cb52314931e98a71e3e9de5e0906debeb3))
 
 ### Test
 
-* test: check output from radiomicFeatureExtraction ([`c525247`](https://github.com/bhklab/yarea/commit/c525247f88029b70f17b1249fd2fdedfa6eb3ddf))
+* test: check output from radiomicFeatureExtraction ([`c525247`](https://github.com/bhklab/readii/commit/c525247f88029b70f17b1249fd2fdedfa6eb3ddf))
 
-* test: test output saving for matchCTtoSegmentation ([`995726d`](https://github.com/bhklab/yarea/commit/995726dbff3a8e6e2a74de3e0e12e9f35e11a7a6))
+* test: test output saving for matchCTtoSegmentation ([`995726d`](https://github.com/bhklab/readii/commit/995726dbff3a8e6e2a74de3e0e12e9f35e11a7a6))
 
-* test: updated test for radiomicFeatureExtraction to use default pyradiomics parameter file ([`617abbc`](https://github.com/bhklab/yarea/commit/617abbcbf732433c08475652242830b6592fa321))
+* test: updated test for radiomicFeatureExtraction to use default pyradiomics parameter file ([`617abbc`](https://github.com/bhklab/readii/commit/617abbcbf732433c08475652242830b6592fa321))
 
-* test: added test for full radiomicFeatureExtraction function ([`ade890c`](https://github.com/bhklab/yarea/commit/ade890cb2a1c8fd90f4fac433ade2c31e15f42a2))
+* test: added test for full radiomicFeatureExtraction function ([`ade890c`](https://github.com/bhklab/readii/commit/ade890cb2a1c8fd90f4fac433ade2c31e15f42a2))
 
-* test: added incorrect object passed to saveDataframeCSV and fixed outputFilePath error test function call ([`281637b`](https://github.com/bhklab/yarea/commit/281637b073dec5b1317a9d1bba627f036e552b64))
+* test: added incorrect object passed to saveDataframeCSV and fixed outputFilePath error test function call ([`281637b`](https://github.com/bhklab/readii/commit/281637b073dec5b1317a9d1bba627f036e552b64))
 
-* test: test csv error in saveDataframeCSV ([`3a9929a`](https://github.com/bhklab/yarea/commit/3a9929a53b67291b0da46b4f53a82515d4df364b))
+* test: test csv error in saveDataframeCSV ([`3a9929a`](https://github.com/bhklab/readii/commit/3a9929a53b67291b0da46b4f53a82515d4df364b))
 
-* test: functions for singleRadiomicFeatureExtraction ([`37ec5d6`](https://github.com/bhklab/yarea/commit/37ec5d6e587642895a5f59faf773b305ad02480e))
+* test: functions for singleRadiomicFeatureExtraction ([`37ec5d6`](https://github.com/bhklab/readii/commit/37ec5d6e587642895a5f59faf773b305ad02480e))
 
-* test: started writing tests for radiomic feature extraction functions ([`cd31b86`](https://github.com/bhklab/yarea/commit/cd31b86fda9bbca1c86111fcd9bd6ea0ff824daf))
+* test: started writing tests for radiomic feature extraction functions ([`cd31b86`](https://github.com/bhklab/readii/commit/cd31b86fda9bbca1c86111fcd9bd6ea0ff824daf))
 
-* test: added tests for matchCTtoSegmentation function ([`c66d24c`](https://github.com/bhklab/yarea/commit/c66d24c77910aaa8af515cb0ece7dcf283de7628))
+* test: added tests for matchCTtoSegmentation function ([`c66d24c`](https://github.com/bhklab/readii/commit/c66d24c77910aaa8af515cb0ece7dcf283de7628))
 
-* test: add getROIVoxelLabel test ([`2571cea`](https://github.com/bhklab/yarea/commit/2571cea7c363f86716eb986588f746430502fb24))
+* test: add getROIVoxelLabel test ([`2571cea`](https://github.com/bhklab/readii/commit/2571cea7c363f86716eb986588f746430502fb24))
 
-* test: added image_processing unit tests ([`587eb2a`](https://github.com/bhklab/yarea/commit/587eb2affeff25a4dfa59a2532029ec7989c9ecb))
+* test: added image_processing unit tests ([`587eb2a`](https://github.com/bhklab/readii/commit/587eb2affeff25a4dfa59a2532029ec7989c9ecb))
 
-* test: added image path fixtures and error check test ([`2b69fa1`](https://github.com/bhklab/yarea/commit/2b69fa132e9f38868cfe895b6d29606ca6735d4f))
+* test: added image path fixtures and error check test ([`2b69fa1`](https://github.com/bhklab/readii/commit/2b69fa132e9f38868cfe895b6d29606ca6735d4f))
 
-* test: add load segmentation module tests ([`6137f61`](https://github.com/bhklab/yarea/commit/6137f6199628de184fc0b914871f0f1ee1059a07))
+* test: add load segmentation module tests ([`6137f61`](https://github.com/bhklab/readii/commit/6137f6199628de184fc0b914871f0f1ee1059a07))
 
 ### Unknown
 
-* data: changed naming convention for matchCTtoSeg output ([`0937fb5`](https://github.com/bhklab/yarea/commit/0937fb538ec693eeef1212b18888ec682b2b1960))
+* data: changed naming convention for matchCTtoSeg output ([`0937fb5`](https://github.com/bhklab/readii/commit/0937fb538ec693eeef1212b18888ec682b2b1960))
 
-* data: image metadata file for NSCLC_Radiogenomics, used in testing feature extraction ([`287349c`](https://github.com/bhklab/yarea/commit/287349cfe0cbb33b0232aa865f29f81a2666b180))
+* data: image metadata file for NSCLC_Radiogenomics, used in testing feature extraction ([`287349c`](https://github.com/bhklab/readii/commit/287349cfe0cbb33b0232aa865f29f81a2666b180))
 
-* renamed file for consistency ([`39f969c`](https://github.com/bhklab/yarea/commit/39f969c1b8f08fa8f1560b09bc380a270d2dc15a))
+* renamed file for consistency ([`39f969c`](https://github.com/bhklab/readii/commit/39f969c1b8f08fa8f1560b09bc380a270d2dc15a))
 
-* data: imgtools output for test data for metadata tests ([`739c6e0`](https://github.com/bhklab/yarea/commit/739c6e0a15fda507ed8a60cf76d03e462add5bac))
+* data: imgtools output for test data for metadata tests ([`739c6e0`](https://github.com/bhklab/readii/commit/739c6e0a15fda507ed8a60cf76d03e462add5bac))
 
-* Moved SEG example to named dataset directory ([`9f31b0c`](https://github.com/bhklab/yarea/commit/9f31b0c42bf6d27e777be76a8638e77575d88002))
+* Moved SEG example to named dataset directory ([`9f31b0c`](https://github.com/bhklab/readii/commit/9f31b0c42bf6d27e777be76a8638e77575d88002))
 
-* updated dependencies ([`d42aec8`](https://github.com/bhklab/yarea/commit/d42aec8b568d1cc745b644fe8aa3357cf314a2e5))
+* updated dependencies ([`d42aec8`](https://github.com/bhklab/readii/commit/d42aec8b568d1cc745b644fe8aa3357cf314a2e5))
 
-* Added test sample with RTSTRUCT segmentation ([`5124203`](https://github.com/bhklab/yarea/commit/5124203b945b11ee64a659bd912b1661ac292835))
+* Added test sample with RTSTRUCT segmentation ([`5124203`](https://github.com/bhklab/readii/commit/5124203b945b11ee64a659bd912b1661ac292835))
 
-* Moved to named dataset folder ([`5077821`](https://github.com/bhklab/yarea/commit/50778219cbffa6d86241a3e4bd28855606a24609))
+* Moved to named dataset folder ([`5077821`](https://github.com/bhklab/readii/commit/50778219cbffa6d86241a3e4bd28855606a24609))
 
-* &#34;feat: add example data and datasets module&#34; ([`aaeded7`](https://github.com/bhklab/yarea/commit/aaeded70258a8704df66994d0174a425050f8071))
+* &#34;feat: add example data and datasets module&#34; ([`aaeded7`](https://github.com/bhklab/readii/commit/aaeded70258a8704df66994d0174a425050f8071))
 
-* More renaming fixes ([`0776f25`](https://github.com/bhklab/yarea/commit/0776f2564493315d54752ff6a0c17f3da6e20d88))
+* More renaming fixes ([`0776f25`](https://github.com/bhklab/readii/commit/0776f2564493315d54752ff6a0c17f3da6e20d88))
 
-* test change in new repo ([`32aed17`](https://github.com/bhklab/yarea/commit/32aed17a11048787d0b536210322918e9e5b3dc5))
+* test change in new repo ([`32aed17`](https://github.com/bhklab/readii/commit/32aed17a11048787d0b536210322918e9e5b3dc5))
 
-* Renamed package to yarea ([`7519c43`](https://github.com/bhklab/yarea/commit/7519c43e3950f907e6774a35095124ce4a2d630d))
+* Renamed package to yarea ([`7519c43`](https://github.com/bhklab/readii/commit/7519c43e3950f907e6774a35095124ce4a2d630d))
 
 
 ## v0.1.0 (2023-11-24)
 
 ### Build
 
-* build: added dev dependencies for docs ([`0e87a13`](https://github.com/bhklab/yarea/commit/0e87a13807786bfb59aad4e5be9e9812033274fb))
+* build: added dev dependencies for docs ([`0e87a13`](https://github.com/bhklab/readii/commit/0e87a13807786bfb59aad4e5be9e9812033274fb))
 
-* build: add pytest and pytest-cov as dev dependencies ([`152b825`](https://github.com/bhklab/yarea/commit/152b825929a8c0982dd6d5210a14fb891d5b6396))
+* build: add pytest and pytest-cov as dev dependencies ([`152b825`](https://github.com/bhklab/readii/commit/152b825929a8c0982dd6d5210a14fb891d5b6396))
 
-* build: remove upper bound on dependency versions ([`62ba9f8`](https://github.com/bhklab/yarea/commit/62ba9f8f0ec84e8270083f7e82ffcecd30b8dd99))
+* build: remove upper bound on dependency versions ([`62ba9f8`](https://github.com/bhklab/readii/commit/62ba9f8f0ec84e8270083f7e82ffcecd30b8dd99))
 
-* build: add loading and image processing dependencies ([`96fd62f`](https://github.com/bhklab/yarea/commit/96fd62f9794c3a97d84d7b5e1c112c1f8a32cbd0))
+* build: add loading and image processing dependencies ([`96fd62f`](https://github.com/bhklab/readii/commit/96fd62f9794c3a97d84d7b5e1c112c1f8a32cbd0))
 
 ### Documentation
 
-* docs: updated example ([`794530e`](https://github.com/bhklab/yarea/commit/794530e2309a448aea4e3775957dcd2e1f95f0ce))
+* docs: updated example ([`794530e`](https://github.com/bhklab/readii/commit/794530e2309a448aea4e3775957dcd2e1f95f0ce))
 
-* docs: updated docstrings for all functions ([`dbe6b84`](https://github.com/bhklab/yarea/commit/dbe6b84ac9ecec6a5e5c2282d10ead56085de197))
+* docs: updated docstrings for all functions ([`dbe6b84`](https://github.com/bhklab/readii/commit/dbe6b84ac9ecec6a5e5c2282d10ead56085de197))
 
 ### Feature
 
-* feat: added image processing functions ([`b0ac044`](https://github.com/bhklab/yarea/commit/b0ac04443cdf39addc601678cea5f49f44f1f89f))
+* feat: added image processing functions ([`b0ac044`](https://github.com/bhklab/readii/commit/b0ac04443cdf39addc601678cea5f49f44f1f89f))
 
-* feat: add image loader functions ([`73f67f5`](https://github.com/bhklab/yarea/commit/73f67f55dbb59c5967f0d70cd7d7d146118e634e))
+* feat: add image loader functions ([`73f67f5`](https://github.com/bhklab/readii/commit/73f67f55dbb59c5967f0d70cd7d7d146118e634e))
 
 ### Fix
 
-* fix: correct conversion of sitk Image to array ([`34ddb65`](https://github.com/bhklab/yarea/commit/34ddb6525983e69996671940e9f13f5107c69369))
+* fix: correct conversion of sitk Image to array ([`34ddb65`](https://github.com/bhklab/readii/commit/34ddb6525983e69996671940e9f13f5107c69369))
 
-* fix: updated segImagePath variable ([`166831c`](https://github.com/bhklab/yarea/commit/166831ccfb0c37b4e057dde254cc387e6a016fc6))
+* fix: updated segImagePath variable ([`166831c`](https://github.com/bhklab/readii/commit/166831ccfb0c37b4e057dde254cc387e6a016fc6))
 
 ### Test
 
-* test: add unit test for loadDicomSITK ([`bef39f7`](https://github.com/bhklab/yarea/commit/bef39f731363d1693f859ffbcdd6686540c1e98d))
+* test: add unit test for loadDicomSITK ([`bef39f7`](https://github.com/bhklab/readii/commit/bef39f731363d1693f859ffbcdd6686540c1e98d))
 
 ### Unknown
 
-* Changed segImagePath to be optional input ([`cd36ce8`](https://github.com/bhklab/yarea/commit/cd36ce833d5ee2c4cdc031ca68df0d446b760a92))
+* Changed segImagePath to be optional input ([`cd36ce8`](https://github.com/bhklab/readii/commit/cd36ce833d5ee2c4cdc031ca68df0d446b760a92))
 
-* remove incorrect RTSTRUCT from tests ([`0350329`](https://github.com/bhklab/yarea/commit/0350329703480f2511d114658618e9dc6880ad29))
+* remove incorrect RTSTRUCT from tests ([`0350329`](https://github.com/bhklab/readii/commit/0350329703480f2511d114658618e9dc6880ad29))
 
-* Added NSCLC_Radiogenomics sample for testing ([`8df5fbb`](https://github.com/bhklab/yarea/commit/8df5fbb2ccca773d60d7a59588a6da56173abc1d))
+* Added NSCLC_Radiogenomics sample for testing ([`8df5fbb`](https://github.com/bhklab/readii/commit/8df5fbb2ccca773d60d7a59588a6da56173abc1d))
 
-* renamed for loader functions ([`8009a37`](https://github.com/bhklab/yarea/commit/8009a374aaaa12fe1b875866724b93496e83d474))
+* renamed for loader functions ([`8009a37`](https://github.com/bhklab/readii/commit/8009a374aaaa12fe1b875866724b93496e83d474))
 
-* Added dependency imports ([`f4394dc`](https://github.com/bhklab/yarea/commit/f4394dc69378bd85e142f1cb412eb2fac756c735))
+* Added dependency imports ([`f4394dc`](https://github.com/bhklab/readii/commit/f4394dc69378bd85e142f1cb412eb2fac756c735))
 
-* updated variable names to be consistent ([`d74a455`](https://github.com/bhklab/yarea/commit/d74a455e5e8ceab8344e814dab76645685107623))
+* updated variable names to be consistent ([`d74a455`](https://github.com/bhklab/readii/commit/d74a455e5e8ceab8344e814dab76645685107623))
 
-* initial package setup ([`18c743b`](https://github.com/bhklab/yarea/commit/18c743be0ba4f15c121834ccf16f9e70bcc5ec09))
+* initial package setup ([`18c743b`](https://github.com/bhklab/readii/commit/18c743be0ba4f15c121834ccf16f9e70bcc5ec09))
