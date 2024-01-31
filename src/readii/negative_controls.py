@@ -459,7 +459,7 @@ def applyNegativeControl(nc_type: str, baseImage: sitk.Image, baseROI: sitk.Imag
         return shuffleNonROI(baseImage, baseROI, roiLabel)
     elif nc_type == "randomized_sampled_full":
         # Make negative control version of ctImage (random sampled pixels from original distribution, same size)
-        return RandomizeImageFromDistribtutionSampling(baseImage)
+        return randomizeImageFromDistribtutionSampling(baseImage)
     elif nc_type == "randomized_sampled_roi":
         # Make negative control version of ctImage (random sampled pixels from original distribution inside ROI, same size)
         return makeRandomFromRoiDistribution(baseImage, baseROI, roiLabel)
