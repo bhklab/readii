@@ -73,7 +73,7 @@ def matchCTtoSegmentation(imgFileListPath: str,
     # Merge the CT and segmentation dataframes based on the CT ID (referenced in the segmentation rows)
     # Uses only segmentation keys, so no extra CTs are kept
     # If multiple CTs have the same ID, they are both included in this table
-    samplesWSeg = allCTRows.merge(allSegRows, how='right', 
+    samplesWSeg = allCTRows.merge(allSegRows, how='inner',
                                   left_on=['series', 'patient_ID'], 
                                   right_on=['reference_ct', 'patient_ID'], 
                                   suffixes=('_CT','_seg'))
