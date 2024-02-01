@@ -3034,29 +3034,27 @@ diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyradiomics"
-version = "3.1.0"
+version = "3.0.1"
 description = "Radiomics features library for python"
 optional = false
 python-versions = "*"
 files = [
-    {file = "pyradiomics-3.1.0-cp37-cp37m-macosx_11_0_x86_64.whl", hash = "sha256:4693b9dcc1543d3d41b9762a3bf1ad371c77cc4bfb8dafab4611075defe50689"},
-    {file = "pyradiomics-3.1.0-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:dfd08864f572735884c47edda62204df53179e3a9e57c94e87008440dcd2b06b"},
-    {file = "pyradiomics-3.1.0-cp37-cp37m-win_amd64.whl", hash = "sha256:c272422a20309db39b9dbb5bd7f73f6b49a85ea5762b608a408a7e44a5822c4e"},
-    {file = "pyradiomics-3.1.0-cp38-cp38-macosx_11_0_x86_64.whl", hash = "sha256:707ebb304b78acbf5dc451608bc8f93c74da1a96581b328260c1a32dc8ba2400"},
-    {file = "pyradiomics-3.1.0-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:10992eff5ce2582f5ecc22f2fa15e748fc434a33a5bc1ae8e374d387e1369785"},
-    {file = "pyradiomics-3.1.0-cp38-cp38-win_amd64.whl", hash = "sha256:9995545f54e3a0a1bbeb415b3fbea4927bd7e9cddee78c47e519912dc44f43c3"},
-    {file = "pyradiomics-3.1.0-cp39-cp39-macosx_11_0_x86_64.whl", hash = "sha256:8552b9cfa77502ff071d7cb8a1aa3388d23abbce5ea0819864128469c9139a1e"},
-    {file = "pyradiomics-3.1.0-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:2975209dbbed49e7fad241db0cfc15d1ba5fadb85b612410bee55ed3fefde2f1"},
-    {file = "pyradiomics-3.1.0-cp39-cp39-win_amd64.whl", hash = "sha256:1411f19206a844404110e31c9a211b0e10ae6e32b04153747c7c139fa466fcec"},
-    {file = "pyradiomics-3.1.0.tar.gz", hash = "sha256:24722c962a6bbd09bc39c1c67dbffe92435f9692a421fabaae8a6b4511eb48e4"},
+    {file = "pyradiomics-3.0.1-cp35-cp35m-manylinux1_x86_64.whl", hash = "sha256:872f2e66679b72c1d6ef64993567454aaf32abad314fccdb748f315be8855066"},
+    {file = "pyradiomics-3.0.1-cp36-cp36m-macosx_10_13_x86_64.whl", hash = "sha256:aa1c805206c4f9c4bc7814ad4fb16b068bf54ca9e6b0c7ea228cc1ae97421b05"},
+    {file = "pyradiomics-3.0.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:ab9cf7f58c490bf148686cd37a67d37a0585dab0c35fcf26bf34e2eb7a6648e5"},
+    {file = "pyradiomics-3.0.1-cp36-cp36m-win_amd64.whl", hash = "sha256:5edc6d3e09751a868d9acbaf5178cf7b501140eb1cc7ae28f4059e5cab11ed9a"},
+    {file = "pyradiomics-3.0.1-cp37-cp37m-macosx_10_13_x86_64.whl", hash = "sha256:c94ad61b0e2924c115e3c1dd4f391a726e636f2f17631cd08832d684693eafe3"},
+    {file = "pyradiomics-3.0.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:319501840245a739591298a8484f9db5392c98f48eff0d321184aef8b43ba903"},
+    {file = "pyradiomics-3.0.1-cp37-cp37m-win_amd64.whl", hash = "sha256:757db4e545e5b367fbde832f32e2a1ea7d21206fd82d8c9aa92b87286ad8d89a"},
+    {file = "pyradiomics-3.0.1.tar.gz", hash = "sha256:47c57f441d6cb7973fa3b2ea48d3948df78e3348e1c69e1e2ff19001601fc2f5"},
 ]
 
 [package.dependencies]
-numpy = "*"
-pykwalify = "*"
-PyWavelets = "*"
-SimpleITK = "*"
-six = "*"
+numpy = ">=1.9.2"
+pykwalify = ">=1.6.0"
+PyWavelets = ">=0.4.0"
+SimpleITK = ">=0.9.1"
+six = ">=1.10.0"
 
 [[package]]
 name = "pytest"
@@ -4833,4 +4831,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4"
-content-hash = "9318603008e7f3461f133b9fe7bec3ff247cd1b8579adf366fc3b412a99f46a2"
+content-hash = "0504ff07fc954736e42d5a6f8c12bf9de59fc8aacdb5ef0fdfeb8b86f8813737"
