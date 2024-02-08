@@ -255,7 +255,7 @@ def getROIVoxelLabel(segImage:sitk.Image):
     # Confirm that all of these are the same value
     if np.all(roiVoxels == roiVoxels[0]):
         labelValue = roiVoxels[0]
-        return labelValue
+        return int(labelValue)
     else:
         raise ValueError("Multiple label values present in this segmentation. Must all be the same.")
 
