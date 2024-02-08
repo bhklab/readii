@@ -2,6 +2,41 @@
 
 
 
+## v1.1.1 (2024-02-08)
+
+### Build
+
+* build: add pyarrow as dependency for pandas ([`0050dc1`](https://github.com/bhklab/readii/commit/0050dc156940aaab895a367c57307764d580c7d6))
+
+* build: updated pyradiomics dependency tp 3.0.1a3 ([`d780b27`](https://github.com/bhklab/readii/commit/d780b27c7fcb4e05343f8575d63b3b5b4b0ae430))
+
+* build: updated med-imagetools dependency ([`ed58b9c`](https://github.com/bhklab/readii/commit/ed58b9cfe726ac0d92d165c2e05bdb32753285a7))
+
+* build: changed pyradiomics dependency to 3.0.1 as 3.1.0 has installation issues ([`9c89227`](https://github.com/bhklab/readii/commit/9c89227c7c97dadcacd94b7f450668c046c955a1))
+
+* build: update dependencies versions ([`8b1af18`](https://github.com/bhklab/readii/commit/8b1af187f9e55dea34685b3a03c0abc80b318035))
+
+### Fix
+
+* fix: update version number ([`3b90606`](https://github.com/bhklab/readii/commit/3b9060652fa39f8480691c5e5edc9e77c61131e9))
+
+### Unknown
+
+* Merge pull request #10 from bhklab/development_katy
+
+fix: update version number ([`2923f7a`](https://github.com/bhklab/readii/commit/2923f7aff3139c6eeae956fca1db7246d5d1f64a))
+
+* fix version number ([`36e8ff8`](https://github.com/bhklab/readii/commit/36e8ff8f94389913bed1583bc87add3fb7bfdd92))
+
+* patch: use pyradiomics 3.0.1a3 ([`98d5e91`](https://github.com/bhklab/readii/commit/98d5e9145ab8642ddb81c68e8fdf3e8b55f01eed))
+
+* Merge pull request #9 from bhklab/development_katy
+
+Development katy ([`0f1cc66`](https://github.com/bhklab/readii/commit/0f1cc665d27bd458a9d7f0f4e95577c4890b175b))
+
+* bug(image_processing): force ROI voxel label to int to be compatible with pyradiomics 3.0.1a3 ([`38e7653`](https://github.com/bhklab/readii/commit/38e76532853573b1de204760a11f2833a235001a))
+
+
 ## v1.1.0 (2024-01-31)
 
 ### Feature
