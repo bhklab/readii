@@ -24,10 +24,22 @@ pip install readii
 $ readii [INPUT DIRECTORY] [OUTPUT DIRECTORY] \
   --roi_names [str] \
   --pyradiomics_setting [str] \
-  --negative_controls [str: randomized_full,randomized_roi,randomized_non_roi,shuffled_full,shuffled_roi,shuffled_non_roi] \
+  --negative_controls [str: shuffled_full,shuffled_roi,shuffled_non_roi,randomized_full,randomized_roi,randomized_non_roi,randomized_sampled_full,randomized_sampled_roi, randomized_sampled_non_roi] \
   --parallel [flag]
   --update [flag]
 ```
+
+### Negative control options
+
+Negative controls are applied to one of three masks: 
+1. full = voxels in the entire image
+2. roi = just voxels within the specified region of interest (ROI) in the segmentation
+3. non_roi = all voxels except the ROI.
+
+The three transformations are:
+1. shuffle = shuffle all voxels in the specified mask
+2. randomized = randomly generate new values within the original range within the specified mask
+3. randomized_sampled = randomly sample original values with replacement to get new values within the specified mask
 
 
 ## Contributing
