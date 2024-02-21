@@ -73,7 +73,7 @@ def main():
         print("Image metadata file has already been created.")
     
     # Check if radiomic feature file already exists
-    radFeatOutPath = os.path.join(outputDir, "features/", "radfeatures_" + datasetName + ".csv")
+    radFeatOutPath = os.path.join(outputDir, "features/", "radiomicfeatures_" + datasetName + ".csv")
     if not os.path.exists(radFeatOutPath) or args.update:
         print("Starting radiomic feature extraction...")
         radiomicFeatures = radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,

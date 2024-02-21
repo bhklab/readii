@@ -2,7 +2,7 @@ import SimpleITK as sitk
 import numpy as np
 import random
 
-from readii.image_processing import alignImages
+from readii.image_processing import alignImages, getROIVoxelLabel
 
 
 def shuffleImage(imageToShuffle: sitk.Image):
@@ -80,7 +80,7 @@ def makeRandomImage(baseImage: sitk.Image):
     return alignedRandomImage
 
 
-def makeRandomRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
+def makeRandomRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: str = None):
     """Function to generate random pixel values within the Region of Interest based on the range of values in a sitk Image
 
     Parameters
@@ -97,6 +97,10 @@ def makeRandomRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1)
     sitk.Image
         Image with all pixel values within the Region of Interest randomly generated with same dimensions as input image
     """
+    # Check the ROI Label exists, if not extract it manually
+    if not roiLabel:
+        roiLabel = getROIVoxelLabel(baseROI)
+
     # Initialize variables to track the highest and lowest pixel values in the ROI
     maxVoxelVal = float('-inf')
     minVoxelVal = float('inf')
@@ -133,7 +137,7 @@ def makeRandomRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1)
     return new_base
 
 
-def shuffleROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
+def shuffleROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: str = None):
     """Function to shuffle all pixel values within the Region of Interest in a sitk Image
 
     Parameters
@@ -150,6 +154,9 @@ def shuffleROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
     sitk.Image
         Image with all pixel values in the Region of Interest randomly shuffled with same dimensions as input image
     """
+    # Check the ROI Label exists, if not extract it manually
+    if not roiLabel:
+        roiLabel = getROIVoxelLabel(baseROI)
 
     # A collection of corresponding value in the BaseImage of all the pixels in the ROI
     count = []
@@ -180,7 +187,7 @@ def shuffleROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
     return new_base
 
 
-def makeRandomNonRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
+def makeRandomNonRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: str = None):
     """Function to generate random pixel values outside the Region of Interest based on the range of values in a sitk Image
 
     Parameters
@@ -197,6 +204,10 @@ def makeRandomNonRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int =
     sitk.Image
         Image with all pixel values outside the Region of Interest randomly generated with same dimensions as input image
     """
+    # Check the ROI Label exists, if not extract it manually
+    if not roiLabel:
+        roiLabel = getROIVoxelLabel(baseROI)
+
     # Initialize variables to track the highest and lowest pixel values not in the ROI
     maxVoxelVal = float('-inf')
     minVoxelVal = float('inf')
@@ -236,7 +247,7 @@ def makeRandomNonRoi(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int =
     return new_base
 
 
-def shuffleNonROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
+def shuffleNonROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: str = None):
     """Function to shuffle all pixel values that are not within the Region of Interest in a sitk Image
 
     Parameters
@@ -253,6 +264,9 @@ def shuffleNonROI(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1)
     sitk.Image
         Image with all pixel values outside the Region of Interest randomly shuffled with same dimensions as input image
     """
+    # Check the ROI Label exists, if not extract it manually
+    if not roiLabel:
+        roiLabel = getROIVoxelLabel(baseROI)
 
     # A collection of corresponding value in the BaseImage of all the pixels not in the ROI
     count = []
@@ -321,7 +335,7 @@ def randomizeImageFromDistribtutionSampling(imageToRandomize: sitk.Image):
 
     return alignedRandomlySampledImage
 
-def makeRandomFromRoiDistribution(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
+def makeRandomFromRoiDistribution(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: str = None):
     """Function to randomly sample pixel values within the Region of Interest uniformly from the distribution of pixel values in the ROI region sitk Image
 
     Parameters
@@ -338,6 +352,10 @@ def makeRandomFromRoiDistribution(baseImage: sitk.Image, baseROI: sitk.Image, ro
     sitk.Image
         Image with all pixel values within the Region of Interest randomly sampled with same dimensions as input image
     """
+    # Check the ROI Label exists, if not extract it manually
+    if not roiLabel:
+        roiLabel = getROIVoxelLabel(baseROI)
+
     # Initialize array of ROI pixel distribution
     distributionROI = []
 
@@ -369,7 +387,7 @@ def makeRandomFromRoiDistribution(baseImage: sitk.Image, baseROI: sitk.Image, ro
 
     return new_base
 
-def makeRandomNonRoiFromDistribution(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: int = 1):
+def makeRandomNonRoiFromDistribution(baseImage: sitk.Image, baseROI: sitk.Image, roiLabel: str = None):
     """Function to random sample pixel values outside the Region of Interest uniformly from the distribution of pixel values outside the ROI in a sitk Image
 
     Parameters
@@ -386,6 +404,9 @@ def makeRandomNonRoiFromDistribution(baseImage: sitk.Image, baseROI: sitk.Image,
     sitk.Image
         Image with all pixel values outside the Region of Interest randomly sample form outside the ROI with same dimensions as input image
     """
+    # Check the ROI Label exists, if not extract it manually
+    if not roiLabel:
+        roiLabel = getROIVoxelLabel(baseROI)
 
     # Initialize array of non-ROI pixel distribution
     distributionROI = []
@@ -422,7 +443,7 @@ def makeRandomNonRoiFromDistribution(baseImage: sitk.Image, baseROI: sitk.Image,
     return new_base
 
 
-def applyNegativeControl(nc_type: str, baseImage: sitk.Image, baseROI: sitk.Image = None, roiLabel: int = 1):
+def applyNegativeControl(nc_type: str, baseImage: sitk.Image, baseROI: sitk.Image = None, roiLabel: str = None):
     """Function to generate random pixel values within the Region of Interest based on the range of values in a sitk Image
 
     Parameters
