@@ -62,9 +62,9 @@ def main():
         # Get segType from imageFileList to generate the image metadata file and set up feature extraction
         segType = getSegmentationType(imageFileListPath)
     except RuntimeError as e:
-         print(str(e))
-         print("Feature extraction not complete.")
-        
+        print(str(e))
+        print("Feature extraction not complete.")
+        exit()        
 
     # Check if image metadata file has already been created
     imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
