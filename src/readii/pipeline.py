@@ -58,8 +58,13 @@ def main():
         raise FileNotFoundError("Output for med-imagetools not found for this image set. Check the data_directory argument or run med-imagetools.")
 
     print("Getting segmentation type...")
-    # Get segType from imageFileList to generate the image metadata file and set up feature extraction
-    segType = getSegmentationType(imageFileListPath)
+    try:
+        # Get segType from imageFileList to generate the image metadata file and set up feature extraction
+        segType = getSegmentationType(imageFileListPath)
+    except RuntimeError as e:
+         print(str(e))
+         print("Feature extraction not complete.")
+        
 
     # Check if image metadata file has already been created
     imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
