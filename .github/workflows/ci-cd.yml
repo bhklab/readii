@@ -142,7 +142,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            ${{ secrets.BHKLAB_DOCKERHUB_USERNAME }}/readii:${{ steps.release.outputs.tag }}
+            bhklab/readii:${{ steps.release.outputs.tag }}
             ghcr.io/${{ github.repository }}/readii:${{ steps.release.outputs.tag }}
 
       - name: Build
@@ -154,8 +154,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.BHKLAB_DOCKERHUB_USERNAME }}/readii:${{ steps.release.outputs.tag }}
-            ${{ secrets.BHKLAB_DOCKERHUB_USERNAME }}/readii:latest
+            bhklab/readii:${{ steps.release.outputs.tag }}
+            bhklab/readii:latest
             ghcr.io/${{ github.repository }}/readii:${{ steps.release.outputs.tag }}
             ghcr.io/${{ github.repository }}/readii:latest
           labels: ${{ steps.meta.outputs.labels }}
