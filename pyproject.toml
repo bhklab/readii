@@ -35,8 +35,8 @@ upload_to_release = true                    # auto-create GitHub release
 remove_dist = false                         # don't remove dists
 patch_without_tag = true                    # patch release by default
 
-[tool.semantic_release.branches]
-include = ["main", "dockerfile"]               # only release from these branches
+[tool.semantic_release.branches.main]
+match = "(main|dockerfile)"
 
 [tool.poetry.scripts]
 readii = "readii.pipeline:main"
