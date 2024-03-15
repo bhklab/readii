@@ -2,6 +2,21 @@
 
 
 
+## v1.2.0 (2024-03-15)
+
+### Feature
+
+* feat: adding dockerfile and gha to build and deploy ([`b7d6b73`](https://github.com/bhklab/readii/commit/b7d6b734ef6b955e5b61ff2d980a08893dc2dddb))
+
+### Fix
+
+* fix: wrong group in toml ([`b55baab`](https://github.com/bhklab/readii/commit/b55baabb4800e074f0f08684874947052ecb9195))
+
+* fix: test builds and update toml to include this branch ([`af61beb`](https://github.com/bhklab/readii/commit/af61beba9a677a86695268a55bd2887138fb2c59))
+
+* fix: test deployment ([`aa1dcb4`](https://github.com/bhklab/readii/commit/aa1dcb479720f8eec295071ad0b45aedaaf275d2))
+
+
 ## v1.1.3 (2024-03-06)
 
 ### Build
