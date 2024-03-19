@@ -29,7 +29,8 @@ jobs:
         run: poetry install
 
       - name: Test with pytest
-        run: poetry run pytest tests/
+        # Github action runners now have 4 cores
+        run: poetry run pytest -s -v -n 4 tests/
 
       # Commented out until we have a repo for coverage
       # - name: Test with pytest
