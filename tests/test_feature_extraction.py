@@ -1,8 +1,18 @@
-from readii.loaders import *
-from readii.feature_extraction import *
+from readii.loaders import (
+    loadDicomSITK, 
+    loadRTSTRUCTSITK, 
+    loadSegmentation,
+) 
+
+from readii.feature_extraction import (
+    singleRadiomicFeatureExtraction,
+    radiomicFeatureExtraction,
+)
 
 import pytest
 import collections
+import pandas as pd
+import os 
 
 @pytest.fixture
 def nsclcCTImage():
@@ -84,7 +94,7 @@ def test_radiomicFeatureExtraction(nsclcMetadataPath):
     actual = radiomicFeatureExtraction(nsclcMetadataPath,
                                        imageDirPath="tests/",
                                        roiNames = None)
-    assert type(actual) == pd.core.frame.DataFrame, \
+    assert isinstance(actual, pd.DataFrame), \
         "Wrong return type, expect a pandas DataFrame"
     assert actual.shape[1] == 1365, \
         "Wrong return size, should include image metadata, diagnostics, and pyradiomics features"

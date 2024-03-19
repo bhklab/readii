@@ -1,6 +1,11 @@
-from readii.metadata import *
 import pytest
 import os
+
+from readii.metadata import (
+    matchCTtoSegmentation,
+    getSegmentationType,
+    saveDataframeCSV
+)
 
 @pytest.fixture
 def nsclcSummaryFilePath():
