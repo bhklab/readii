@@ -5,6 +5,7 @@ import SimpleITK as sitk
 from imgtools.ops import StructureSetToSegmentation
 from imgtools.io import read_dicom_auto
 
+from typing import Optional
 
 def loadDicomSITK(imgDirPath: str) -> sitk.Image:
     """Read DICOM series as SimpleITK Image.
@@ -28,7 +29,7 @@ def loadDicomSITK(imgDirPath: str) -> sitk.Image:
 
 def loadRTSTRUCTSITK(rtstructPath: str,
                      baseImageDirPath: str,
-                     roiNames:str = None) -> dict:
+                     roiNames: Optional[str] = None) -> dict:
     """ Load RTSTRUCT into SimpleITK Image.
 
     Parameters
@@ -77,8 +78,9 @@ def loadRTSTRUCTSITK(rtstructPath: str,
 
 def loadSegmentation(segImagePath: str,
                      modality: str,
-                     baseImageDirPath: str = None,
-                     roiNames: str = None) -> dict:
+                     baseImageDirPath: Optional[str] = None,
+                     roiNames: Optional[str] = None
+) -> dict:
     ''' Function to load a segmentation with the correct function.
     
     Parameters
