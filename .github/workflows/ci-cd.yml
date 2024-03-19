@@ -3,12 +3,12 @@ name: ci-cd
 # only run on pushes to main or pull requests
 on:
   push:
-    branches: [ "*"]
+    branches: [ "*" ]
   pull_request:
     branches: [ main ]
 
 jobs:
-  ci:
+  Unit-Testing:
     # Set up operating system
     runs-on: ubuntu-latest
 
@@ -28,6 +28,9 @@ jobs:
       - name: Install package
         run: poetry install
 
+      - name: Test with pytest
+        run: poetry run pytest tests/
+
       # Commented out until we have a repo for coverage
       # - name: Test with pytest
       #   run: poetry run pytest tests/ --cov=readii --cov-report=xml
@@ -37,9 +40,8 @@ jobs:
       #   with:
       #     files: ./coverage.xml   # coverage report
 
-  cd:
-    # Only run this job if the "ci" job passes
-    needs: ci
+  Continuous-Deployment:
+    needs: Unit-Testing
 
     # # Only run this job if new work is pushed to "main"
     if: github.ref == 'refs/heads/main'
