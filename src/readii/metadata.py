@@ -136,6 +136,13 @@ def getSegmentationType(
     -------
     str
         Segmentation type (RTSTRUCT or SEG)
+        
+    Raises
+    ------
+    ValueError
+        If the imgFileListPath does not end in .csv
+    RuntimeError
+        If no suitable segmentation type is found in the dataset
     """
     # Check that imgFileListPath is a csv file to properly be loaded in
     if not imgFileListPath.endswith(".csv"):
