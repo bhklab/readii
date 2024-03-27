@@ -1,0 +1,27 @@
+from pathlib import Path
+
+image_dir = Path("../tests/NSCLC_Radiogenomics/")
+PATIENT_IDS = ["R01-001", "R01-002"]
+NEGATIVE_CONTROLS = ["negative_control_1", "negative_control_2"]
+rule all:
+    input:
+        all_negative_controls = expand(
+            "results/{patient}/{negative_control}.<filetype>",
+            patient = PATIENT_IDS,
+            negative_control = NEGATIVE_CONTROLS,
+        )
+
+rule create_negative_control:
+    input: 
+        ct_img_dir = image_dir / "{patient}" / "idk",
+        seg_dcm_path = image_dir / "{patient}" / "idk",
+    output: 
+        # idk what this output would be 
+        output_sitk_image = "results/{patient}/{negative_control}.<filetype>",
+    params:
+        negative_control = "{negative_control}",
+        roiLabel = "idk where to get this from"
+    benchmark:
+        repeat("benchmarks/ct-seg_benchmark.txt", 3)
+    script: 
+        "scripts/create_negative_control.py"
