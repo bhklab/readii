@@ -1,4 +1,7 @@
 # READII
+![Docker Pulls](https://img.shields.io/docker/pulls/bhklab/readii)
+![GitHub Release](https://img.shields.io/github/v/release/bhklab/readii)
+
 
 **R**adiomic **E**xtraction and **A**nalysis for **DI**COM **I**mages
 
