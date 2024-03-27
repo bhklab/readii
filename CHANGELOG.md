@@ -2,6 +2,63 @@
 
 
 
+## v1.2.1 (2024-03-27)
+
+### Build
+
+* build: Update pytest command to run tests in parallel ([`e8f67b9`](https://github.com/bhklab/readii/commit/e8f67b9108f254431c0542a2812c674578db0794))
+
+* build: update poetry lock ([`6999f20`](https://github.com/bhklab/readii/commit/6999f208f33132e53f6ba42037387ae41070bf07))
+
+* build: Fix formatting in ci-cd.yml and add back unit tests. Rename jobs for better clarity ([`b4d49d5`](https://github.com/bhklab/readii/commit/b4d49d53fcccaa63e0e0d0b720da39f9f1dda3fb))
+
+* build: add pytest-xdist for development parallel tests ([`d52a5a3`](https://github.com/bhklab/readii/commit/d52a5a3189cef9fc7599687f6dc1558378d87506))
+
+### Fix
+
+* fix: no development branch ([`e3349db`](https://github.com/bhklab/readii/commit/e3349dbc68dd3f8c4f72afe351148f8af2ef846f))
+
+### Refactor
+
+* refactor: format with black, explicit imports, and update type annotations ([`04bada5`](https://github.com/bhklab/readii/commit/04bada5a9d1933f840d647c4ef383329a6e9d2e7))
+
+* refactor: Fixes, updates, formatting
+
+refactor: Fixes, updates, formatting ([`998f299`](https://github.com/bhklab/readii/commit/998f299cfb3d29b95afde4f371508da2c6c142b6))
+
+* refactor: format with black ([`07d04d8`](https://github.com/bhklab/readii/commit/07d04d8f1b8bacea29a896557971468446e22bf8))
+
+* refactor: explicit imports from readii.metadata module for performance ([`f91afa4`](https://github.com/bhklab/readii/commit/f91afa43e63daeb06be8d9276c9607453d7fe71c))
+
+* refactor: Refactor type check in test_radiomicFeatureExtraction ([`bc0d18d`](https://github.com/bhklab/readii/commit/bc0d18da89907ca82e30eb81fbed1ab1ae475cfe))
+
+* refactor: Refactor saveDataframeCSV and matchCTtoSegmentation functions, add type hints, and improve error handling, format with black ([`16a83b9`](https://github.com/bhklab/readii/commit/16a83b9541d717f132f6a32afbeb89db02653c63))
+
+* refactor: Update version variables in pyproject.toml ([`5776e5f`](https://github.com/bhklab/readii/commit/5776e5f0f618c3634d01fb86c685e012bc073a08))
+
+* refactor: explicitly import all, nested import * can lead to performance issues ([`8054799`](https://github.com/bhklab/readii/commit/80547997d7d2c4c852a0f4f43b61d3c49ebe1f51))
+
+* refactor: update type annotations. ([`c6ee885`](https://github.com/bhklab/readii/commit/c6ee885422df735b3230c5541936d3f71ab17f6c))
+
+* refactor: update type annotations to handle optional parameters, format with black for readability, refactor applyNegativeControl function to raise AssertionErrror for optional baseROI, handle edge case and raise error if none of the nc_types. ([`11f0d92`](https://github.com/bhklab/readii/commit/11f0d92a3f86e1c1db328172d338b92b09654f46))
+
+### Style
+
+* style(feature_extraction.py): changed some function call spacing ([`09331a3`](https://github.com/bhklab/readii/commit/09331a3d7f9b6459ab151b9b3611877c04f4d265))
+
+### Unknown
+
+* Merge pull request #15 from bhklab/dockerfile
+
+Refactor: Add dockerfile, fix some type errors, update type annotations, add some error-handling, formatting ([`20f8d54`](https://github.com/bhklab/readii/commit/20f8d543cfd27125ca21bb467acad13d556be284))
+
+* fixed wrong docker repo ([`8ca1a93`](https://github.com/bhklab/readii/commit/8ca1a9349c7e0ac3bf13da572aa13d691d1cb56d))
+
+* Merge branch &#39;dockerfile&#39; of github.com:bhklab/readii into dockerfile ([`6bb042d`](https://github.com/bhklab/readii/commit/6bb042de6bf31a5869f0bfa016b7f38b229e5249))
+
+* Update ci-cd.yml and pyproject.toml ([`fa35141`](https://github.com/bhklab/readii/commit/fa35141d0d9b1772ac4d6242d942f4ad9c0061d3))
+
+
 ## v1.2.0 (2024-03-15)
 
 ### Feature
@@ -34,7 +91,7 @@
 Another fix for catching no segmentation type error ([`6e3e8fc`](https://github.com/bhklab/readii/commit/6e3e8fc8486334e7e3c1c438fc5ce757eb8a5585))
 
 
-## v1.1.2 (2024-03-07)
+## v1.1.2 (2024-03-06)
 
 ### Documentation
 
@@ -171,7 +228,7 @@ Created 3 new negative controls by sampling original image and tests ([`2f95cf7`
 feat(pipeline): change parallel input argument to be false by default ([`8d0626d`](https://github.com/bhklab/readii/commit/8d0626d08acad7f9e2ca3d31560ea4d532f86e2e))
 
 
-## v0.5.0 (2024-01-18)
+## v0.5.0 (2024-01-17)
 
 ### Build
 
@@ -312,7 +369,7 @@ Created testing suite for negative controls and fixed errors in image_processing
 * updated version ([`3a063cf`](https://github.com/bhklab/readii/commit/3a063cf057fdfe3c056ca86af325f060c3c65cf3))
 
 
-## v0.2.0 (2023-12-20)
+## v0.2.0 (2023-12-19)
 
 ### Build
 
@@ -423,7 +480,7 @@ Created testing suite for negative controls and fixed errors in image_processing
 * Renamed package to yarea ([`7519c43`](https://github.com/bhklab/readii/commit/7519c43e3950f907e6774a35095124ce4a2d630d))
 
 
-## v0.1.0 (2023-11-24)
+## v0.1.0 (2023-11-23)
 
 ### Build
 
