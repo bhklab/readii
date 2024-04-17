@@ -1,3 +1,4 @@
+# Run this from the root directory using `snakemake -s benchmarking/snakemake-benchmark/Snakefile -c 8 -F`
 from pathlib import Path
 from readii.negative_controls import NEGATIVE_CONTROL_TYPES
 
