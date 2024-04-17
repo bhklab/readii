@@ -9,7 +9,7 @@ NEGATIVE_CONTROLS = NEGATIVE_CONTROL_TYPES.all()
 rule all:
     input:
         all_negative_controls = expand(
-            "bencmarking/benchmarks/results/{patient}/{negative_control}.dcm",
+            "benchmarking/benchmarks/results/{patient}/{negative_control}.dcm",
             patient = PATIENT_IDS,
             negative_control = NEGATIVE_CONTROLS,
         )
@@ -20,12 +20,12 @@ rule create_negative_control:
         seg_dcm_path = image_dir / "{patient}" / "11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
     output: 
         # just touching the output to indicate that the rule has been run and not influence benchmarking
-        output_sitk_image = touch("bencmarking/benchmarks/results/{patient}/{negative_control}.dcm"),
+        output_sitk_image = touch("benchmarking/benchmarks/results/{patient}/{negative_control}.dcm"),
     params:
         negative_control = "{negative_control}",
         roiLabel = "Tumor_c40",
         modality = "RTSTRUCT"
     benchmark:
-        repeat("benchmarking/benchmarks/{patient}/{negative_control}.txt", 3)
+        repeat("benchmarking/benchmarks/{patient}/{negative_control}.txt", 5)
     script: 
         "scripts/create_negative_control.py"
