@@ -6,6 +6,44 @@ from readii.image_processing import alignImages, getROIVoxelLabel
 
 from typing import Optional
 
+from enum import Enum
+
+class NEGATIVE_CONTROL_TYPES(Enum):
+    RANDOMIZED_FULL = "randomized_full"
+    SHUFFLED_FULL = "shuffled_full"
+    RANDOMIZED_SAMPLED_FULL = "randomized_sampled_full"
+    RANDOMIZED_ROI = "randomized_roi"
+    SHUFFLED_ROI = "shuffled_roi"
+    RANDOMIZED_NON_ROI = "randomized_non_roi"
+    SHUFFLED_NON_ROI = "shuffled_non_roi"
+    RANDOMIZED_SAMPLED_ROI = "randomized_sampled_roi"
+    RANDOMIZED_SAMPLED_NON_ROI = "randomized_sampled_non_roi"
+ 
+    def __str__(self) -> str:
+        return self.value
+ 
+    @staticmethod
+    def all() -> list[str]:
+        """
+        Returns a list of all negative control types.
+        """
+        return [nc_type.value for nc_type in NEGATIVE_CONTROL_TYPES]
+
+    @staticmethod
+    def from_str(value: str) -> 'NEGATIVE_CONTROL_TYPES':
+        """ 
+        Convert a string to a NEGATIVE_CONTROL_TYPES enum
+        """
+        return NEGATIVE_CONTROL_TYPES(value)
+ 
+    @staticmethod
+    def mapping() -> dict[str, str]:
+        """ 
+        Return a dictionary mapping of string to NEGATIVE_CONTROL_TYPES enum
+        """
+        return {nc_type.name: nc_type.value for nc_type in NEGATIVE_CONTROL_TYPES}
+
+
 def shuffleImage(
     imageToShuffle: sitk.Image
 ) -> sitk.Image:
@@ -569,4 +607,4 @@ def applyNegativeControl(
         # Make negative control version of ctImage (random sampled pixels from original distribution outside ROI, same size)
         return makeRandomNonRoiFromDistribution(baseImage, baseROI, roiLabel)
     else:
-        raise ValueError("Invalid nc_type. Please choose a valid negative control type.")
+        raise ValueError(f"Invalid nc_type: {nc_type}. Please choose a valid negative control type.")
