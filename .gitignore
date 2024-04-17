@@ -146,3 +146,6 @@ dmypy.json
 
 # Test outputs
 tests/output/*
+
+.snakemake/
+benchmarking/benchmarks/
