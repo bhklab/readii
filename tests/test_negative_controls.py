@@ -104,7 +104,7 @@ def test_makeRandomImage(nsclcCTImage, randomSeed):
             "Random pixel value not shuffled"
 
 
-def test_shuffleROI(nsclcCropped):
+def test_shuffleROI(nsclcCropped, randomSeed):
     " Test negative control to shuffle the roi of the image"
 
     croppedCT, croppedROI, segmentationLabel = nsclcCropped
@@ -133,32 +133,36 @@ def test_shuffleROI(nsclcCropped):
                           np.sort(shuffled_pixels)), \
         "Shuffled pixel values in ROI are different"
     assert shuffled_pixels[0,0,0] == -740, \
-        "Random seed is not working for shuffled image. Random seed should be 10."
-    assert shuffled_pixels[-1,-1,-1] == -818, \
-        "Random seed is not working for shuffled image. Random seed should be 10."
+        "Voxel outside the ROI is being randomized. Should just be the ROI voxels."
+    assert shuffled_pixels[7,18,11] == -100, \
+        "Random seed is not working for shuffled ROI image, centre pixel has wrong value. Random seed should be 10."
 
 
-def test_makeRandomRoi(nsclcCropped):
+def test_makeRandomRoi(nsclcCropped, randomSeed):
     " Test negative control to randomize the pixels of the ROI of the image"
 
     croppedCT, croppedROI, segmentationLabel = nsclcCropped
 
-    randomized_image = makeRandomRoi(croppedCT, croppedROI, segmentationLabel)
+    randomized_roi_image = makeRandomRoi(croppedCT, croppedROI, segmentationLabel, randomSeed)
     original_arr_image = sitk.GetArrayFromImage(croppedCT)
     minVoxelVal, maxVoxelVal = np.min(original_arr_image), np.max(original_arr_image)
 
-    randomized_arr_image = sitk.GetArrayFromImage(randomized_image)
+    randomized_arr_image = sitk.GetArrayFromImage(randomized_roi_image)
 
-    assert croppedCT.GetSize() == randomized_image.GetSize(), \
+    assert croppedCT.GetSize() == randomized_roi_image.GetSize(), \
         "Randomized image size not same as input image"
-    assert croppedCT.GetSpacing() == randomized_image.GetSpacing(), \
+    assert croppedCT.GetSpacing() == randomized_roi_image.GetSpacing(), \
         "Randomized image spacing not same as input image"
-    assert croppedCT.GetOrigin() == randomized_image.GetOrigin(), \
+    assert croppedCT.GetOrigin() == randomized_roi_image.GetOrigin(), \
         "Randomized image origin not same as input image"
-    assert isinstance(randomized_image, sitk.Image), \
+    assert isinstance(randomized_roi_image, sitk.Image), \
         "Returned object is not a sitk.Image"
     assert randomized_arr_image.max() <= maxVoxelVal and randomized_arr_image.min() >= minVoxelVal, \
         "Pixel values are not within the expected range"
+    assert randomized_arr_image[0,0,0] == -740, \
+        "Voxel outside the ROI is being randomized. Should just be the ROI voxels."
+    assert randomized_arr_image[7,18,11] == -400, \
+        "Random seed is not working for shuffled ROI image, centre pixel has wrong value. Random seed should be 10."
 
     size = croppedROI.GetSize()
     for _ in range(5):
@@ -166,7 +170,7 @@ def test_makeRandomRoi(nsclcCropped):
         y = random.randint(0, size[1] - 1)
         z = random.randint(0, size[2] - 1)
         if croppedROI.GetPixel(x, y, z) == segmentationLabel:
-            assert randomized_image.GetPixel(x, y, z) != croppedCT.GetPixel(x, y, z), \
+            assert randomized_roi_image.GetPixel(x, y, z) != croppedCT.GetPixel(x, y, z), \
                 "Pixel value not randomized"
 
 
