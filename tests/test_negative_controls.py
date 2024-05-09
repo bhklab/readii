@@ -77,10 +77,10 @@ def test_shuffleImage(nsclcCTImage, randomSeed):
         "Random seed is not working for shuffled image. Random seed should be 10."
 
 
-def test_makeRandomImage(nsclcCTImage):
+def test_makeRandomImage(nsclcCTImage, randomSeed):
     " Test negative control to randomize the pixels of the whole image"
 
-    randomized_image = makeRandomImage(nsclcCTImage)
+    randomized_image = makeRandomImage(nsclcCTImage, randomSeed)
     original_arr_image = sitk.GetArrayFromImage(nsclcCTImage)
     minVoxelVal, maxVoxelVal = np.min(original_arr_image), np.max(original_arr_image)
 
@@ -96,6 +96,10 @@ def test_makeRandomImage(nsclcCTImage):
         "Returned object is not a sitk.Image"
     assert randomized_arr_image.max() <= maxVoxelVal and randomized_arr_image.min() >= minVoxelVal, \
         "Pixel values are not within the expected range"
+    assert randomized_arr_image[0,0,0] == 2156, \
+        "Random seed is not working for random image. Random seed should be 10."
+    assert randomized_arr_image[-1,-1,-1] == 90, \
+        "Random seed is not working for random image. Random seed should be 10."
 
     for _ in range(5):
         size = nsclcCTImage.GetSize()
@@ -111,7 +115,7 @@ def test_shuffleROI(nsclcCropped):
 
     croppedCT, croppedROI, segmentationLabel = nsclcCropped
 
-    shuffled_image = shuffleROI(croppedCT, croppedROI, segmentationLabel)
+    shuffled_image = shuffleROI(croppedCT, croppedROI, segmentationLabel, randomSeed)
 
     original_pixels = [croppedCT.GetPixel(x, y, z) for x in range(croppedROI.GetSize()[0]) for y in
                        range(croppedROI.GetSize()[1]) for z in range(croppedROI.GetSize()[2]) if
