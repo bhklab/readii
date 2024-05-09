@@ -159,6 +159,7 @@ def shuffleROI(
     baseImage: sitk.Image, 
     baseROI: sitk.Image, 
     roiLabel: Optional[int] = None,
+    randomSeed: Optional[int] = None,
 ) -> sitk.Image:
     """Function to shuffle all pixel values within the Region of Interest in a sitk Image
 
@@ -170,7 +171,9 @@ def shuffleROI(
         Image detailing Region of Interest
     roiLabel : int
         The label representing the ROI in baseROI
-
+    randomSeed : int
+        Value to initialize random number generator with for shuffling. Set for reproducible results.
+        
     Returns
     -------
     sitk.Image
@@ -196,7 +199,9 @@ def shuffleROI(
     # Delete the input image to save space
     del baseImage
 
-    # # Randomly shuffling the pixel values
+    # Initialize the random number generator
+    random.seed(randomSeed)
+    # Randomly shuffling the pixel values
     random.shuffle(count)
 
     for x in range(baseROISize[0]):
