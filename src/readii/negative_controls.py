@@ -17,7 +17,9 @@ def shuffleImage(
     ----------
     imageToShuffle : sitk.Image
         Image to shuffle the pixels in
-
+    randomSeed : int
+        Value to initialize random number generator with for shuffling. Set for reproducible results.
+        
     Returns
     -------
     sitk.Image
