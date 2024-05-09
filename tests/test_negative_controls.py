@@ -109,29 +109,33 @@ def test_shuffleROI(nsclcCropped):
 
     croppedCT, croppedROI, segmentationLabel = nsclcCropped
 
-    shuffled_image = shuffleROI(croppedCT, croppedROI, segmentationLabel, randomSeed)
+    shuffled_roi_image = shuffleROI(croppedCT, croppedROI, segmentationLabel, randomSeed)
 
     original_pixels = [croppedCT.GetPixel(x, y, z) for x in range(croppedROI.GetSize()[0]) for y in
                        range(croppedROI.GetSize()[1]) for z in range(croppedROI.GetSize()[2]) if
                        croppedROI.GetPixel(x, y, z) == segmentationLabel]
 
-    shuffled_pixels = [shuffled_image.GetPixel(x, y, z) for x in range(croppedROI.GetSize()[0]) for y in
+    shuffled_pixels = [shuffled_roi_image.GetPixel(x, y, z) for x in range(croppedROI.GetSize()[0]) for y in
                        range(croppedROI.GetSize()[1]) for z in range(croppedROI.GetSize()[2]) if
                        croppedROI.GetPixel(x, y, z) == segmentationLabel]
 
-    assert croppedCT.GetSize() == shuffled_image.GetSize(), \
+    assert croppedCT.GetSize() == shuffled_roi_image.GetSize(), \
         "Shuffled image size not same as input image"
-    assert croppedCT.GetSpacing() == shuffled_image.GetSpacing(), \
+    assert croppedCT.GetSpacing() == shuffled_roi_image.GetSpacing(), \
         "Shuffled image spacing not same as input image"
-    assert croppedCT.GetOrigin() == shuffled_image.GetOrigin(), \
+    assert croppedCT.GetOrigin() == shuffled_roi_image.GetOrigin(), \
         "Shuffled image origin not same as input image"
-    assert isinstance(shuffled_image, sitk.Image), \
+    assert isinstance(shuffled_roi_image, sitk.Image), \
         "Returned object is not a sitk.Image"
     assert not np.array_equal(original_pixels, shuffled_pixels), \
         "Pixel values in ROI are not shuffled"
     assert np.array_equal(np.sort(original_pixels),
                           np.sort(shuffled_pixels)), \
         "Shuffled pixel values in ROI are different"
+    assert shuffled_pixels[0,0,0] == -740, \
+        "Random seed is not working for shuffled image. Random seed should be 10."
+    assert shuffled_pixels[-1,-1,-1] == -818, \
+        "Random seed is not working for shuffled image. Random seed should be 10."
 
 
 def test_makeRandomRoi(nsclcCropped):
