@@ -37,13 +37,7 @@ def nsclcCropped(nsclcCTImage, nsclcSEGImage, nsclcCTImageFolderPath, nsclcSEGFi
     alignedROIImage = alignImages(nsclcCTImage, roiImage)
     segmentationLabel = getROIVoxelLabel(alignedROIImage)
 
-    segBoundingBox, correctedROIImage = imageoperations.checkMask(nsclcCTImage, alignedROIImage,
-                                                                  label=segmentationLabel)
-
-    if correctedROIImage is not None:
-        alignedROIImage = correctedROIImage
-
-    croppedCT, croppedROI = imageoperations.cropToTumorMask(nsclcCTImage, alignedROIImage, segBoundingBox)
+    croppedCT, croppedROI = getCroppedImages(nsclcCTImage, alignedROIImage, label=segmentationLabel)
 
     return croppedCT, croppedROI, segmentationLabel
 
