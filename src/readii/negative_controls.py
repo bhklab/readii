@@ -7,7 +7,8 @@ from readii.image_processing import alignImages, getROIVoxelLabel
 from typing import Optional
 
 def shuffleImage(
-    imageToShuffle: sitk.Image
+    imageToShuffle: sitk.Image,
+    randomSeed: Optional[int] = None,
 ) -> sitk.Image:
     
     """Function to shuffle all pixel values in a sitk Image (developed for 3D, should work on 2D as well)
@@ -31,8 +32,11 @@ def shuffleImage(
     # Flatten the 3D array to 1D so values can be shuffled
     flatArrImage = arrImage.flatten()
 
+    # Set the random seed for np random generator
+    randNumGen = np.random.default_rng(seed=randomSeed)
+
     # Shuffle the flat array
-    np.random.shuffle(
+    randNumGen.shuffle(
         flatArrImage,
     )
 
