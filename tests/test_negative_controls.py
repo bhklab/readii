@@ -80,7 +80,7 @@ def test_shuffleImage(nsclcCTImage, randomSeed):
 def test_makeRandomImage(nsclcCTImage):
     " Test negative control to randomize the pixels of the whole image"
 
-    randomized_image = shuffleImage(nsclcCTImage)
+    randomized_image = makeRandomImage(nsclcCTImage)
     original_arr_image = sitk.GetArrayFromImage(nsclcCTImage)
     minVoxelVal, maxVoxelVal = np.min(original_arr_image), np.max(original_arr_image)
 
