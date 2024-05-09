@@ -47,11 +47,14 @@ def nsclcCropped(nsclcCTImage, nsclcSEGImage, nsclcCTImageFolderPath, nsclcSEGFi
 
     return croppedCT, croppedROI, segmentationLabel
 
+@pytest.fixture()
+def randomSeed():
+    return 10
 
-def test_shuffleImage(nsclcCTImage):
+def test_shuffleImage(nsclcCTImage, randomSeed):
     " Test negative control to shuffle the whole image"
 
-    shuffled_image = shuffleImage(nsclcCTImage)
+    shuffled_image = shuffleImage(nsclcCTImage, randomSeed)
     original_pixels = sitk.GetArrayFromImage(nsclcCTImage).flatten()
     shuffled_pixels = sitk.GetArrayFromImage(shuffled_image).flatten()
 
@@ -68,6 +71,10 @@ def test_shuffleImage(nsclcCTImage):
     assert np.array_equal(np.sort(original_pixels),
                           np.sort(shuffled_pixels)), \
         "Shuffled image has different pixel values"
+    assert shuffled_pixels[0,0,0] == -987, \
+        "Random seed is not working for shuffled image. Random seed should be 10."
+    assert shuffled_pixels[-1,-1,-1] == 10, \
+        "Random seed is not working for shuffled image. Random seed should be 10."
 
 
 def test_makeRandomImage(nsclcCTImage):
