@@ -161,7 +161,7 @@ def makeRandomRoi(
             for z in range(baseROISize[2]):
                 if baseROI.GetPixel(x, y, z) == roiLabel:
                     # Randomly assigning the current value to the range [maxVoxelVal, maxVoxelVal]
-                    mapped_value = randNumGen.integers(low=minVoxelVal, high=maxVoxelVal, endpoint=True)
+                    mapped_value = int(randNumGen.integers(low=minVoxelVal, high=maxVoxelVal, endpoint=True))
 
                     # Set the new pixel value
                     new_base.SetPixel(x, y, z, mapped_value)
@@ -298,7 +298,7 @@ def makeRandomNonRoi(
                     or baseROI.GetPixel(x, y, z) != roiLabel
                 ):
                     # Randomly assigning the current value to the range [maxVoxelVal, maxVoxelVal]
-                    mapped_value = randNumGen.integers(low=minVoxelVal, high=maxVoxelVal, endpoint=True)
+                    mapped_value = int(randNumGen.integers(low=minVoxelVal, high=maxVoxelVal, endpoint=True))
 
                     # Set the new pixel value
                     new_base.SetPixel(x, y, z, mapped_value)
