@@ -375,7 +375,7 @@ def shuffleNonROI(
     return new_base
 
 
-def randomizeImageFromDistribtutionSampling(
+def randomizeImageFromDistributionSampling(
     imageToRandomize: sitk.Image,
     randomSeed: Optional[int] = None
 ) -> sitk.Image:
@@ -597,7 +597,7 @@ def applyNegativeControl(
         return shuffleImage(baseImage, randomSeed)
     elif nc_type == "randomized_sampled_full":
         # Make negative control version of ctImage (random sampled pixels from original distribution, same size)
-        return randomizeImageFromDistribtutionSampling(baseImage, randomSeed)
+        return randomizeImageFromDistributionSampling(baseImage, randomSeed)
     
     # typesafety check here to ensure baseROI is not None for the following negative control types
     assert baseROI is not None, \
