@@ -110,14 +110,6 @@ def test_shuffleROI(nsclcCropped, randomSeed):
     original_pixels = sitk.GetArrayFromImage(croppedCT)
     shuffled_roi_pixels = sitk.GetArrayFromImage(shuffled_roi_image)
 
-    # original_pixels = [croppedCT.GetPixel(x, y, z) for x in range(croppedROI.GetSize()[0]) for y in
-    #                    range(croppedROI.GetSize()[1]) for z in range(croppedROI.GetSize()[2]) if
-    #                    croppedROI.GetPixel(x, y, z) == segmentationLabel]
-
-    # shuffled_pixels = [shuffled_roi_image.GetPixel(x, y, z) for x in range(croppedROI.GetSize()[0]) for y in
-    #                    range(croppedROI.GetSize()[1]) for z in range(croppedROI.GetSize()[2]) if
-    #                    croppedROI.GetPixel(x, y, z) == segmentationLabel]
-
     assert croppedCT.GetSize() == shuffled_roi_image.GetSize(), \
         "Shuffled image size not same as input image"
     assert croppedCT.GetSpacing() == shuffled_roi_image.GetSpacing(), \
@@ -128,9 +120,9 @@ def test_shuffleROI(nsclcCropped, randomSeed):
         "Returned object is not a sitk.Image"
     assert not np.array_equal(original_pixels, shuffled_roi_pixels), \
         "Pixel values in ROI are not shuffled"
-    # assert np.array_equal(np.sort(original_pixels),
-    #                       np.sort(shuffled_pixels)), \
-    #     "Shuffled pixel values in ROI are different"
+    assert np.array_equal(np.sort(original_pixels.flatten()),
+                          np.sort(shuffled_roi_pixels.flatten())), \
+        "Shuffled pixel values in ROI are different"
     assert shuffled_roi_pixels[0,0,0] == -740, \
         "Voxel outside the ROI is being shuffled. Should just be the ROI voxels."
     assert shuffled_roi_pixels[7,18,11] == -100, \
