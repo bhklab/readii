@@ -93,17 +93,11 @@ def test_makeRandomImage(nsclcCTImage, randomSeed):
     assert randomized_arr_image.max() <= maxVoxelVal and randomized_arr_image.min() >= minVoxelVal, \
         "Pixel values are not within the expected range"
     assert randomized_arr_image[0,0,0] == 2156, \
-        "Random seed is not working for random image. Random seed should be 10."
+        "Random seed is not working for random image, first voxel has wrong random value. Random seed should be 10."
     assert randomized_arr_image[-1,-1,-1] == 90, \
-        "Random seed is not working for random image. Random seed should be 10."
-
-    for _ in range(5):
-        size = nsclcCTImage.GetSize()
-        x = random.randint(0, size[0] - 1)
-        y = random.randint(0, size[1] - 1)
-        z = random.randint(0, size[2] - 1)
-        assert randomized_image.GetPixel(x, y, z) != nsclcCTImage.GetPixel(x, y, z), \
-            "Random pixel value not shuffled"
+        "Random seed is not working for random image, last voxel has wrong shuffled value. Random seed should be 10."
+    assert randomized_arr_image[238,252,124] == -840, \
+        "Random seed is not working for random image, central ROI voxel has wrong random value. Random seed should be 10."
 
 
 def test_shuffleROI(nsclcCropped, randomSeed):
