@@ -119,7 +119,7 @@ def test_shuffleROI(nsclcCropped, randomSeed):
     assert isinstance(shuffled_roi_image, sitk.Image), \
         "Returned object is not a sitk.Image"
     assert not np.array_equal(original_pixels, shuffled_roi_pixels), \
-        "Pixel values in ROI are not shuffled"
+        "No voxel values are being shuffled."
     assert np.array_equal(np.sort(original_pixels.flatten()),
                           np.sort(shuffled_roi_pixels.flatten())), \
         "Shuffled pixel values in ROI are different"
