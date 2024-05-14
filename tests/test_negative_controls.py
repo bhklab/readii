@@ -66,9 +66,11 @@ def test_shuffleImage(nsclcCTImage, randomSeed):
                           np.sort(shuffled_pixels.flatten())), \
         "Shuffled image has different pixel values than original image. Should just be original pixels rearranged."
     assert shuffled_pixels[0,0,0] == -987, \
-        "Random seed is not working for shuffled image. Random seed should be 10."
+        "Random seed is not working for shuffled image, first voxel has wrong shuffled value. Random seed should be 10."
     assert shuffled_pixels[-1,-1,-1] == 10, \
-        "Random seed is not working for shuffled image. Random seed should be 10."
+        "Random seed is not working for shuffled image, last voxel has wrong shuffled value. Random seed should be 10."
+    assert shuffled_pixels[238,252,124] == -118, \
+        "Random seed is not working for shuffled image, central ROI voxel has wrong shuffled value. Random seed should be 10."
 
 
 def test_makeRandomImage(nsclcCTImage, randomSeed):
