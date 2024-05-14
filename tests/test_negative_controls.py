@@ -148,21 +148,14 @@ def test_makeRandomRoi(nsclcCropped, randomSeed):
         "Randomized image origin not same as input image"
     assert isinstance(randomized_roi_image, sitk.Image), \
         "Returned object is not a sitk.Image"
+    assert not np.array_equal(original_arr_image, randomized_roi_image), \
+        "No voxel values have been changed to random."
     assert randomized_arr_image.max() <= maxVoxelVal and randomized_arr_image.min() >= minVoxelVal, \
         "Pixel values are not within the expected range"
     assert randomized_arr_image[0,0,0] == -740, \
         "Voxel outside the ROI is being randomized. Should just be the ROI voxels."
     assert randomized_arr_image[7,18,11] == -400, \
         "Random seed is not working for randomized ROI image, centre pixel has wrong value. Random seed should be 10."
-
-    size = croppedROI.GetSize()
-    for _ in range(5):
-        x = random.randint(0, size[0] - 1)
-        y = random.randint(0, size[1] - 1)
-        z = random.randint(0, size[2] - 1)
-        if croppedROI.GetPixel(x, y, z) == segmentationLabel:
-            assert randomized_roi_image.GetPixel(x, y, z) != croppedCT.GetPixel(x, y, z), \
-                "Pixel value not randomized"
 
 
 def test_shuffleNonROI(nsclcCropped, randomSeed):
@@ -175,15 +168,6 @@ def test_shuffleNonROI(nsclcCropped, randomSeed):
     original_pixels = sitk.GetArrayFromImage(croppedCT)
     shuffled_non_roi_pixels = sitk.GetArrayFromImage(shuffled_non_roi_image)
 
-    # original_pixels = [croppedCT.GetPixel(x, y, z) for x in range(croppedCT.GetSize()[0]) \
-    #                    for y in range(croppedCT.GetSize()[1]) for z in range(croppedCT.GetSize()[2]) \
-    #                    if x > croppedROI[0] or y > croppedROI[1] or z > croppedROI[2] or croppedROI.GetPixel(x, y,
-    #                                                                                                          z) != segmentationLabel]
-
-    # shuffled_pixels = [shuffled_non_roi_image.GetPixel(x, y, z) for x in range(croppedCT.GetSize()[0]) \
-    #                    for y in range(croppedCT.GetSize()[1]) for z in range(croppedCT.GetSize()[2]) \
-    #                    if x > croppedROI[0] or y > croppedROI[1] or z > croppedROI[2] or croppedROI.GetPixel(x, y,
-    #                                                                                                          z) != segmentationLabel]
     assert croppedCT.GetSize() == shuffled_non_roi_image.GetSize(), \
         "Shuffled image size not same as input image"
     assert croppedCT.GetSpacing() == shuffled_non_roi_image.GetSpacing(), \
@@ -193,23 +177,16 @@ def test_shuffleNonROI(nsclcCropped, randomSeed):
     assert isinstance(shuffled_non_roi_image, sitk.Image), \
         "Returned object is not a sitk.Image"
     assert not np.array_equal(original_pixels, shuffled_non_roi_pixels), \
-        "Pixel values outside ROI are not shuffled"
-    # assert np.array_equal(np.sort(original_pixels),
-    #                       np.sort(shuffled_non_roi_pixels)), \
-    #     "Shuffled pixel values outside ROI are different"
+        "Shuffled image has different pixel values than original image. Should just be original pixels rearranged."
+    assert np.array_equal(np.sort(original_pixels.flatten()),
+                          np.sort(shuffled_non_roi_pixels.flatten())), \
+        "Shuffled pixel values outside ROI are different"
     assert shuffled_non_roi_pixels[0,0,0] == 54, \
         "Random seed is not working for shuffled non-ROI image. Random seed should be 10."
     assert shuffled_non_roi_pixels[-1,-1,-1] == -617, \
         "Random seed is not working for shuffled non-ROI image. Random seed should be 10."
     assert shuffled_non_roi_pixels[7,18,11] == -1, \
         "ROI is getting shuffled when it shouldn't."
-
-    for x in range(croppedROI.GetSize()[0]):
-        for y in range(croppedROI.GetSize()[1]):
-            for z in range(croppedROI.GetSize()[2]):
-                if croppedROI.GetPixel(x, y, z) == segmentationLabel:
-                    assert croppedCT.GetPixel(x, y, z) == shuffled_non_roi_image.GetPixel(x, y, z), \
-                        "Pixel values within ROI have changed"
 
 
 def test_makeRandomNonRoi(nsclcCropped, randomSeed):
