@@ -474,7 +474,7 @@ def makeRandomFromRoiDistribution(
             for z in range(baseROISize[2]):
                 if baseROI.GetPixel(x, y, z) == roiLabel:
                     # Assigning the current value to the randomly sampled value from within the ROI
-                    mapped_value = randNumGen.choice(distributionROI)
+                    mapped_value = int(randNumGen.choice(distributionROI))
 
                     # Set the new pixel value
                     new_base.SetPixel(x, y, z, mapped_value)
@@ -548,7 +548,7 @@ def makeRandomNonRoiFromDistribution(
                     or baseROI.GetPixel(x, y, z) != roiLabel
                 ):
                     # Assigning the current value to the randomly sampled value from within the ROI
-                    mapped_value = randNumGen.choice(distributionROI)
+                    mapped_value = int(randNumGen.choice(distributionROI))
 
                     # Set the new pixel value
                     new_base.SetPixel(x, y, z, mapped_value)
