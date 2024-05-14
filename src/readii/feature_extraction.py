@@ -37,7 +37,7 @@ from readii.negative_controls import (
     shuffleROI,
     makeRandomNonRoi,
     shuffleNonROI,
-    randomizeImageFromDistribtutionSampling,
+    randomizeImageFromDistributionSampling,
     makeRandomFromRoiDistribution,
     makeRandomNonRoiFromDistribution,
 )
