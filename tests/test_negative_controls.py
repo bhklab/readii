@@ -62,9 +62,9 @@ def test_shuffleImage(nsclcCTImage, randomSeed):
         "Returned object is not a sitk.Image"
     assert not np.array_equal(original_pixels, shuffled_pixels), \
         "Pixel values are not shuffled"
-    # assert np.array_equal(np.sort(original_pixels),
-    #                       np.sort(shuffled_pixels)), \
-    #     "Shuffled image has different pixel values"
+    assert np.array_equal(np.sort(original_pixels.flatten()),
+                          np.sort(shuffled_pixels.flatten())), \
+        "Shuffled image has different pixel values than original image. Should just be original pixels rearranged."
     assert shuffled_pixels[0,0,0] == -987, \
         "Random seed is not working for shuffled image. Random seed should be 10."
     assert shuffled_pixels[-1,-1,-1] == 10, \
