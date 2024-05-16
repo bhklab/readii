@@ -1,5 +1,6 @@
 # READII
-![Docker Pulls](https://img.shields.io/docker/pulls/bhklab/readii)
+[![Docker Pulls](https://img.shields.io/docker/pulls/bhklab/readii)](https://hub.docker.com/r/bhklab/readii)
+
 ![GitHub Release](https://img.shields.io/github/v/release/bhklab/readii)
 
 
