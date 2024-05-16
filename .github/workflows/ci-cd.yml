@@ -3,9 +3,9 @@ name: ci-cd
 # only run on pushes to main or pull requests
 on:
   push:
-    branches: [ "*" ]
+    branches: ["*"]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   Unit-Testing:
@@ -100,7 +100,10 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: "3.9"
-      
+
+      - name: Install poetry
+        uses: snok/install-poetry@v1
+
       - name: Install Package Building Tool
         run: python3 -m pip install build twine
 
@@ -120,10 +123,10 @@ jobs:
 
       - name: Test install from TestPyPI
         run: |
-            pip install \
-            --index-url https://test.pypi.org/simple/ \
-            --extra-index-url https://pypi.org/simple \
-            readii
+          pip install \
+          --index-url https://test.pypi.org/simple/ \
+          --extra-index-url https://pypi.org/simple \
+          readii
 
       - name: Publish to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
@@ -131,7 +134,7 @@ jobs:
           verbose: true
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
-  
+
   Build-Docker-Images:
     needs: Continuous-Deployment
     if: ${{ needs.Continuous-Deployment.outputs.released == 'true' }}
@@ -182,5 +185,3 @@ jobs:
       #       ghcr.io/${{ github.repository }}/readii:${{ steps.release.outputs.tag }}
       #       ghcr.io/${{ github.repository }}/readii:latest
       #     labels: ${{ steps.meta.outputs.labels }}
-
-
