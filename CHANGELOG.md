@@ -2,6 +2,15 @@
 
 
 
+## v1.3.2 (2024-05-16)
+
+### Fix
+
+* fix: update lock ([`18054bd`](https://github.com/bhklab/readii/commit/18054bdadda30253b29eb06839dccaca356fbf1f))
+
+* fix: no docker buils ([`e0a8e63`](https://github.com/bhklab/readii/commit/e0a8e63c584d0fcedbd5fcba42523d5d52a22a4d))
+
+
 ## v1.3.1 (2024-05-16)
 
 ### Fix
