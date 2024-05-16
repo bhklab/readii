@@ -2,6 +2,13 @@
 
 
 
+## v1.3.3 (2024-05-16)
+
+### Fix
+
+* fix: install poetry ([`c1a905a`](https://github.com/bhklab/readii/commit/c1a905a7c3304d31e6edddb8332d98701b1ede18))
+
+
 ## v1.3.2 (2024-05-16)
 
 ### Fix
