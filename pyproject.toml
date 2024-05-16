@@ -14,9 +14,7 @@ dicom-parser = ">=1.2.3"
 matplotlib = ">=3.8.2"
 med-imagetools = "^1.2.0.2"
 pyarrow = "^15.0.0"
-# pyradiomics = "3.0.1a3"
-numpy = "^1.26.4"
-pyradiomics = {git = "https://github.com/AIM-Harvard/pyradiomics.git"}
+pyradiomics = "3.0.1a3"
 
 [tool.poetry.dev-dependencies]
 
