@@ -2,6 +2,81 @@
 
 
 
+## v1.3.0 (2024-05-16)
+
+### Build
+
+* build(poetry.lock): updated package versions ([`811b748`](https://github.com/bhklab/readii/commit/811b748184992b090fb96b0ec10ae5768cd6fa1d))
+
+### Documentation
+
+* docs(negative_controls): add random seed description to shuffleImage function header ([`df9a7d3`](https://github.com/bhklab/readii/commit/df9a7d3fa3cc9992a965e670a0474a19b9291cd2))
+
+* docs(example.ipynb): update notebook to use med-imagetools CT DICOM loader ([`e6339b7`](https://github.com/bhklab/readii/commit/e6339b738f8cf05c04f12d5ae88b0e7baabc8685))
+
+### Feature
+
+* feat(negative_controls): added random seed to all random functions and the apply negative control function ([`280b465`](https://github.com/bhklab/readii/commit/280b46578b6320dd8c9e66ee822dc0ffb7ac9d98))
+
+* feat(negative_controls): add random seed to shuffleNonROI ([`a402ee5`](https://github.com/bhklab/readii/commit/a402ee57b9300558cd796bffe3ed3d8afa1e1654))
+
+* feat(negative_controls): add random seed to shuffleROI ([`826b00d`](https://github.com/bhklab/readii/commit/826b00ddd92ae7fa1e4441426970066de66f8af4))
+
+* feat(negative_controls): added random seed to shuffleImage function, now using numpy RNG and shuffle function ([`a2556ae`](https://github.com/bhklab/readii/commit/a2556aef0afe87f162bf3f6d12c572af23f9a9dc))
+
+### Fix
+
+* fix(negative_controls): set random generated pixel value to int to work with SetPixel ([`8d9b071`](https://github.com/bhklab/readii/commit/8d9b0717428231ff8e8b96c5150953e487ce6038))
+
+* fix(negative_controls): cast result from randNumGen.integers to int for sitk SetPixel function to fix type error ([`257c498`](https://github.com/bhklab/readii/commit/257c49873ebd73b0829b1b4d940e214c3a9192fe))
+
+* fix(image_processing): correctedROIImage was assigned to unused variabel, changed to segImage ([`453402e`](https://github.com/bhklab/readii/commit/453402ed269cf7ec796a7337eae6fedabf07adc4))
+
+* fix(test_negative_controls): makeRandomImage test was using incorrect function (shuffleImage) ([`143712a`](https://github.com/bhklab/readii/commit/143712a7885d957bbd63552a716b51ecbb4a9704))
+
+### Style
+
+* style(feature_extraction): fix typo in randomizeImageFromDistributionSampling import ([`79dc539`](https://github.com/bhklab/readii/commit/79dc539c6802bc235347e16ba4025c39e3cfef4f))
+
+* style(negative_controls): fix spelling of distribution in randomizeImageFromDistributionSampling ([`4a01f5c`](https://github.com/bhklab/readii/commit/4a01f5cb6eb448429d3cdac236ab06a3c6441282))
+
+### Test
+
+* test(negative_controls): added tests for no roiLabel input for ROI and non-ROI negative control functions ([`c083878`](https://github.com/bhklab/readii/commit/c083878e86f8196ccbf2cf15eecb8b6c01f42754))
+
+* test(negative_controls): removed redundant random pixel checks and added some checks for any change in the negative controls, updated some assertion failure messages ([`4ca434b`](https://github.com/bhklab/readii/commit/4ca434b34eebaf71064d3cc34f758d1bb6321556))
+
+* test(negative_controls): update whole image pixel checks and remove random pixel checks in shuffleNonROI and makeRandomRoi ([`b970cbe`](https://github.com/bhklab/readii/commit/b970cbe72a2dc66262a3d3bdac8869a5dd160a59))
+
+* test(negative_controls): update assertion comment in shuffle ROI ([`0c542f4`](https://github.com/bhklab/readii/commit/0c542f48ff07294e504713e51d6a171dbfb70d1c))
+
+* test(negative_controls): fix the shuffle check that the same values exist in the new image in shuffleROI ([`6de291d`](https://github.com/bhklab/readii/commit/6de291d5c7595a31cfb22869784c6183ab4207ef))
+
+* test(negative_controls): in makeRandomImage, added ROI voxel check, removed random pixel check as its covered by the randomSeed checks ([`17ca738`](https://github.com/bhklab/readii/commit/17ca7386daf7cb5d3437deb1d5dcca9b665b2d57))
+
+* test(negative_controls): Added pixel check for centre of ROI, updated failed assertion message for randomSeed pixel checks ([`ed3bb17`](https://github.com/bhklab/readii/commit/ed3bb17768842339c5661fcfafebbd1c6efc786f))
+
+* test(negative_controls): updated shuffle pixel check that values are the same as original ([`52dda33`](https://github.com/bhklab/readii/commit/52dda337b321b71b61922bbcb20363cea05c23eb))
+
+* test(negative_controls): added random seed to rest of functions, changed conversion to pixels to include whole image not just region that&#39;s been altered ([`28db728`](https://github.com/bhklab/readii/commit/28db7280944c3e99dffa56e99fb297e27710d563))
+
+* test(negative_controls): added random seed to shuffleROI and randomROI tests, updated negative control image variable to be clearer ([`e09c142`](https://github.com/bhklab/readii/commit/e09c14282427a2c854d06e25b69556b3ae6351ef))
+
+* test(negative_controls): add random seed in shuffleROI test ([`d12ac25`](https://github.com/bhklab/readii/commit/d12ac25ba7cfb050017d365ef5d93825469e9a0c))
+
+* test(negative_controls): updated nsclcCropped fixture to use getCroppedImages function ([`24dafff`](https://github.com/bhklab/readii/commit/24dafff25aeddd0bfded9b7dfbac4bf588ac7870))
+
+* test(negative_controls): add random seed to make random image ([`6979ac6`](https://github.com/bhklab/readii/commit/6979ac6b72ac9a33aaa2f9178bf52ff711770478))
+
+* test(negative_controls): add random seed to shuffle image test ([`c07c50e`](https://github.com/bhklab/readii/commit/c07c50e857d2dd3c1fff4a25d6f59f4074a2a784))
+
+### Unknown
+
+* Merge pull request #19 from bhklab/add_random_seed
+
+Adding random seed to all negative controls for reproducible results ([`26d8cbc`](https://github.com/bhklab/readii/commit/26d8cbcd74aa0343634332de60dab3ca3b3a2cd6))
+
+
 ## v1.2.1 (2024-03-27)
 
 ### Build
