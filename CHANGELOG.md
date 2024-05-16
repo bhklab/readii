@@ -2,6 +2,17 @@
 
 
 
+## v1.3.1 (2024-05-16)
+
+### Fix
+
+* fix: update readme with docker link
+
+fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readii/commit/4584af76e908708e9af1edc4fba0622c8a0ad30c))
+
+* fix: update readme with docker link ([`2f9a437`](https://github.com/bhklab/readii/commit/2f9a43707510154f207ff1b1ba31ddb879fb6e2d))
+
+
 ## v1.3.0 (2024-05-16)
 
 ### Build
