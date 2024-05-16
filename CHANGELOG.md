@@ -2,6 +2,17 @@
 
 
 
+## v1.3.4 (2024-05-16)
+
+### Fix
+
+* fix: poetry lock ([`0632d5a`](https://github.com/bhklab/readii/commit/0632d5ae3aa619387f2e3c8ff064c243dd5b3ee4))
+
+* fix: pyradiomics original ([`4ab6aa7`](https://github.com/bhklab/readii/commit/4ab6aa7f7562a34c4ddf91a2697058fc796ee8a8))
+
+* fix: pyradiomics original ([`9513427`](https://github.com/bhklab/readii/commit/9513427f2cf7a9d7a59adb250d8d1a76d5e45773))
+
+
 ## v1.3.3 (2024-05-16)
 
 ### Fix
