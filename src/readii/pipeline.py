@@ -32,6 +32,9 @@ def parser():
 
     parser.add_argument("--update", action="store_true", help="Flag to force rerun all steps of pipeline. False by default.")
 
+    parser.add_argument("--random_seed", type=int,
+                        help="Value to set random seed to for reproducible negative controls")
+
     return parser.parse_known_args()[0]
     
 
@@ -107,6 +110,7 @@ def main():
                                                                pyradiomicsParamFilePath = args.pyradiomics_setting,
                                                                outputDirPath = outputDir,
                                                                negativeControl = negativeControl,
+                                                               randomSeed=args.random_seed,
                                                                parallel = args.parallel)
             else:
                 print(negativeControl, " radiomic features have already been extracted. See ", ncRadFeatOutPath)
