@@ -2,6 +2,21 @@
 
 
 
+## v1.4.0 (2024-05-29)
+
+### Feature
+
+* feat(pipeline): added random seed command line argument for negative control creation ([`405fa74`](https://github.com/bhklab/readii/commit/405fa74f80c257c8e616d838dcc64b3865ac5bc9))
+
+* feat(feature_extraction): added argument random seed for negative control creation ([`053d542`](https://github.com/bhklab/readii/commit/053d54266781863a2c5f285e3aec77a831aa1d28))
+
+### Unknown
+
+* Merge pull request #23 from bhklab/development_katy
+
+Adding negative control to main pipeline and feature extraction functions ([`0afc838`](https://github.com/bhklab/readii/commit/0afc83833fcb80f2e158712bc1c8fd91e3b070e1))
+
+
 ## v1.3.4 (2024-05-16)
 
 ### Fix
