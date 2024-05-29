@@ -50,6 +50,7 @@ def singleRadiomicFeatureExtraction(
     roiImage: sitk.Image,
     pyradiomicsParamFilePath: str = "./src/readii/data/default_pyradiomics.yaml",
     negativeControl: Optional[str] = None,
+    randomSeed: Optional[int] = None,
 ) -> OrderedDict[Any, Any]:
     """Function to perform radiomic feature extraction for a single CT image and its corresponding segmentation.
        CT and segmentation will be aligned and cropped prior to extraction.
@@ -64,7 +65,9 @@ def singleRadiomicFeatureExtraction(
         Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
     negativeControl : str
         Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
-
+    randomSeed : int
+        Value to set random seed with for negative control creation to be reproducible.
+        
     Returns
     -------
     OrderedDict[Any, Any]
@@ -100,6 +103,7 @@ def singleRadiomicFeatureExtraction(
             baseImage=croppedCT,
             baseROI=croppedROI,
             roiLabel=segmentationLabel,
+            randomSeed=randomSeed
         )
 
     # Load PyRadiomics feature extraction parameters to use
@@ -125,6 +129,7 @@ def radiomicFeatureExtraction(
     pyradiomicsParamFilePath: str = "src/readii/data/default_pyradiomics.yaml",
     outputDirPath: Optional[str] = None,
     negativeControl: Optional[str] = None,
+    randomSeed: Optional[int] = None,
     parallel: bool = False,
 ) -> pd.DataFrame:
     """Perform radiomic feature extraction using PyRadiomics on CT images with a corresponding segmentation.
@@ -145,6 +150,8 @@ def radiomicFeatureExtraction(
         Path to directory save the dataframe of extracted features to as a csv
     negativeControl : str
         Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
+    randomSeed : int
+        Value to set random seed with for negative control creation to be reproducible.
     parallel : bool
         Flag to decide whether to run extraction in parallel.
 
@@ -269,6 +276,7 @@ def radiomicFeatureExtraction(
                         roiImage=roiImage,
                         pyradiomicsParamFilePath=pyradiomicsParamFilePath,
                         negativeControl=negativeControl,
+                        randomSeed=randomSeed
                     )
 
                     # Create dictionary of image metadata to append to front of output table
