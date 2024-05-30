@@ -1,4 +1,4 @@
-FROM python:3.9-slim-buster
+FROM python:3.11-slim-buster
 
 LABEL maintainer="Katy Scott"
 LABEL description="This is a Dockerfile for the readii package."
