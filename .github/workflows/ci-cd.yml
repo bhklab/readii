@@ -136,7 +136,7 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
   Build-Docker-Images:
-    needs: [Continuous-Deployment, Publish-To-PyPI]
+    needs: [ Continuous-Deployment, Publish-To-PyPI ]
     if: ${{ needs.Continuous-Deployment.outputs.released == 'true' }}
     runs-on: ubuntu-latest
     steps:
