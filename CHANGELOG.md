@@ -2,6 +2,13 @@
 
 
 
+## v1.4.1 (2024-05-30)
+
+### Fix
+
+* fix: add auto build docker ([`e1a58cd`](https://github.com/bhklab/readii/commit/e1a58cd94c2a2a99b0d71f9a536451b734f4f718))
+
+
 ## v1.4.0 (2024-05-29)
 
 ### Feature
