@@ -6,11 +6,6 @@ LABEL license="MIT"
 LABEL usage="docker run -it --rm <image_name> readii --help"
 LABEL org.opencontainers.image.source="github.com/bhklab/readii"
 
-# copy current directory to /readiii
-COPY . /readii
-
-# set working directory
-WORKDIR /readii
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -20,7 +15,7 @@ RUN apt-get update \
 # install readii
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir numpy==1.26.4
-RUN pip install --no-cache-dir .
+RUN pip install readii
 
 RUN readii --help
 

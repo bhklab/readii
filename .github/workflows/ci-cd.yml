@@ -136,7 +136,7 @@ jobs:
           password: ${{ secrets.PYPI_API_TOKEN }}
 
   Build-Docker-Images:
-    needs: Continuous-Deployment
+    needs: Publish-To-PyPI
     if: ${{ needs.Continuous-Deployment.outputs.released == 'true' }}
     runs-on: ubuntu-latest
     steps:
@@ -169,9 +169,8 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            bhklab/readii:${{ steps.release.outputs.tag }}
-            ghcr.io/${{ github.repository }}/readii:${{ steps.release.outputs.tag }}
-
+            bhklab/readii:${{ needs.Continuous-Deployment.outputs.tag }}
+            ghcr.io/${{ github.repository }}/readii:${{ needs.Continuous-Deployment.outputs.tag }}
       - name: Build
         uses: docker/build-push-action@v5
         with:
@@ -180,8 +179,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            bhklab/readii:${{ steps.release.outputs.tag }}
+            bhklab/readii:${{ needs.Continuous-Deployment.outputs.tag }}
             bhklab/readii:latest
-            ghcr.io/${{ github.repository }}/readii:${{ steps.release.outputs.tag }}
+            ghcr.io/${{ github.repository }}/readii:${{ needs.Continuous-Deployment.outputs.tag }}
             ghcr.io/${{ github.repository }}/readii:latest
           labels: ${{ steps.meta.outputs.labels }}
