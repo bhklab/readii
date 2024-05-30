@@ -2,6 +2,17 @@
 
 
 
+## v1.4.3 (2024-05-30)
+
+### Chore
+
+* chore: update dependencies and workflow for continuous deployment ([`d400520`](https://github.com/bhklab/readii/commit/d4005204a85adacceea20cf00ceb22f51f684df4))
+
+### Fix
+
+* fix: force build ([`45cab79`](https://github.com/bhklab/readii/commit/45cab79004e661b955157d7c4284351d532d50b4))
+
+
 ## v1.4.2 (2024-05-30)
 
 ### Fix
