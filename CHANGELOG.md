@@ -2,6 +2,13 @@
 
 
 
+## v1.4.4 (2024-05-30)
+
+### Fix
+
+* fix: update docker image reference ([`91b3c05`](https://github.com/bhklab/readii/commit/91b3c057507e316df375a5fab34428cc47622922))
+
+
 ## v1.4.3 (2024-05-30)
 
 ### Chore
