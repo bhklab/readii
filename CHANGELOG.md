@@ -2,6 +2,13 @@
 
 
 
+## v1.4.2 (2024-05-30)
+
+### Fix
+
+* fix: tag version in dockerfile ([`1b06ed8`](https://github.com/bhklab/readii/commit/1b06ed8a4c196f1e794c34717c700fff75a93f48))
+
+
 ## v1.4.1 (2024-05-30)
 
 ### Fix
