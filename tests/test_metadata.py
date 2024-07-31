@@ -4,7 +4,8 @@ import os
 from readii.metadata import (
     matchCTtoSegmentation,
     getSegmentationType,
-    saveDataframeCSV
+    saveDataframeCSV,
+    getCTWithSegmentation
 )
 
 @pytest.fixture
@@ -14,6 +15,10 @@ def nsclcSummaryFilePath():
 @pytest.fixture
 def lung4DSummaryFilePath():
     return "tests/.imgtools/imgtools_4D-Lung.csv"
+
+@pytest.fixture
+def lung4DEdgesSummaryFilePath():
+    return "tests/.imgtools/imgtools_4D-Lung_edges.csv"
 
 
 def test_matchCTtoSEG(nsclcSummaryFilePath):
@@ -48,10 +53,32 @@ def test_matchCTtoSegmentation_output(nsclcSummaryFilePath):
     """Test saving output of summary file"""
     actual = matchCTtoSegmentation(nsclcSummaryFilePath, 
                                    segType = "SEG",
-                                   outputDirPath = "tests/output/")
+                                   outputFilePath = "tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
     assert os.path.exists("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv") == True, \
         "Output does not exist, double check output file is named correctly."
 
+
+def test_getCTWithRTTRUCT(lung4DEdgesSummaryFilePath):
+    """Test getting CTs with RTSTRUCT segmentation from edges file"""
+    actual = getCTWithSegmentation(lung4DEdgesSummaryFilePath, 
+                                   segType = "RTSTRUCT")
+    assert len(actual) == 1, \
+        "Incorrect merge, should result in only 1 row"
+    assert actual['reference_ct_seg'][0] == '1.3.6.1.4.1.14519.5.2.1.6834.5010.339023390306606021995936229543', \
+        "The segmentation's reference CT ID is wrong/missing"
+    assert actual['reference_ct_seg'][0] == actual['series_CT'][0], \
+        "Segmentation reference ID does not match CT series ID"
+    assert actual['modality_seg'][0] == 'RTSTRUCT', \
+        "Incorrect segmentation type has been found"
+
+
+def test_getCTtoSegmentation_output(lung4DEdgesSummaryFilePath):
+    """Test saving output of summary file"""
+    actual = getCTWithSegmentation(lung4DEdgesSummaryFilePath, 
+                                   segType = "RTSTRUCT",
+                                   outputFilePath = "tests/output/ct_to_seg_match_list_4D-Lung.csv")
+    assert os.path.exists("tests/output/ct_to_seg_match_list_4D-Lung.csv") == True, \
+        "Output does not exist, double check output file is named correctly."
 
 
 @pytest.mark.parametrize(
@@ -76,6 +103,26 @@ def test_saveDataframeCSV_outputFilePath_error(nsclcSummaryFilePath):
     badFilePath = "notacsv.xlsx"
     with pytest.raises(ValueError):
         saveDataframeCSV(testDataframe, badFilePath)
+
+@pytest.mark.parametrize(
+    "wrongSeg",
+    [
+        'CT',
+        'Nonsense',
+        ""
+    ]
+)
+def test_getCTWithRTSTRUCT_error(lung4DEdgesSummaryFilePath, wrongSeg):
+    """Check ValueError is raised when incorrect segType is passed"""
+    with pytest.raises(ValueError):
+        getCTWithSegmentation(lung4DEdgesSummaryFilePath, 
+                                   segType = wrongSeg)
+
+def test_getCTWithSEG_error(nsclcSummaryFilePath):
+    """Check ValueError is raised when incorrect segType is passed"""
+    with pytest.raises(ValueError):
+        getCTWithSegmentation(nsclcSummaryFilePath, 
+                                   segType = "SEG")
 
 
 @pytest.mark.parametrize(

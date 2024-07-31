@@ -45,10 +45,11 @@ def saveDataframeCSV(
     else:
         return
 
+
 def matchCTtoSegmentation(
     imgFileListPath: str, 
     segType: str, 
-    outputDirPath: Optional[str] = None,
+    outputFilePath: Optional[str] = None,
 ) -> pd.DataFrame:
     """From full list of image files, extract CT and corresponding segmentation files and create new table.
     One row of the table contains both the CT and segmentation data for one patient.
@@ -62,7 +63,7 @@ def matchCTtoSegmentation(
     segType : str
         Type of file segmentation is in. Can be SEG or RTSTRUCT.
     outputDirPath : str
-        Optional path to directory to save the dataframe to as a csv.
+        Optional file path to save the dataframe to as a csv.
 
     Returns
     -------
@@ -110,12 +111,7 @@ def matchCTtoSegmentation(
     samplesWSeg.sort_values(by="patient_ID", inplace=True)
 
     # Save out the combined list
-    if outputDirPath != None:
-        # Get datasetname from imgtools output
-        datasetName = imgFileListPath.partition("imgtools_")[2]
-        fileName = "ct_to_seg_match_list_" + datasetName
-        # Join this name with the output directory and add file prefix and csv suffix
-        outputFilePath = os.path.join(outputDirPath, fileName)
+    if outputFilePath != None:
         saveDataframeCSV(samplesWSeg, outputFilePath)
 
     return samplesWSeg
@@ -123,7 +119,7 @@ def matchCTtoSegmentation(
 
 def getCTWithSegmentation(imgFileEdgesPath: str, 
                           segType: str = "RTSTRUCT",
-                          outputDirPath: Optional[str] = None,
+                          outputFilePath: Optional[str] = None,
 ) -> pd.DataFrame:
     """From full list of image files edges from med-imagetools, get the list of CTs with segmentation.
     These are marked as edge type 2 in the edges file.
@@ -136,8 +132,8 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
         Expecting output from med-imagetools autopipeline .imgtools_[dataset]_edges
     segType : str
         Type of file segmentation is in. Must be RTSTRUCT.
-    outputDirPath : str
-        Optional path to directory to save the dataframe to as a csv.
+    outputFilePath : str
+        Optional file path to save the dataframe to as a csv.
 
     Returns
     -------
@@ -170,7 +166,14 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
     samplesWSeg.columns = samplesWSeg.columns.str.replace("_x", "_CT", regex=True)
     samplesWSeg.columns = samplesWSeg.columns.str.replace("_y", "_seg", regex=True)
 
-    sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID_CT")
+    # Remove the _CT suffix from the patient_ID column to match matchCTtoSegmentation
+    samplesWSeg.rename(columns={"patient_ID_CT": "patient_ID"}, inplace=True)
+
+    sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID")
+
+    # Save out the combined list
+    if outputFilePath != None:
+        saveDataframeCSV(sortedSamplesWSeg, outputFilePath)
 
     return sortedSamplesWSeg
 
