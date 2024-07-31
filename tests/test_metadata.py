@@ -53,7 +53,7 @@ def test_matchCTtoSegmentation_output(nsclcSummaryFilePath):
     """Test saving output of summary file"""
     actual = matchCTtoSegmentation(nsclcSummaryFilePath, 
                                    segType = "SEG",
-                                   outputDirPath = "tests/output/")
+                                   outputFilePath = "tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
     assert os.path.exists("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv") == True, \
         "Output does not exist, double check output file is named correctly."
 
@@ -70,6 +70,15 @@ def test_getCTWithRTTRUCT(lung4DEdgesSummaryFilePath):
         "Segmentation reference ID does not match CT series ID"
     assert actual['modality_seg'][0] == 'RTSTRUCT', \
         "Incorrect segmentation type has been found"
+
+
+def test_getCTtoSegmentation_output(lung4DEdgesSummaryFilePath):
+    """Test saving output of summary file"""
+    actual = getCTWithSegmentation(lung4DEdgesSummaryFilePath, 
+                                   segType = "RTSTRUCT",
+                                   outputFilePath = "tests/output/ct_to_seg_match_list_4D-Lung.csv")
+    assert os.path.exists("tests/output/ct_to_seg_match_list_4D-Lung.csv") == True, \
+        "Output does not exist, double check output file is named correctly."
 
 
 @pytest.mark.parametrize(
