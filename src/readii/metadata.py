@@ -119,7 +119,7 @@ def matchCTtoSegmentation(
 
 def getCTWithSegmentation(imgFileEdgesPath: str, 
                           segType: str = "RTSTRUCT",
-                          outputDirPath: Optional[str] = None,
+                          outputFilePath: Optional[str] = None,
 ) -> pd.DataFrame:
     """From full list of image files edges from med-imagetools, get the list of CTs with segmentation.
     These are marked as edge type 2 in the edges file.
@@ -132,8 +132,8 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
         Expecting output from med-imagetools autopipeline .imgtools_[dataset]_edges
     segType : str
         Type of file segmentation is in. Must be RTSTRUCT.
-    outputDirPath : str
-        Optional path to directory to save the dataframe to as a csv.
+    outputFilePath : str
+        Optional file path to save the dataframe to as a csv.
 
     Returns
     -------
@@ -167,6 +167,10 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
     samplesWSeg.columns = samplesWSeg.columns.str.replace("_y", "_seg", regex=True)
 
     sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID_CT")
+
+    # Save out the combined list
+    if outputFilePath != None:
+        saveDataframeCSV(sortedSamplesWSeg, outputFilePath)
 
     return sortedSamplesWSeg
 
