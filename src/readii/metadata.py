@@ -162,7 +162,7 @@ def getSegmentationType(
         segType = "SEG"
     else:
         raise RuntimeError(
-            "No suitable segmentation type found. YAREA can only use RTSTRUCTs and DICOM-SEG segmentations."
+            "No suitable segmentation type found. READII can only use RTSTRUCTs and DICOM-SEG segmentations."
         )
 
     return segType
