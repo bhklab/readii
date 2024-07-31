@@ -1,5 +1,37 @@
 # CHANGELOG
 
+## v1.6.0 (2024-07-31)
+
+### Feature
+
+* feat(metadata.py): add saving out samples with segmentations to getCTWithSegmentation ([`b575f31`](https://github.com/bhklab/readii/commit/b575f3110f1b3be64e635cbe2252c668a6725382))
+
+### Fix
+
+* fix(metadata): drop _CT suffix from patient ID column in output of getCTWithSegmentation ([`5e31b73`](https://github.com/bhklab/readii/commit/5e31b739e74edab76d4a2d248098e68fed8c2f52))
+
+### Refactor
+
+* refactor(pipeline.py): use new getCTWithSegmentation function, utilizes imgtools edges output ([`f1dd879`](https://github.com/bhklab/readii/commit/f1dd8792692dff0dbaa132a47f47bf39e0d53d6a))
+
+* refactor(metdata.py): in matchCTtoSegmentation change outputDir to outputFilePath ([`4219a1a`](https://github.com/bhklab/readii/commit/4219a1ac90673ce7fbfc71c907c6101da8928f97))
+
+### Test
+
+* test(test_metadata): fix outputFilePath argument for matchCTtoSegmentation, add output test for getCTWithSegmentation ([`a9fec18`](https://github.com/bhklab/readii/commit/a9fec1876d649e02c5097f80cf9f37d8d6d9eea0))
+
+* test(test_metadata): added tests for getCTWithSegmentation ([`a7d3fc7`](https://github.com/bhklab/readii/commit/a7d3fc7d7181eab5d539eda46fda38a38d51e116))
+
+### Unknown
+
+* Merge pull request #25 from bhklab/development_katy
+
+New get CT with RTSTRUCTs function ([`5c31b26`](https://github.com/bhklab/readii/commit/5c31b26dbb7400b90620dbf2f79ad4f52eaa103b))
+
+* getCTWithSegmentation works for RTSTRUCT ([`6c69b8a`](https://github.com/bhklab/readii/commit/6c69b8a6c5a9123af6b5695ee7baba4523ead50c))
+
+* getCTWithSegmentation works for RTSTRUCT ([`bd8d0a0`](https://github.com/bhklab/readii/commit/bd8d0a074db517b84434bb523df956782adf45df))
+
 ## v1.5.0 (2024-07-31)
 
 ### Feature
