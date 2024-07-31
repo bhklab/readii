@@ -45,10 +45,11 @@ def saveDataframeCSV(
     else:
         return
 
+
 def matchCTtoSegmentation(
     imgFileListPath: str, 
     segType: str, 
-    outputDirPath: Optional[str] = None,
+    outputFilePath: Optional[str] = None,
 ) -> pd.DataFrame:
     """From full list of image files, extract CT and corresponding segmentation files and create new table.
     One row of the table contains both the CT and segmentation data for one patient.
@@ -62,7 +63,7 @@ def matchCTtoSegmentation(
     segType : str
         Type of file segmentation is in. Can be SEG or RTSTRUCT.
     outputDirPath : str
-        Optional path to directory to save the dataframe to as a csv.
+        Optional file path to save the dataframe to as a csv.
 
     Returns
     -------
@@ -110,12 +111,7 @@ def matchCTtoSegmentation(
     samplesWSeg.sort_values(by="patient_ID", inplace=True)
 
     # Save out the combined list
-    if outputDirPath != None:
-        # Get datasetname from imgtools output
-        datasetName = imgFileListPath.partition("imgtools_")[2]
-        fileName = "ct_to_seg_match_list_" + datasetName
-        # Join this name with the output directory and add file prefix and csv suffix
-        outputFilePath = os.path.join(outputDirPath, fileName)
+    if outputFilePath != None:
         saveDataframeCSV(samplesWSeg, outputFilePath)
 
     return samplesWSeg
