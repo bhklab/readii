@@ -73,10 +73,19 @@ def main():
     imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
     if not os.path.exists(imageMetadataPath) or args.update:
         print("Matching CT to segmentations...")
-        # Generate image metadata file by matching CT and segmentations in imageFileList from med-imagetools
-        matchCTtoSegmentation(imgFileListPath = imageFileListPath,
-                              segType = segType,
-                              outputDirPath = outputDir)
+        if segType == "RTSTRUCT":
+            imageFileEdgesPath = os.path.join(parentDirPath + "/.imgtools/imgtools_" + datasetName + "_edges.csv")
+            getCTWithSegmentation(imgFileEdgesPath = imageFileEdgesPath,
+                                  segType = segType,
+                                  outputFilePath = imageMetadataPath)
+        elif segType == "SEG":
+            # Generate image metadata file by matching CT and segmentations in imageFileList from med-imagetools
+            matchCTtoSegmentation(imgFileListPath = imageFileListPath,
+                                  segType = segType,
+                                  outputFilePath= imageMetadataPath)
+        else:
+            raise ValueError("Incorrect segmentation type or segmentation type is missing from med-imagetools output. Must be RTSTRUCT or SEG.")
+
     else:
         print("Image metadata file has already been created.")
     
