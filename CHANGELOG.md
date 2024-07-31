@@ -1,13 +1,30 @@
 # CHANGELOG
 
+## v1.5.0 (2024-07-31)
 
+### Feature
+
+* feat(metadata.py): using imgtools edges crawl output to get matched CT to RTSTRUCT list ([`dce17fc`](https://github.com/bhklab/readii/commit/dce17fc4b353a7f3971f5eebaffd79ac5da5a522))
+
+### Style
+
+* style(metadata): Update error message to say READII instead of YAREA ([`d6fc791`](https://github.com/bhklab/readii/commit/d6fc7917140bafb645fc07f8a77d582d73dd3410))
+
+### Unknown
+
+* Merge pull request #24 from bhklab/development_katy
+
+New CT to RTSTRUCT matching method and start of testing new negative control generation method ([`c3533a0`](https://github.com/bhklab/readii/commit/c3533a0c21b02d32187fa375505fded3a6741ebb))
+
+* notebooks: create general notebook for debugging ([`9df7b73`](https://github.com/bhklab/readii/commit/9df7b734a0ff6a871cccb593a486b91eb661af6b))
+
+* notebooks: working on improving efficiency of negative control generation ([`bccb4f5`](https://github.com/bhklab/readii/commit/bccb4f5676df90a690e6846e5f04849e512b8884))
 
 ## v1.4.4 (2024-05-30)
 
 ### Fix
 
 * fix: update docker image reference ([`91b3c05`](https://github.com/bhklab/readii/commit/91b3c057507e316df375a5fab34428cc47622922))
-
 
 ## v1.4.3 (2024-05-30)
 
@@ -19,20 +36,17 @@
 
 * fix: force build ([`45cab79`](https://github.com/bhklab/readii/commit/45cab79004e661b955157d7c4284351d532d50b4))
 
-
 ## v1.4.2 (2024-05-30)
 
 ### Fix
 
 * fix: tag version in dockerfile ([`1b06ed8`](https://github.com/bhklab/readii/commit/1b06ed8a4c196f1e794c34717c700fff75a93f48))
 
-
 ## v1.4.1 (2024-05-30)
 
 ### Fix
 
 * fix: add auto build docker ([`e1a58cd`](https://github.com/bhklab/readii/commit/e1a58cd94c2a2a99b0d71f9a536451b734f4f718))
-
 
 ## v1.4.0 (2024-05-29)
 
@@ -48,7 +62,6 @@
 
 Adding negative control to main pipeline and feature extraction functions ([`0afc838`](https://github.com/bhklab/readii/commit/0afc83833fcb80f2e158712bc1c8fd91e3b070e1))
 
-
 ## v1.3.4 (2024-05-16)
 
 ### Fix
@@ -59,13 +72,11 @@ Adding negative control to main pipeline and feature extraction functions ([`0af
 
 * fix: pyradiomics original ([`9513427`](https://github.com/bhklab/readii/commit/9513427f2cf7a9d7a59adb250d8d1a76d5e45773))
 
-
 ## v1.3.3 (2024-05-16)
 
 ### Fix
 
 * fix: install poetry ([`c1a905a`](https://github.com/bhklab/readii/commit/c1a905a7c3304d31e6edddb8332d98701b1ede18))
-
 
 ## v1.3.2 (2024-05-16)
 
@@ -74,7 +85,6 @@ Adding negative control to main pipeline and feature extraction functions ([`0af
 * fix: update lock ([`18054bd`](https://github.com/bhklab/readii/commit/18054bdadda30253b29eb06839dccaca356fbf1f))
 
 * fix: no docker buils ([`e0a8e63`](https://github.com/bhklab/readii/commit/e0a8e63c584d0fcedbd5fcba42523d5d52a22a4d))
-
 
 ## v1.3.1 (2024-05-16)
 
@@ -85,7 +95,6 @@ Adding negative control to main pipeline and feature extraction functions ([`0af
 fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readii/commit/4584af76e908708e9af1edc4fba0622c8a0ad30c))
 
 * fix: update readme with docker link ([`2f9a437`](https://github.com/bhklab/readii/commit/2f9a43707510154f207ff1b1ba31ddb879fb6e2d))
-
 
 ## v1.3.0 (2024-05-16)
 
@@ -161,7 +170,6 @@ fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readi
 
 Adding random seed to all negative controls for reproducible results ([`26d8cbc`](https://github.com/bhklab/readii/commit/26d8cbcd74aa0343634332de60dab3ca3b3a2cd6))
 
-
 ## v1.2.1 (2024-03-27)
 
 ### Build
@@ -216,9 +224,6 @@ Refactor: Add dockerfile, fix some type errors, update type annotations, add som
 
 * Merge branch &#39;dockerfile&#39; of github.com:bhklab/readii into dockerfile ([`6bb042d`](https://github.com/bhklab/readii/commit/6bb042de6bf31a5869f0bfa016b7f38b229e5249))
 
-* Update ci-cd.yml and pyproject.toml ([`fa35141`](https://github.com/bhklab/readii/commit/fa35141d0d9b1772ac4d6242d942f4ad9c0061d3))
-
-
 ## v1.2.0 (2024-03-15)
 
 ### Feature
@@ -233,6 +238,9 @@ Refactor: Add dockerfile, fix some type errors, update type annotations, add som
 
 * fix: test deployment ([`aa1dcb4`](https://github.com/bhklab/readii/commit/aa1dcb479720f8eec295071ad0b45aedaaf275d2))
 
+### Unknown
+
+* Update ci-cd.yml and pyproject.toml ([`fa35141`](https://github.com/bhklab/readii/commit/fa35141d0d9b1772ac4d6242d942f4ad9c0061d3))
 
 ## v1.1.3 (2024-03-06)
 
@@ -249,7 +257,6 @@ Refactor: Add dockerfile, fix some type errors, update type annotations, add som
 * Merge pull request #14 from bhklab/development_katy
 
 Another fix for catching no segmentation type error ([`6e3e8fc`](https://github.com/bhklab/readii/commit/6e3e8fc8486334e7e3c1c438fc5ce757eb8a5585))
-
 
 ## v1.1.2 (2024-03-06)
 
@@ -274,7 +281,6 @@ Added ROI Name Quality Check  for Negative Controls ([`308ceaf`](https://github.
 * Merge pull request #11 from bhklab/development_katy
 
 docs: update README with randomized sampled negative controls, add de… ([`0c90846`](https://github.com/bhklab/readii/commit/0c908463559da5f8cd0a4a0fcc59eaa294ab4dd6))
-
 
 ## v1.1.1 (2024-02-08)
 
@@ -310,7 +316,6 @@ Development katy ([`0f1cc66`](https://github.com/bhklab/readii/commit/0f1cc665d2
 
 * bug(image_processing): force ROI voxel label to int to be compatible with pyradiomics 3.0.1a3 ([`38e7653`](https://github.com/bhklab/readii/commit/38e76532853573b1de204760a11f2833a235001a))
 
-
 ## v1.1.0 (2024-01-31)
 
 ### Feature
@@ -343,18 +348,7 @@ Fixed CTtoSegmentation merge issue and fixed negative control settings ([`7bbf3b
 
 * added new negative controls to --negative_control flag ([`9aaf76c`](https://github.com/bhklab/readii/commit/9aaf76c9c1f5edc968734fde5d03e86f2aa988c3))
 
-
 ## v1.0.0 (2024-01-26)
-
-### Breaking
-
-* build: changed package name from YAREA to READII
-
-BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhklab/readii/commit/3bcb4f9d9b1666f4fb3c3f66b4e4913358db25d7))
-
-### Documentation
-
-* docs(README): update package headline for READII acronym ([`1294d44`](https://github.com/bhklab/readii/commit/1294d44ed87a45567e6a957db77f9738817b37b4))
 
 ### Unknown
 
@@ -372,10 +366,17 @@ Created 3 new negative controls by sampling original image and tests ([`2f95cf7`
 
 * merged changes ([`db63a6c`](https://github.com/bhklab/readii/commit/db63a6c766b1bd6e98dd10369336128038c2b7a1))
 
-* Removed test that doesn&#39;t take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/readii/commit/28ab19e652531095338935d9b6b655f7c3508d02))
-
-
 ## v0.6.0 (2024-01-19)
+
+### Breaking
+
+* build: changed package name from YAREA to READII
+
+BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhklab/readii/commit/3bcb4f9d9b1666f4fb3c3f66b4e4913358db25d7))
+
+### Documentation
+
+* docs(README): update package headline for READII acronym ([`1294d44`](https://github.com/bhklab/readii/commit/1294d44ed87a45567e6a957db77f9738817b37b4))
 
 ### Feature
 
@@ -387,6 +388,7 @@ Created 3 new negative controls by sampling original image and tests ([`2f95cf7`
 
 feat(pipeline): change parallel input argument to be false by default ([`8d0626d`](https://github.com/bhklab/readii/commit/8d0626d08acad7f9e2ca3d31560ea4d532f86e2e))
 
+* Removed test that doesn&#39;t take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/readii/commit/28ab19e652531095338935d9b6b655f7c3508d02))
 
 ## v0.5.0 (2024-01-17)
 
@@ -399,6 +401,8 @@ feat(pipeline): change parallel input argument to be false by default ([`8d0626d
 * docs(pipeline): indicate whether flags are true or false by default in help message of parallel and update ([`311dd5e`](https://github.com/bhklab/readii/commit/311dd5e4f946ba78caaf7c1f0d1ed6dceecd5dcb))
 
 * docs(image_processing): wrote docstring for displayCTSegOverlay ([`2f69dab`](https://github.com/bhklab/readii/commit/2f69dab8f8d7b7b46f7fbe2175b356a4fb28baf7))
+
+* docs: require python 3.9 in conda env setup ([`480b199`](https://github.com/bhklab/readii/commit/480b1997788be447a53a2699a952df076b7b5262))
 
 ### Feature
 
@@ -426,16 +430,9 @@ Added some new functions focused on displaying the CT with a segmentation overla
 
 docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhklab/readii/commit/390d6e6f094968d0d19191484e14da16294e046e))
 
-
 ## v0.4.0 (2024-01-17)
 
-### Build
-
-* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/readii/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
-
 ### Documentation
-
-* docs: require python 3.9 in conda env setup ([`480b199`](https://github.com/bhklab/readii/commit/480b1997788be447a53a2699a952df076b7b5262))
 
 * docs: add installation and usage details to README ([`4281620`](https://github.com/bhklab/readii/commit/4281620f5f791030a020cb4fe91b08318d63426b))
 
@@ -449,11 +446,11 @@ docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhkl
 
 * Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`1327e22`](https://github.com/bhklab/readii/commit/1327e22ab994212e24e4658313897791bef39c82))
 
-* Add ci pass requirement back in ([`b678d4a`](https://github.com/bhklab/readii/commit/b678d4afb2c9818c07d0f8165f8b5baf3426e11c))
-
 * Fixed error with the path for CT and SEG files in the tests for negative controls ([`5ea6e2c`](https://github.com/bhklab/readii/commit/5ea6e2caa601f3aa3eefd806c1c09cdbef0c6e23))
 
 * Fixed feature_extraction error where padSegToMatchCT function was being called incorrectly ([`82ad022`](https://github.com/bhklab/readii/commit/82ad0228bae60a5d800e15f77a9e6cad487e8c23))
+
+* Add ci pass requirement back in ([`b678d4a`](https://github.com/bhklab/readii/commit/b678d4afb2c9818c07d0f8165f8b5baf3426e11c))
 
 * Merge pull request #1 from bhklab/negative_control_tests
 
@@ -461,14 +458,21 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * merged conflicts ([`d78fb5f`](https://github.com/bhklab/readii/commit/d78fb5f101d3532b656a63f5134ac05d281f0bcf))
 
+* Merge branch &#39;main&#39; into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/readii/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
+
 * Finished testing suite for the negative controls ([`6d81739`](https://github.com/bhklab/readii/commit/6d81739841318c201508eb787f46d1024f78039b))
 
-* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/readii/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
+* Fixed issue with shuffleROI and shuffleNonROI, where some pixels with duplicate values were ignored ([`e812bcc`](https://github.com/bhklab/readii/commit/e812bccacaf5ad9f37d62811e6644dc2f6128159))
 
+* Fixed error with wrong variable names, for CT folder path ([`302a284`](https://github.com/bhklab/readii/commit/302a284b904ceee539fee64b52b22c1e03f28fe1))
+
+* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/readii/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
 
 ## v0.3.0 (2023-12-21)
 
 ### Build
+
+* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/readii/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
 
 * build: updated semantic release variables ([`5e24044`](https://github.com/bhklab/readii/commit/5e240446bc561cc34640a24d315edaf376cd244f))
 
@@ -518,16 +522,9 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 ### Unknown
 
-* Merge branch &#39;main&#39; into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/readii/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
-
-* Fixed issue with shuffleROI and shuffleNonROI, where some pixels with duplicate values were ignored ([`e812bcc`](https://github.com/bhklab/readii/commit/e812bccacaf5ad9f37d62811e6644dc2f6128159))
-
-* Fixed error with wrong variable names, for CT folder path ([`302a284`](https://github.com/bhklab/readii/commit/302a284b904ceee539fee64b52b22c1e03f28fe1))
-
 * remove files from tutorial ([`5afac9a`](https://github.com/bhklab/readii/commit/5afac9af90c7112c18acf2c3ce6f22a617c1cf86))
 
 * updated version ([`3a063cf`](https://github.com/bhklab/readii/commit/3a063cf057fdfe3c056ca86af325f060c3c65cf3))
-
 
 ## v0.2.0 (2023-12-19)
 
@@ -638,7 +635,6 @@ Created testing suite for negative controls and fixed errors in image_processing
 * test change in new repo ([`32aed17`](https://github.com/bhklab/readii/commit/32aed17a11048787d0b536210322918e9e5b3dc5))
 
 * Renamed package to yarea ([`7519c43`](https://github.com/bhklab/readii/commit/7519c43e3950f907e6774a35095124ce4a2d630d))
-
 
 ## v0.1.0 (2023-11-23)
 
