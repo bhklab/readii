@@ -166,7 +166,10 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
     samplesWSeg.columns = samplesWSeg.columns.str.replace("_x", "_CT", regex=True)
     samplesWSeg.columns = samplesWSeg.columns.str.replace("_y", "_seg", regex=True)
 
-    sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID_CT")
+    # Remove the _CT suffix from the patient_ID column to match matchCTtoSegmentation
+    samplesWSeg.rename(columns={"patient_ID_CT": "patient_ID"}, inplace=True)
+
+    sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID")
 
     # Save out the combined list
     if outputFilePath != None:
