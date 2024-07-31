@@ -121,6 +121,60 @@ def matchCTtoSegmentation(
     return samplesWSeg
 
 
+def getCTWithSegmentation(imgFileEdgesPath: str, 
+                          segType: str = "RTSTRUCT",
+                          outputDirPath: Optional[str] = None,
+) -> pd.DataFrame:
+    """From full list of image files edges from med-imagetools, get the list of CTs with segmentation.
+    These are marked as edge type 2 in the edges file.
+    Note: This function can only handle RTSTRUCT segmentations as this is what med-imagetools catches at this point.
+
+    Parameters
+    ----------
+    imgFileEdgesPath : str
+        Path to csv containing list of image directories/paths in the dataset with the edge types.
+        Expecting output from med-imagetools autopipeline .imgtools_[dataset]_edges
+    segType : str
+        Type of file segmentation is in. Must be RTSTRUCT.
+    outputDirPath : str
+        Optional path to directory to save the dataframe to as a csv.
+
+    Returns
+    -------
+    pd.Dataframe
+        Dataframe containing the CT and corresponding segmentation data for each patient
+    
+    Raises
+    ------
+    ValueError
+        If the segmentation file type is not RTSTRUCT, or if the imgFileEdgesPath does not end in .csv
+    """
+
+    # Check that segmentation file type is acceptable
+    if segType != "RTSTRUCT":
+        raise ValueError("Incorrect segmentation file type. Must be RTSTRUCT. For SEG, use matchCTtoSegmentation.")
+
+    # Check that imgFileListPath is a csv file to properly be loaded in
+    if not imgFileEdgesPath.endswith(".csv"):
+        raise ValueError(
+            "This function expects to load in a .csv file, so imgFileEdgesPath must end in .csv"
+        )
+    
+    # Load in complete list of patient image directories of all modalities and edge types(output from med-imagetools crawl)
+    fullDicomEdgeList: pd.DataFrame = pd.read_csv(imgFileEdgesPath)
+
+    # Get just the CTs with segmentations, marked as edge type 2 in the edges file
+    samplesWSeg: pd.DataFrame = fullDicomEdgeList.loc[fullDicomEdgeList["edge_type"] == 2]
+
+    # Replace the _x and _y suffixes in the column names with _CT and _seg to match matchCTtoSegmentation
+    samplesWSeg.columns = samplesWSeg.columns.str.replace("_x", "_CT", regex=True)
+    samplesWSeg.columns = samplesWSeg.columns.str.replace("_y", "_seg", regex=True)
+
+    sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID_CT")
+
+    return sortedSamplesWSeg
+
+
 def getSegmentationType(
     imgFileListPath: str
 ) -> Literal['RTSTRUCT', 'SEG']:
@@ -162,7 +216,7 @@ def getSegmentationType(
         segType = "SEG"
     else:
         raise RuntimeError(
-            "No suitable segmentation type found. YAREA can only use RTSTRUCTs and DICOM-SEG segmentations."
+            "No suitable segmentation type found. READII can only use RTSTRUCTs and DICOM-SEG segmentations."
         )
 
     return segType
