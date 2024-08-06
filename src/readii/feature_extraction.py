@@ -31,15 +31,6 @@ from readii.metadata import (
 )
 from readii.negative_controls import (
     applyNegativeControl,
-    shuffleImage, 
-    makeRandomImage,
-    makeRandomRoi,
-    shuffleROI,
-    makeRandomNonRoi,
-    shuffleNonROI,
-    randomizeImageFromDistributionSampling,
-    makeRandomFromRoiDistribution,
-    makeRandomNonRoiFromDistribution,
 )
 
 from typing import Optional, Any
@@ -97,18 +88,23 @@ def singleRadiomicFeatureExtraction(
 
     if negativeControl != None:
         print("Generating ", negativeControl, "negative control for CT.")
+        # Split negative control type into negative control and region of interest
+        negativeControlComponents = negativeControl.rsplit("_", 1)
+        negativeControlType = negativeControlComponents[0]
+        negativeControlRegion = negativeControlComponents[1]
         # Make negative control version of ctImage
         croppedCT = applyNegativeControl(
-            nc_type=negativeControl,
             baseImage=croppedCT,
-            baseROI=croppedROI,
-            roiLabel=segmentationLabel,
+            negativeControlType=negativeControlType,
+            negativeControlRegion=negativeControlRegion,
+            roiMask=croppedROI,
             randomSeed=randomSeed
         )
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
     try:
+        print("Starting radiomic feature extraction...")
         featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
     except OSError as e:
         print(
