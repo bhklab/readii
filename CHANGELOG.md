@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## v1.6.1 (2024-08-06)
+
+### Performance
+
+* perf(negative_controls): improved efficiency for ROI and Non-ROI negative control generation ([`00f3ab2`](https://github.com/bhklab/readii/commit/00f3ab266b16b820a8d92bed52e444ded1feb566))
+
+### Refactor
+
+* refactor(feature_extraction): update for new negative control functions, remove unnecessary imports, add print statement when starting feature extraction to differentiate from negative control creation ([`5669919`](https://github.com/bhklab/readii/commit/566991945fc4c8ff079149ff6c54759f84fa7920))
+
+### Test
+
+* test(test_negative_controls): updated test functions to match new negative control generation functions ([`fa78177`](https://github.com/bhklab/readii/commit/fa781775c2de8a887464836a526fe770580446ad))
+
+### Unknown
+
+* Merge pull request #26 from bhklab/development_katy
+
+Improved efficiency negative control functions ([`8d9bcb6`](https://github.com/bhklab/readii/commit/8d9bcb65813f9a158395f684c0236af05f8c2265))
+
+* notebook(optimize_negative_controls): code to develop improved negative control functions ([`d5c396b`](https://github.com/bhklab/readii/commit/d5c396be1217de08df5991fa3c5e9d860059fb34))
+
+* Coded up improved speed functions for ROI and Non-ROI negative control generation using matrix math ([`bc825cd`](https://github.com/bhklab/readii/commit/bc825cdee4b6970abd453ab2b761a2f52554e4e9))
+
 ## v1.6.0 (2024-07-31)
 
 ### Feature
