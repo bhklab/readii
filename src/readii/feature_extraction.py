@@ -89,9 +89,14 @@ def singleRadiomicFeatureExtraction(
     if negativeControl != None:
         print("Generating ", negativeControl, "negative control for CT.")
         # Split negative control type into negative control and region of interest
-        negativeControlComponents = negativeControl.rsplit("_", 1)
-        negativeControlType = negativeControlComponents[0]
-        negativeControlRegion = negativeControlComponents[1]
+        if negativeControl == "randomized_sampled_non_roi":
+            negativeControlType = "randomized_sampled"
+            negativeControlRegion = "non_roi"
+        else:
+            negativeControlComponents = negativeControl.rsplit("_", 1)
+            negativeControlType = negativeControlComponents[0]
+            negativeControlRegion = negativeControlComponents[1]
+
         # Make negative control version of ctImage
         croppedCT = applyNegativeControl(
             baseImage=croppedCT,
