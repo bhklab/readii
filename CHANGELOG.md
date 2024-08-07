@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v1.6.2 (2024-08-07)
+
+### Fix
+
+* fix(feature_extraction): negative control component split wouldn&#39;t work for randomized_sampled_non_roi, so added specific fix for it for now until readii input is updated ([`241b202`](https://github.com/bhklab/readii/commit/241b2028f34fd66c0b349c4dbe6e574370a37ecd))
+
+### Unknown
+
+* Merge pull request #27 from bhklab/development_katy
+
+fix(feature_extraction): negative control component split wouldn&#39;t wo… ([`55dac25`](https://github.com/bhklab/readii/commit/55dac2572bf2ff1e8373169d88c0105359693baf))
+
 ## v1.6.1 (2024-08-06)
 
 ### Performance
