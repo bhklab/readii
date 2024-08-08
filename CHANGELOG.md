@@ -1,5 +1,17 @@
 # CHANGELOG
 
+## v1.6.3 (2024-08-08)
+
+### Fix
+
+* fix(feature_extraction): update negative control component splitting for non_roi options to properly separate the type and region in singleRadiomicFeatureExtraction ([`3bb250e`](https://github.com/bhklab/readii/commit/3bb250e138f7886461bd15613d1bac168c54f3b6))
+
+### Unknown
+
+* Merge pull request #28 from bhklab/development_katy
+
+fix(feature_extraction): update negative control component splitting … ([`fc6d13d`](https://github.com/bhklab/readii/commit/fc6d13d4b14b6f299bb46f24585a58f86ce5d3ef))
+
 ## v1.6.2 (2024-08-07)
 
 ### Fix
