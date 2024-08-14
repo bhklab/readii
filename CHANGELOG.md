@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v1.6.4 (2024-08-14)
+
+### Fix
+
+* fix(feature_extraction): missed variable name change for non-cropped negative control ([`8d0d7bd`](https://github.com/bhklab/readii/commit/8d0d7bd91bb60f669086ef2ef85bf5e210e4ce7d))
+
+### Refactor
+
+* refactor(feature_extraction): move cropping to after negative control creation ([`f6e840b`](https://github.com/bhklab/readii/commit/f6e840b5f4b813334a5ec7fb050ac2cb82472564))
+
+### Unknown
+
+* Merge pull request #30 from bhklab/development_katy
+
+fix(feature_extraction): missed variable name change for non-cropped … ([`ffe6e47`](https://github.com/bhklab/readii/commit/ffe6e4751ed18fb9175db45ea2647d941895a6c4))
+
+* Merge pull request #29 from bhklab/development_katy
+
+refactor(feature_extraction): move cropping to after negative control… ([`f8db5b0`](https://github.com/bhklab/readii/commit/f8db5b06c47c68d6c1759541b59856b0f5354a3d))
+
 ## v1.6.3 (2024-08-08)
 
 ### Fix
