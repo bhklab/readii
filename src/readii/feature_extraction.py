@@ -83,9 +83,6 @@ def singleRadiomicFeatureExtraction(
     if correctedROIImage is not None:
         alignedROIImage = correctedROIImage
 
-    # Crop the image and mask to a bounding box around the mask to reduce volume size to process
-    croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, alignedROIImage, segBoundingBox)
-
     if negativeControl != None:
         print("Generating ", negativeControl, "negative control for CT.")
         # Split negative control type into negative control and region of interest
@@ -99,12 +96,15 @@ def singleRadiomicFeatureExtraction(
 
         # Make negative control version of ctImage
         croppedCT = applyNegativeControl(
-            baseImage=croppedCT,
+            baseImage=ctImage,
             negativeControlType=negativeControlType,
             negativeControlRegion=negativeControlRegion,
-            roiMask=croppedROI,
+            roiMask=alignedROIImage,
             randomSeed=randomSeed
         )
+
+    # Crop the image and mask to a bounding box around the mask to reduce volume size to process
+    croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, alignedROIImage, segBoundingBox)
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
