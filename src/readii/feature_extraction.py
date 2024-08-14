@@ -95,7 +95,7 @@ def singleRadiomicFeatureExtraction(
             negativeControlRegion = negativeControlComponents[1]
 
         # Make negative control version of ctImage
-        croppedCT = applyNegativeControl(
+        ctImage = applyNegativeControl(
             baseImage=ctImage,
             negativeControlType=negativeControlType,
             negativeControlRegion=negativeControlRegion,
