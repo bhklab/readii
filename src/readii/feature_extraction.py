@@ -321,6 +321,9 @@ def radiomicFeatureExtraction(
             delayed(featureExtraction)(ctSeriesID) for ctSeriesID in ctSeriesIDList
         )
 
+    # Filter out None and ensure each result is a list (even if it's empty)
+    features = [f if isinstance(f, list) else [f] for f in features if f is not None]
+
     # Flatten the list of dictionaries (happens when there are multiple ROIs or SEGs associated with a single CT)
     flatFeatures = list(chain.from_iterable(features))
     # Convert list of feature sets into a pandas dataframe to save out
