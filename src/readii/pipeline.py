@@ -45,10 +45,10 @@ def parser():
 def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imageFileListPath, update = False):
     imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
     if os.path.exists(imageMetadataPath) and not update:
-        logger.info(f"Image metadata file {imageMetadataPath} already exists.")
+        logger.info(f"Image metadata file {imageMetadataPath} already exists & update flag is {update}.")
         return imageMetadataPath
     elif update:
-        logger.info(f"Image metadata file {imageMetadataPath} will be overwritten.")
+        logger.info(f"{update=}, Image metadata file {imageMetadataPath} will be overwritten.")
     else:
         logger.info(f"Image metadata file {imageMetadataPath} not found.. creating...")
     

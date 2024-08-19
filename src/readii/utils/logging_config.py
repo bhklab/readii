@@ -7,13 +7,14 @@ BASE_LOGGING: dict = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'json': {
-            'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
-            'format': '%(asctime)s %(name)s %(levelname)s %(module)s %(message)s %(pathname)s %(lineno)s %(funcName)s %(threadName)s %(thread)s %(process)s %(processName)s',  # noqa: E501
-            'datefmt': '%Y-%m-%d %H:%M:%S',
-        },
+        # 'json': {
+        #     'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+        #     'format': '%(asctime)s %(name)s %(levelname)s %(module)s %(message)s %(pathname)s %(lineno)s %(funcName)s %(threadName)s %(thread)s %(process)s %(processName)s',  # noqa: E501
+        #     'datefmt': '%Y-%m-%d %H:%M:%S',
+        # },
         'stdout': {
-            'format': '%(levelname)s | %(asctime)s | %(name)s | %(module)s:%(funcName)s:%(lineno)d | %(message)s',
+            'class': 'coloredlogs.ColoredFormatter',
+            'format': '%(asctime)s %(module)s:%(funcName)s:%(lineno)d %(levelname)s: %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
     },
@@ -21,13 +22,12 @@ BASE_LOGGING: dict = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'stdout',
-            'level': 'DEBUG',
         },
     },
     'loggers': {
         'devel': {
             'handlers': ['console'],
-            'level': os.getenv('READII_VERBOSITY', 'DEBUG'),
+            'level': os.getenv('READII_VERBOSITY', 'INFO'),
             'propagate': True,
         },
     },
@@ -49,7 +49,6 @@ def setup_logger(
     logging_config = BASE_LOGGING.copy()
     if config:
         logging_config.update(config)
-    
     logging.config.dictConfig(logging_config)
 
     logger = logging.getLogger(logger_name)
