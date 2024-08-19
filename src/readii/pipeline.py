@@ -42,29 +42,7 @@ def parser():
 
     return parser.parse_known_args()[0]
     
-def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imageFileListPath, update = False):
-    imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
-    if os.path.exists(imageMetadataPath) and not update:
-        logger.info(f"Image metadata file {imageMetadataPath} already exists & update flag is {update}.")
-        return imageMetadataPath
-    elif update:
-        logger.info(f"{update=}, Image metadata file {imageMetadataPath} will be overwritten.")
-    else:
-        logger.info(f"Image metadata file {imageMetadataPath} not found.. creating...")
-    
-    if segType == "RTSTRUCT":
-        imageFileEdgesPath = os.path.join(parentDirPath + "/.imgtools/imgtools_" + datasetName + "_edges.csv")
-        getCTWithSegmentation(imgFileEdgesPath = imageFileEdgesPath,
-                                segType = segType,
-                                outputFilePath = imageMetadataPath)
-    elif segType == "SEG":
-        matchCTtoSegmentation(imgFileListPath = imageFileListPath,
-                                segType = segType,
-                                outputFilePath = imageMetadataPath)
-    else:
-        logger.info(f"Expecting either RTSTRUCT or SEG segmentation type. Found {segType}.")
-        raise ValueError("Incorrect segmentation type or segmentation type is missing from med-imagetools output. Must be RTSTRUCT or SEG.")
-    return imageMetadataPath
+
     
 
 def main():
