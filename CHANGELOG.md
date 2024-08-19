@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.7.2 (2024-08-19)
+
+### Fix
+
+* fix: update base image in Dockerfile to python:3.11-slim to fix docker image errors ([`0e2cd3a`](https://github.com/bhklab/readii/commit/0e2cd3a2e7ef29b445ae9d81520739d44672f938))
+
 ## v1.7.1 (2024-08-19)
 
 ### Fix
