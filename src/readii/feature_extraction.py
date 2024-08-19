@@ -1,3 +1,4 @@
+from token import OP
 from venv import logger
 from imgtools.io import read_dicom_series
 from itertools import chain
@@ -45,7 +46,7 @@ logger = get_logger()
 def singleRadiomicFeatureExtraction(
     ctImage: sitk.Image,
     roiImage: sitk.Image,
-    pyradiomicsParamFilePath: str | None = "./src/readii/data/default_pyradiomics.yaml",
+    pyradiomicsParamFilePath: Optional[str] = "./src/readii/data/default_pyradiomics.yaml",
     negativeControl: Optional[str] = None,
     randomSeed: Optional[int] = None,
 ) -> OrderedDict[Any, Any]:
@@ -133,7 +134,7 @@ def radiomicFeatureExtraction(
     imageMetadataPath: str,
     imageDirPath: str,
     roiNames: Optional[str] = None,
-    pyradiomicsParamFilePath: str | None = "src/readii/data/default_pyradiomics.yaml",
+    pyradiomicsParamFilePath: Optional[str] = "src/readii/data/default_pyradiomics.yaml",
     outputDirPath: Optional[str] = None,
     negativeControl: Optional[str] = None,
     randomSeed: Optional[int] = None,
