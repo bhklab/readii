@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.7.1 (2024-08-19)
+
+### Fix
+
+* fix: using correct pyradiomics in pyproject ([`980cdda`](https://github.com/bhklab/readii/commit/980cdda937ee07333d14d80454e3818a4757b556))
+
 ## v1.7.0 (2024-08-19)
 
 ### Chore
