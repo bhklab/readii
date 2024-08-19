@@ -371,10 +371,8 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
     
     if negativeControlRegion == "roi":
         return negativeControlROIOnly(baseImage, roiMask, negativeControlType, randomSeed)
-    elif negativeControlRegion == "non_roi":
+    else: # negativeControlRegion == "non_roi":
         return negativeControlNonROIOnly(baseImage, roiMask, negativeControlType, randomSeed)
-    else:
-        raise ValueError(f"Invalid negative control region: {negativeControlRegion}. Must be one of ['full', 'roi', 'non_roi']")
 
 #################################################################
 ####################### OLD FUNCTIONS ###########################
