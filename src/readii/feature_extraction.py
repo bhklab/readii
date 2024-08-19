@@ -1,3 +1,4 @@
+from venv import logger
 from imgtools.io import read_dicom_series
 from itertools import chain
 from joblib import Parallel, delayed
@@ -33,8 +34,12 @@ from readii.negative_controls import (
     applyNegativeControl,
 )
 
+from readii.utils import get_logger
+
 from typing import Optional, Any
 from collections import OrderedDict
+
+logger = get_logger()
 
 def singleRadiomicFeatureExtraction(
     ctImage: sitk.Image,
@@ -84,7 +89,7 @@ def singleRadiomicFeatureExtraction(
         alignedROIImage = correctedROIImage
 
     if negativeControl != None:
-        print("Generating ", negativeControl, "negative control for CT.")
+        logger.info(f"Generating {negativeControl} negative control for CT.")
         # Split negative control type into negative control and region of interest
         if "non_roi" in negativeControl:
             negativeControlType =  negativeControl.rsplit("_", 2)[0]
@@ -109,12 +114,10 @@ def singleRadiomicFeatureExtraction(
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
     try:
-        print("Starting radiomic feature extraction...")
+        logger.info("Starting radiomic feature extraction...")
         featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
     except OSError as e:
-        print(
-            "ERROR: Supplied pyradiomics parameter file does not exist or is not at that location."
-        )
+        logger.error(f"Supplied pyradiomics parameter file {pyradiomicsParamFilePath} does not exist or is not at that location: {e}")
         raise
 
     # Extract radiomic features from CT with segmentation as mask
@@ -181,7 +184,7 @@ def radiomicFeatureExtraction(
         ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
         patID = ctSeriesInfo.iloc[0]["patient_ID"]
 
-        print("Processing ", patID)
+        logger.info(f"Processing {patID}")
 
         # Get absolute path to CT image files
         ctDirPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]["folder_CT"])
@@ -220,15 +223,8 @@ def radiomicFeatureExtraction(
 
             # Check that this series has ROIs to extract from (dictionary isn't empty)
             if not segImages:
-                print(
-                    "CT ",
-                    ctSeriesID,
-                    "and segmentation ",
-                    segSeriesID,
-                    " has no ROIs or no ROIs with the label ",
-                    roiNames,
-                    ". Moving to next segmentation.",
-                )
+                log_msg = f"CT {ctSeriesID} and segmentation {segSeriesID} has no ROIs or no ROIs with the label {roiNames}. Moving to next segmentation."
+                logger.warning(log_msg)
 
             else:
                 # Loop over each ROI contained in the segmentation to perform radiomic feature extraction
@@ -237,9 +233,7 @@ def radiomicFeatureExtraction(
                     roiNum = roiCount + 1
 
                     # Extract features listed in the parameter file
-                    print(
-                        "Calculating radiomic features for segmentation:", roiImageName
-                    )
+                    logger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
 
                     # Get sitk Image object for this ROI
                     roiImage = segImages[roiImageName]
@@ -254,13 +248,18 @@ def radiomicFeatureExtraction(
                         if ctImage.GetSize() != roiImage.GetSize():
                             # Checking if number of segmentation slices is less than CT
                             if ctImage.GetSize()[2] > roiImage.GetSize()[2]:
-                                print(
-                                    "Slice number mismatch between CT and segmentation for",
-                                    patID,
-                                    ". Padding segmentation to match.",
+                                logger.warning(
+                                    f"Slice number mismatch between CT and segmentation for {patID}."
+                                    f"ctImage.GetSize(): {ctImage.GetSize()}"
+                                    f"roiImage.GetSize(): {roiImage.GetSize()}"
+                                    "Padding segmentation to match."
                                 )
                                 roiImage = padSegToMatchCT(
                                     ctDirPath, segFilePath, ctImage, roiImage
+                                )
+                                logger.warning(
+                                    f"Padded segmentation to match CT for {patID}."
+                                    "roiImage.GetSize() after padding: {roiImage.GetSize()}"
                                 )
                             else:
                                 raise RuntimeError(
@@ -269,7 +268,7 @@ def radiomicFeatureExtraction(
 
                     # Catching CT and segmentation size mismatch error
                     except RuntimeError as e:
-                        print(str(e))
+                        logger.error(str(e))
 
                     # Extract radiomic features from this CT/segmentation pair
                     idFeatureVector = singleRadiomicFeatureExtraction(

@@ -7,6 +7,10 @@ from imgtools.io import read_dicom_auto
 
 from typing import Optional
 
+from readii.utils import get_logger
+
+# Create a global logger instance
+logger = get_logger()
 
 def loadDicomSITK(imgDirPath: str) -> sitk.Image:
     """Read DICOM series as SimpleITK Image.
@@ -22,6 +26,7 @@ def loadDicomSITK(imgDirPath: str) -> sitk.Image:
         The loaded image.
     """
     # Set up the reader for the DICOM series
+    logger.debug(f"Loading DICOM series from directory: {imgDirPath}")
     reader = sitk.ImageSeriesReader()
     dicomNames = reader.GetGDCMSeriesFileNames(imgDirPath)
     reader.SetFileNames(dicomNames)
@@ -49,11 +54,12 @@ def loadRTSTRUCTSITK(
         A dictionary of mask ROIs from the loaded RTSTRUCT image as a SimpleITK image objects.
         The segmentation label is set to 1.
     """
-
     # Set up segmentation loader
+    logger.debug(f"Making mask using ROI names: {roiNames}")
     makeMask = StructureSetToSegmentation(roi_names=roiNames)
 
     # Read in the base image (CT) and segmentation DICOMs into SITK Images
+    logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
     baseImage = read_dicom_auto(baseImageDirPath)
     segImage = read_dicom_auto(rtstructPath)
 

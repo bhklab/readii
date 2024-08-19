@@ -1,7 +1,33 @@
 import os
 import pandas as pd
 from typing import Optional, Literal
+from readii.utils import get_logger
 
+logger = get_logger()
+
+def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imageFileListPath, update = False):
+    imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
+    if os.path.exists(imageMetadataPath) and not update:
+        logger.info(f"Image metadata file {imageMetadataPath} already exists & update flag is {update}.")
+        return imageMetadataPath
+    elif update:
+        logger.info(f"{update=}, Image metadata file {imageMetadataPath} will be overwritten.")
+    else:
+        logger.info(f"Image metadata file {imageMetadataPath} not found.. creating...")
+    
+    if segType == "RTSTRUCT":
+        imageFileEdgesPath = os.path.join(parentDirPath + "/.imgtools/imgtools_" + datasetName + "_edges.csv")
+        getCTWithSegmentation(imgFileEdgesPath = imageFileEdgesPath,
+                                segType = segType,
+                                outputFilePath = imageMetadataPath)
+    elif segType == "SEG":
+        matchCTtoSegmentation(imgFileListPath = imageFileListPath,
+                                segType = segType,
+                                outputFilePath = imageMetadataPath)
+    else:
+        logger.info(f"Expecting either RTSTRUCT or SEG segmentation type. Found {segType}.")
+        raise ValueError("Incorrect segmentation type or segmentation type is missing from med-imagetools output. Must be RTSTRUCT or SEG.")
+    return imageMetadataPath
 
 def saveDataframeCSV(
     dataframe: pd.DataFrame, 
@@ -32,9 +58,8 @@ def saveDataframeCSV(
     if not isinstance(dataframe, pd.DataFrame):
         raise ValueError("Function expects a pandas DataFrame to save out.")
 
-    # Make directory if it doesn't exist
-    if not os.path.exists(os.path.dirname(outputFilePath)):
-        os.makedirs(os.path.dirname(outputFilePath))
+    # Make directory if it doesn't exist, but don't fail if it already exists
+    os.makedirs(os.path.dirname(outputFilePath), exist_ok=True)
 
     try:
         # Save out DataFrame
@@ -78,7 +103,7 @@ def matchCTtoSegmentation(
     Note: All subseries of CT will be kept in the dataframe in this function
     """
     # Check that segmentation file type is acceptable
-    if segType != "RTSTRUCT" and segType != "SEG":
+    if segType not in ["RTSTRUCT", "SEG"]:
         raise ValueError("Incorrect segmentation file type. Must be RTSTRUCT or SEG.")
 
     # Check that imgFileListPath is a csv file to properly be loaded in
@@ -87,6 +112,10 @@ def matchCTtoSegmentation(
             "This function expects to load in a .csv file, so imgFileListPath must end in .csv"
         )
 
+    if not os.path.exists(imgFileListPath):
+        logger.error(f"Image file list {imgFileListPath} not found.")
+        raise FileNotFoundError("Image file list not found.")
+    
     # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
     fullDicomList: pd.DataFrame = pd.read_csv(imgFileListPath, index_col=0)
 
@@ -132,7 +161,7 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
         Expecting output from med-imagetools autopipeline .imgtools_[dataset]_edges
     segType : str
         Type of file segmentation is in. Must be RTSTRUCT.
-    outputFilePath : str
+    outputFilePath : Optional[str]
         Optional file path to save the dataframe to as a csv.
 
     Returns
@@ -212,7 +241,8 @@ def getSegmentationType(
 
     # Get list of unique modalities
     modalities = list(fullDicomList["modality"].unique())
-
+    logger.debug(f"Modalities found: {modalities}")
+    
     if "RTSTRUCT" in modalities:
         segType = "RTSTRUCT"
     elif "SEG" in modalities:
