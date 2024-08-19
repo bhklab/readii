@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## v1.7.0 (2024-08-19)
+
+### Chore
+
+* chore(deps): update dependencies ([`0296dbd`](https://github.com/bhklab/readii/commit/0296dbdc687f7e06caed3ef2e2edff16a7cae004))
+
+### Feature
+
+* feat(logging): integrate logging for feature extraction and pipeline; replace print statements with logger calls ([`ed6aed4`](https://github.com/bhklab/readii/commit/ed6aed499fd8d50ca34218e8cfd0b67b4d4b822a))
+
+### Fix
+
+* fix(logging): enhance metadata file logging output with update flag details and adjust logging level to INFO ([`3705110`](https://github.com/bhklab/readii/commit/370511086ab57bb7fa92fcd341b01d9aacdcc855))
+
+### Refactor
+
+* refactor(metadata): add createImageMetadataFile function with logging for segmentation; improve error handling and directory creation ([`7e3d07f`](https://github.com/bhklab/readii/commit/7e3d07f86cd9464e6e146e3bee7968ba5f1d3ba7))
+
+### Unknown
+
+* Merge pull request #31 from bhklab/add_logging
+
+feat: Add_logging ([`1255e97`](https://github.com/bhklab/readii/commit/1255e97a97b06a231ab70e69f8f6d09dfc940b03))
+
 ## v1.6.4 (2024-08-14)
 
 ### Fix
