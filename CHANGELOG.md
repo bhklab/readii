@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.7.3 (2024-08-19)
+
+### Fix
+
+* fix: update CI/CD workflow to specify supported platforms for Docker build, removing unsupported macOS entries ([`d19bf9b`](https://github.com/bhklab/readii/commit/d19bf9b79840b0921bf6d60be212b2947f7dbb47))
+
 ## v1.7.2 (2024-08-19)
 
 ### Fix
