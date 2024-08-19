@@ -1,12 +1,42 @@
+from venv import logger
 import SimpleITK as sitk
+from SimpleITK import Image
 import numpy as np
 import random
 
 from readii.image_processing import alignImages, getROIVoxelLabel
+from readii.utils import get_logger
 
 from typing import Optional, Union
-from SimpleITK import Image
 from numpy import ndarray
+
+logger = get_logger()
+
+def getArrayFromImageOrArray(imageOrArray: Union[Image, ndarray]) -> ndarray:
+    """Function to convert a SimpleITK Image to a numpy array.
+    
+    Parameters
+    ----------
+    imageOrArray : sitk.Image | np.ndarray
+        Image or array to convert to numpy array.
+
+    Returns
+    -------
+    np.ndarray
+        Numpy array version of the input image or array.
+        
+    Raises
+    ------
+    ValueError
+        If the input is not a SimpleITK Image or numpy array.
+    """
+    assert isinstance(imageOrArray, Image) or isinstance(imageOrArray, ndarray), \
+        "Input must be a SimpleITK Image or numpy array."
+
+    if isinstance(imageOrArray, Image):
+        return sitk.GetArrayFromImage(imageOrArray)
+    elif isinstance(imageOrArray, ndarray):
+        return imageOrArray    
 
 def makeShuffleImage(
     baseImage: Union[Image, ndarray],
@@ -27,14 +57,8 @@ def makeShuffleImage(
     sitk.Image | np.ndarray
         Image with all pixel values randomly shuffled with same dimensions and object type as input image.
     """
-    # Check if baseImage is a sitk.Image or np.ndarray
-    if type(baseImage) == sitk.Image:
-        # Convert the image to an array
-        arrImage = sitk.GetArrayFromImage(baseImage)
-    elif type(baseImage) == np.ndarray:
-        arrImage = baseImage
-    else:
-        raise ValueError("baseImage must be a sitk.Image or np.ndarray")
+    # # Check if baseImage is a sitk.Image or np.ndarray
+    arrImage = getArrayFromImageOrArray(baseImage)
 
     # Get array dimensions to reshape back to
     imgDimensions = arrImage.shape
@@ -65,7 +89,6 @@ def makeShuffleImage(
         # Return the shuffled array
         return shuffled3DArrImage
 
-
 def makeRandomImage(
     baseImage: Union[Image, ndarray],
     randomSeed: Optional[int] = None,
@@ -84,14 +107,8 @@ def makeRandomImage(
     sitk.Image | np.ndarray
         Image with all pixel values randomly generated with same dimensions and object type as input image.
     """
-    # Check if baseImage is a sitk.Image or np.ndarray
-    if type(baseImage) == sitk.Image:
-        # Convert the image to an array
-        arrImage = sitk.GetArrayFromImage(baseImage)
-    elif type(baseImage) == np.ndarray:
-        arrImage = baseImage
-    else:
-        raise ValueError("baseImage must be a sitk.Image or np.ndarray")
+    # # Check if baseImage is a sitk.Image or np.ndarray
+    arrImage = getArrayFromImageOrArray(baseImage)
 
     # Get array dimensions to reshape back to
     imgDimensions = arrImage.shape
@@ -125,7 +142,6 @@ def makeRandomImage(
         # Return the random array
         return random3DArr
     
-
 def makeRandomSampleFromDistributionImage(
     baseImage: Union[Image, ndarray],
     randomSeed: Optional[int] = None,
@@ -144,13 +160,7 @@ def makeRandomSampleFromDistributionImage(
         Image with all pixel values randomly sampled from the initial dstribution of the image, with same dimensions and object type as input image.
     """
     # Check if baseImage is a sitk.Image or np.ndarray
-    if type(baseImage) == sitk.Image:
-        # Convert the image to an array
-        arrImage = sitk.GetArrayFromImage(baseImage)
-    elif type(baseImage) == np.ndarray:
-        arrImage = baseImage
-    else:
-        raise ValueError("baseImage must be a sitk.Image or np.ndarray")
+    arrImage = getArrayFromImageOrArray(baseImage)
 
     # Get array dimensions to reshape back to
     imgDimensions = arrImage.shape
@@ -179,7 +189,6 @@ def makeRandomSampleFromDistributionImage(
     else:
         # Return the randomly sampled array
         return randomlySampled3DArrImage
-
 
 def negativeControlROIOnly(
         baseImage: Union[Image, ndarray], 
@@ -210,18 +219,10 @@ def negativeControlROIOnly(
         raise ValueError("negativeControlType must be one of 'shuffled', 'randomized', or 'randomized_sampled'")
     
     # Check if baseImage is a sitk.Image or np.ndarray
-    if type(baseImage) == sitk.Image:
-        # Convert the image to an array
-        arrBaseImage = sitk.GetArrayFromImage(baseImage)
-    elif type(baseImage) == np.ndarray:
-        arrBaseImage = baseImage
-
+    arrBaseImage = getArrayFromImageOrArray(baseImage)
+    
     # Check if roiMask is a sitk.Image or np.ndarray
-    if type(roiMask) == sitk.Image:
-        # Convert the image to an array
-        arrROIMask = sitk.GetArrayFromImage(roiMask)
-    elif type(roiMask) == np.ndarray:
-        arrROIMask = roiMask
+    arrROIMask = getArrayFromImageOrArray(roiMask)
 
     # Get binary segmentation masks
     # ROI is 1, background is 0
@@ -288,18 +289,10 @@ def negativeControlNonROIOnly(
         raise ValueError("negativeControlType must be one of 'shuffled', 'randomized', or 'randomized_sampled'")
     
     # Check if baseImage is a sitk.Image or np.ndarray
-    if type(baseImage) == sitk.Image:
-        # Convert the image to an array
-        arrBaseImage = sitk.GetArrayFromImage(baseImage)
-    elif type(baseImage) == np.ndarray:
-        arrBaseImage = baseImage
+    arrBaseImage = getArrayFromImageOrArray(baseImage)
 
     # Check if roiMask is a sitk.Image or np.ndarray
-    if type(roiMask) == sitk.Image:
-        # Convert the image to an array
-        arrROIMask = sitk.GetArrayFromImage(roiMask)
-    elif type(roiMask) == np.ndarray:
-        arrROIMask = roiMask
+    arrROIMask = getArrayFromImageOrArray(roiMask)
 
     # Get binary segmentation masks
     # ROI is 1, background is 0
@@ -372,11 +365,16 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
             return makeRandomImage(baseImage, randomSeed)
         elif negativeControlType == "randomized_sampled":
             return makeRandomSampleFromDistributionImage(baseImage, randomSeed)
-    elif negativeControlRegion == "roi":
+    
+    assert roiMask is not None, \
+        f"ROI mask is None. Must pass ROI mask to negative control function for {negativeControlType} negative control."
+    
+    if negativeControlRegion == "roi":
         return negativeControlROIOnly(baseImage, roiMask, negativeControlType, randomSeed)
     elif negativeControlRegion == "non_roi":
         return negativeControlNonROIOnly(baseImage, roiMask, negativeControlType, randomSeed)
-
+    else:
+        raise ValueError(f"Invalid negative control region: {negativeControlRegion}. Must be one of ['full', 'roi', 'non_roi']")
 
 #################################################################
 ####################### OLD FUNCTIONS ###########################
