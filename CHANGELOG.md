@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## v1.7.4 (2024-08-19)
+
+### Fix
+
+* fix: use Optional for  pyradiomicsParamFilePath in feature extraction functions for older python versions ([`a9aa977`](https://github.com/bhklab/readii/commit/a9aa977dcb78e24bdbbf2cc7fa4c92dbd9c755e7))
+
+* fix: filter out None values and ensure feature results are properly formatted as lists in radiomicFeatureExtraction function ([`53c68ff`](https://github.com/bhklab/readii/commit/53c68ffc7adc02176e12f78dc1c8a0fd4e2a6283))
+
+### Refactor
+
+* refactor: simplify negative control region handling by removing unnecessary elif and raising ValueError in negative_controls.py ([`17ad253`](https://github.com/bhklab/readii/commit/17ad2532f9c5dfdb84b2b91a2b071ff1133d543c))
+
+* refactor: update logging format for better clarity in log messages, put the function name at the end of message in brackets to make it easier to read ([`bb8aa14`](https://github.com/bhklab/readii/commit/bb8aa14a5c525030663dbace9fe86e8db39c2b9c))
+
+* refactor: address some type annotation errors, and add logging ([`79f342e`](https://github.com/bhklab/readii/commit/79f342ef92d9943a08c495946c48d1aa9a6b01ba))
+
+### Unknown
+
+* Merge pull request #33 from bhklab/feature_extraction_typeannt
+
+fix: type annotations &amp; refactor typing issues ([`b1ce1ed`](https://github.com/bhklab/readii/commit/b1ce1ed6c618d506305fc5bdff778fec80a3646e))
+
 ## v1.7.3 (2024-08-19)
 
 ### Fix
