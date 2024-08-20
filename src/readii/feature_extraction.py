@@ -1,3 +1,4 @@
+from token import OP
 from venv import logger
 from imgtools.io import read_dicom_series
 from itertools import chain
@@ -6,6 +7,7 @@ from radiomics import featureextractor, imageoperations, logging
 
 import os
 import pandas as pd
+import numpy as np
 import SimpleITK as sitk
 
 from readii.image_processing import (
@@ -44,7 +46,7 @@ logger = get_logger()
 def singleRadiomicFeatureExtraction(
     ctImage: sitk.Image,
     roiImage: sitk.Image,
-    pyradiomicsParamFilePath: str = "./src/readii/data/default_pyradiomics.yaml",
+    pyradiomicsParamFilePath: Optional[str] = "./src/readii/data/default_pyradiomics.yaml",
     negativeControl: Optional[str] = None,
     randomSeed: Optional[int] = None,
 ) -> OrderedDict[Any, Any]:
@@ -98,18 +100,20 @@ def singleRadiomicFeatureExtraction(
             negativeControlComponents = negativeControl.rsplit("_", 1)
             negativeControlType = negativeControlComponents[0]
             negativeControlRegion = negativeControlComponents[1]
-
+        logger.debug(f"Negative control region: {negativeControlRegion}")
+        logger.debug(f"Negative control type: {negativeControlType}")
         # Make negative control version of ctImage
-        ctImage = applyNegativeControl(
+        ctImage_nc: sitk.Image | np.ndarray = applyNegativeControl(
             baseImage=ctImage,
             negativeControlType=negativeControlType,
             negativeControlRegion=negativeControlRegion,
             roiMask=alignedROIImage,
             randomSeed=randomSeed
         )
-
-    # Crop the image and mask to a bounding box around the mask to reduce volume size to process
-    croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, alignedROIImage, segBoundingBox)
+        croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage_nc, alignedROIImage, segBoundingBox)
+    else:
+        # Crop the image and mask to a bounding box around the mask to reduce volume size to process
+        croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, alignedROIImage, segBoundingBox)
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
@@ -135,7 +139,7 @@ def radiomicFeatureExtraction(
     imageMetadataPath: str,
     imageDirPath: str,
     roiNames: Optional[str] = None,
-    pyradiomicsParamFilePath: str = "src/readii/data/default_pyradiomics.yaml",
+    pyradiomicsParamFilePath: Optional[str] = "src/readii/data/default_pyradiomics.yaml",
     outputDirPath: Optional[str] = None,
     negativeControl: Optional[str] = None,
     randomSeed: Optional[int] = None,
@@ -170,8 +174,8 @@ def radiomicFeatureExtraction(
         Dataframe containing the image metadata and extracted radiomic features.
     """
     # Setting pyradiomics verbosity lower
-    logger = logging.getLogger("radiomics")
-    logger.setLevel(logging.ERROR)
+    radiomics_logger: logging.Logger = logging.getLogger("radiomics")
+    radiomics_logger.setLevel(logging.ERROR)
 
     # If no pyradiomics paramater file passed, use default
     if pyradiomicsParamFilePath == None:
@@ -323,7 +327,12 @@ def radiomicFeatureExtraction(
             delayed(featureExtraction)(ctSeriesID) for ctSeriesID in ctSeriesIDList
         )
 
+
     logger.info("Finished feature extraction.")
+
+    # Filter out None and ensure each result is a list (even if it's empty)
+    features = [f if isinstance(f, list) else [f] for f in features if f is not None]
+
     # Flatten the list of dictionaries (happens when there are multiple ROIs or SEGs associated with a single CT)
     flatFeatures = list(chain.from_iterable(features))
     # Convert list of feature sets into a pandas dataframe to save out

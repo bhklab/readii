@@ -1,5 +1,69 @@
 # CHANGELOG
 
+## v1.7.4 (2024-08-19)
+
+### Fix
+
+* fix: use Optional for  pyradiomicsParamFilePath in feature extraction functions for older python versions ([`a9aa977`](https://github.com/bhklab/readii/commit/a9aa977dcb78e24bdbbf2cc7fa4c92dbd9c755e7))
+
+* fix: filter out None values and ensure feature results are properly formatted as lists in radiomicFeatureExtraction function ([`53c68ff`](https://github.com/bhklab/readii/commit/53c68ffc7adc02176e12f78dc1c8a0fd4e2a6283))
+
+### Refactor
+
+* refactor: simplify negative control region handling by removing unnecessary elif and raising ValueError in negative_controls.py ([`17ad253`](https://github.com/bhklab/readii/commit/17ad2532f9c5dfdb84b2b91a2b071ff1133d543c))
+
+* refactor: update logging format for better clarity in log messages, put the function name at the end of message in brackets to make it easier to read ([`bb8aa14`](https://github.com/bhklab/readii/commit/bb8aa14a5c525030663dbace9fe86e8db39c2b9c))
+
+* refactor: address some type annotation errors, and add logging ([`79f342e`](https://github.com/bhklab/readii/commit/79f342ef92d9943a08c495946c48d1aa9a6b01ba))
+
+### Unknown
+
+* Merge pull request #33 from bhklab/feature_extraction_typeannt
+
+fix: type annotations &amp; refactor typing issues ([`b1ce1ed`](https://github.com/bhklab/readii/commit/b1ce1ed6c618d506305fc5bdff778fec80a3646e))
+
+## v1.7.3 (2024-08-19)
+
+### Fix
+
+* fix: update CI/CD workflow to specify supported platforms for Docker build, removing unsupported macOS entries ([`d19bf9b`](https://github.com/bhklab/readii/commit/d19bf9b79840b0921bf6d60be212b2947f7dbb47))
+
+## v1.7.2 (2024-08-19)
+
+### Fix
+
+* fix: update base image in Dockerfile to python:3.11-slim to fix docker image errors ([`0e2cd3a`](https://github.com/bhklab/readii/commit/0e2cd3a2e7ef29b445ae9d81520739d44672f938))
+
+## v1.7.1 (2024-08-19)
+
+### Fix
+
+* fix: using correct pyradiomics in pyproject ([`980cdda`](https://github.com/bhklab/readii/commit/980cdda937ee07333d14d80454e3818a4757b556))
+
+## v1.7.0 (2024-08-19)
+
+### Chore
+
+* chore(deps): update dependencies ([`0296dbd`](https://github.com/bhklab/readii/commit/0296dbdc687f7e06caed3ef2e2edff16a7cae004))
+
+### Feature
+
+* feat(logging): integrate logging for feature extraction and pipeline; replace print statements with logger calls ([`ed6aed4`](https://github.com/bhklab/readii/commit/ed6aed499fd8d50ca34218e8cfd0b67b4d4b822a))
+
+### Fix
+
+* fix(logging): enhance metadata file logging output with update flag details and adjust logging level to INFO ([`3705110`](https://github.com/bhklab/readii/commit/370511086ab57bb7fa92fcd341b01d9aacdcc855))
+
+### Refactor
+
+* refactor(metadata): add createImageMetadataFile function with logging for segmentation; improve error handling and directory creation ([`7e3d07f`](https://github.com/bhklab/readii/commit/7e3d07f86cd9464e6e146e3bee7968ba5f1d3ba7))
+
+### Unknown
+
+* Merge pull request #31 from bhklab/add_logging
+
+feat: Add_logging ([`1255e97`](https://github.com/bhklab/readii/commit/1255e97a97b06a231ab70e69f8f6d09dfc940b03))
+
 ## v1.6.4 (2024-08-14)
 
 ### Fix
