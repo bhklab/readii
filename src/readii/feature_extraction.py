@@ -114,14 +114,19 @@ def singleRadiomicFeatureExtraction(
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
     try:
-        logger.info("Starting radiomic feature extraction...")
+        logger.info("Setting up Pyradiomics feature extractor...")
         featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
     except OSError as e:
         logger.error(f"Supplied pyradiomics parameter file {pyradiomicsParamFilePath} does not exist or is not at that location: {e}")
         raise
 
-    # Extract radiomic features from CT with segmentation as mask
-    idFeatureVector = featureExtractor.execute(croppedCT, croppedROI, label=segmentationLabel)
+    try:
+        logger.info("Starting radiomic feature extraction...")
+        # Extract radiomic features from CT with segmentation as mask
+        idFeatureVector = featureExtractor.execute(croppedCT, croppedROI, label=segmentationLabel)
+    except Exception as e:
+        logger.error(f"An error occurred while extracting radiomic features: {e}")
+        raise
 
     return idFeatureVector
 
@@ -318,12 +323,14 @@ def radiomicFeatureExtraction(
             delayed(featureExtraction)(ctSeriesID) for ctSeriesID in ctSeriesIDList
         )
 
+    logger.info("Finished feature extraction.")
     # Flatten the list of dictionaries (happens when there are multiple ROIs or SEGs associated with a single CT)
     flatFeatures = list(chain.from_iterable(features))
     # Convert list of feature sets into a pandas dataframe to save out
     featuresTable = pd.DataFrame(flatFeatures)
 
     if outputDirPath != None:
+        logger.info("Saving output to file...")
         datasetName = imageMetadataPath.partition("match_list_")[2]
         # Setup output file name with the dataset name as a suffix
         if negativeControl == None:
