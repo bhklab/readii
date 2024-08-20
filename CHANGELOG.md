@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## v1.7.5 (2024-08-20)
+
+### Unknown
+
+* Merge pull request #34 from bhklab/add_logging
+
+fix(feature_extraction): add try except around actual feature extract… ([`3e6f211`](https://github.com/bhklab/readii/commit/3e6f211055fd8bcf9a80f8b8dffeb05d60ce88bf))
+
+* Merge branch &#39;main&#39; into add_logging ([`e36ac1b`](https://github.com/bhklab/readii/commit/e36ac1b610f45822652ccd5d517dfa44d800bc44))
+
 ## v1.7.4 (2024-08-19)
 
 ### Fix
@@ -51,6 +61,8 @@ fix: type annotations &amp; refactor typing issues ([`b1ce1ed`](https://github.c
 * feat(logging): integrate logging for feature extraction and pipeline; replace print statements with logger calls ([`ed6aed4`](https://github.com/bhklab/readii/commit/ed6aed499fd8d50ca34218e8cfd0b67b4d4b822a))
 
 ### Fix
+
+* fix(feature_extraction): add try except around actual feature extraction call, add logging to end of feature extraction and file saving ([`ba119ad`](https://github.com/bhklab/readii/commit/ba119adde76c32b9bf04d2199b0c09bbcb07349e))
 
 * fix(logging): enhance metadata file logging output with update flag details and adjust logging level to INFO ([`3705110`](https://github.com/bhklab/readii/commit/370511086ab57bb7fa92fcd341b01d9aacdcc855))
 
