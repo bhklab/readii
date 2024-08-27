@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "readii"
-version = "1.7.5"
+version = "1.7.6"
 description = "A package to extract radiomic features!"
 authors = ["Katy Scott"]
 license = "MIT"

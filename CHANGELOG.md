@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## v1.7.6 (2024-08-27)
+
+### Fix
+
+* fix: Update ci-cd.yml ([`13cc197`](https://github.com/bhklab/readii/commit/13cc197546d81be42c3ba4c72c476ba2ad1895a7))
+
 ## v1.7.5 (2024-08-20)
 
 ### Unknown
