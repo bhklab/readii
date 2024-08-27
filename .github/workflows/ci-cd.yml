@@ -177,7 +177,7 @@ jobs:
           context: .
           # platforms: macos/amd64,linux/amd64, macos/arm64, linux/arm64
           # slim-buster only supports linux/{amd64,arm64}
-          platforms: linux/amd64, linux/arm64
+          platforms: linux/amd64
           file: ./Dockerfile
           push: true
           tags: |
