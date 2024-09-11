@@ -13,7 +13,6 @@ BASE_LOGGING: dict = {
         #     'datefmt': '%Y-%m-%d %H:%M:%S',
         # },
         'stdout': {
-            'class': 'coloredlogs.ColoredFormatter',
             'format': '%(asctime)s %(levelname)s: %(message)s (%(module)s:%(funcName)s:%(lineno)d)',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
