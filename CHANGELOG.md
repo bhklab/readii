@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## v1.7.7 (2024-09-12)
+
+### Chore
+
+* chore: update lockfile ([`9c5fa18`](https://github.com/bhklab/readii/commit/9c5fa18fd2b4c53d24a66f12d8987b2c4d7a3f28))
+
+### Fix
+
+* fix: Remove coloredlogs dependency and logging configuration from the project ([`ba8208f`](https://github.com/bhklab/readii/commit/ba8208fc1925533cda8dfccc165c887fc58bc67d))
+
+### Unknown
+
+* Merge pull request #35 from bhklab/remove_colored_logs
+
+fix: Remove coloredlogs dependency and logging configuration from the project ([`7616d88`](https://github.com/bhklab/readii/commit/7616d882119e8d608846ab80e875d58f16973aba))
+
 ## v1.7.6 (2024-08-27)
 
 ### Fix
