@@ -343,7 +343,7 @@ def radiomicFeatureExtraction(
         datasetName = imageMetadataPath.partition("match_list_")[2]
         # Setup output file name with the dataset name as a suffix
         if negativeControl == None:
-            outFileName = "radiomicfeatures_" + datasetName
+            outFileName = "radiomicfeatures_original_" + datasetName
         else:
             # Add negative control identifier to output file name
             outFileName = "radiomicfeatures_" + negativeControl + "_" + datasetName
