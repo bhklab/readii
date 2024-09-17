@@ -1,5 +1,25 @@
 # CHANGELOG
 
+## v1.8.0 (2024-09-17)
+
+### Feature
+
+* feat: make output directory and parents as needed before saving radiomic output ([`bf7600c`](https://github.com/bhklab/readii/commit/bf7600ce681e08eca55fcf4ef6ece028a99ae430))
+
+### Refactor
+
+* refactor: change output file from feature extraction without negative control to be radiomicfeatures_original_datasetname.csv ([`7663ce8`](https://github.com/bhklab/readii/commit/7663ce8de4266a29e857d86e6fad0d32cf4dc87a))
+
+### Test
+
+* test(test_feature_extraction): updated for new original image feature extraction output ([`2e53bc8`](https://github.com/bhklab/readii/commit/2e53bc8916c53795d96db00057fa108f9f9422db))
+
+### Unknown
+
+* Merge pull request #36 from bhklab/change-original-image-output-name-convention
+
+Change original image output name convention ([`d6af655`](https://github.com/bhklab/readii/commit/d6af65553f97b8f7b7939a1660d75c6404ce313f))
+
 ## v1.7.7 (2024-09-12)
 
 ### Chore
