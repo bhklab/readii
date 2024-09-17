@@ -97,7 +97,7 @@ def main():
         args.update)
     
     # Check if radiomic feature file already exists
-    radFeatOutPath = os.path.join(outputDir, "features/", "radiomicfeatures_" + datasetName + ".csv")
+    radFeatOutPath = os.path.join(outputDir, "features/", "radiomicfeatures_original_" + datasetName + ".csv")
     if not os.path.exists(radFeatOutPath) or args.update:
         logger.info("Starting radiomic feature extraction...")
         radiomicFeatures = radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,

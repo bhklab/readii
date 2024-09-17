@@ -339,11 +339,17 @@ def radiomicFeatureExtraction(
     featuresTable = pd.DataFrame(flatFeatures)
 
     if outputDirPath != None:
+        if not os.path.exists(outputDirPath):
+            logger.info(f"Directory {outputDirPath} does not exist. Creating...")
+            os.makedirs(outputDirPath)
+        else:
+            logger.warning(f"Directory {outputDirPath} already exists. Will overwrite contents.")
+
         logger.info("Saving output to file...")
         datasetName = imageMetadataPath.partition("match_list_")[2]
         # Setup output file name with the dataset name as a suffix
         if negativeControl == None:
-            outFileName = "radiomicfeatures_" + datasetName
+            outFileName = "radiomicfeatures_original_" + datasetName
         else:
             # Add negative control identifier to output file name
             outFileName = "radiomicfeatures_" + negativeControl + "_" + datasetName
