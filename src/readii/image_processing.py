@@ -12,6 +12,7 @@ from readii.loaders import (
     loadSegmentation,
 )
 
+
 def flattenImage(image: sitk.Image) -> sitk.Image:
     """Remove axes of image with size one. (ex. shape is [1, 100, 256, 256])
 
@@ -87,11 +88,23 @@ def padSegToMatchCT(
 
     Examples
     --------
-    >>> paddedSeg = padSegToMatchCT("/path/to/CT", "/path/to/segmentation/1.dcm")
+    >>> paddedSeg = padSegToMatchCT(
+    ...     '/path/to/CT',
+    ...     '/path/to/segmentation/1.dcm',
+    ... )
 
-    >>> lungCT = loadDicomSITK("/path/to/CT")
-    >>> tumourSeg = loadSegmentation("/path/to/segmentation/1.dcm", 'SEG')
-    >>> paddedSeg = padSegToMatchCT("/path/to/CT", ctImage = lungCT, alignedSegImage = tumourSeg)
+    >>> lungCT = loadDicomSITK(
+    ...     '/path/to/CT'
+    ... )
+    >>> tumourSeg = loadSegmentation(
+    ...     '/path/to/segmentation/1.dcm',
+    ...     'SEG',
+    ... )
+    >>> paddedSeg = padSegToMatchCT(
+    ...     '/path/to/CT',
+    ...     ctImage=lungCT,
+    ...     alignedSegImage=tumourSeg,
+    ... )
     """
 
     # Load the CT image to align the segmentation to if not passed as argument
@@ -102,10 +115,10 @@ def padSegToMatchCT(
     if alignedSegImage is None:
         if segImagePath is None:
             raise ValueError(
-                "Must pass either a loaded and aligned segmentation or the path to load the segmentation from."
+                'Must pass either a loaded and aligned segmentation or the path to load the segmentation from.'
             )
         else:
-            segImage = loadSegmentation(segImagePath, modality="SEG")
+            segImage = loadSegmentation(segImagePath, modality='SEG')
             # Segmentation contains extra axis, flatten to 3D by removing it
             segImage = flattenImage(segImage)
             # Segmentation has different origin, align it to the CT for proper feature extraction
@@ -128,8 +141,8 @@ def padSegToMatchCT(
     )
 
     # Get the index of the reference IDs in the CT image
-    firstSliceIdx = ctSeries["SOPInstanceUID"].index(firstSliceRef)
-    lastSliceIdx = ctSeries["SOPInstanceUID"].index(lastSliceRef)
+    firstSliceIdx = ctSeries['SOPInstanceUID'].index(firstSliceRef)
+    lastSliceIdx = ctSeries['SOPInstanceUID'].index(lastSliceRef)
 
     # Convert the segmentation image to an array and pad with 0s so segmentation mask is in the correct indices
     arrSeg = sitk.GetArrayFromImage(alignedSegImage)
@@ -142,7 +155,7 @@ def padSegToMatchCT(
                 (0, 0),
             )
         ),
-        "constant",
+        'constant',
         constant_values=(0),
     )
 
@@ -153,13 +166,7 @@ def padSegToMatchCT(
     return paddedSegImage
 
 
-def displayImageSlice(
-    image,
-    sliceIdx,
-    cmap=plt.cm.Greys_r,
-    dispMin=None,
-    dispMax=None
-) -> None:
+def displayImageSlice(image, sliceIdx, cmap=plt.cm.Greys_r, dispMin=None, dispMax=None) -> None:
     """Function to display a 2D slice from a 3D image
         By default, displays slice in greyscale with min and max range set to min and max value in the slice.
 
@@ -188,7 +195,7 @@ def displayImageSlice(
 
     # Display the slice of the image
     plt.imshow(image[sliceIdx, :, :], cmap=cmap, vmin=dispMin, vmax=dispMax)
-    plt.axis("off")
+    plt.axis('off')
 
 
 def displayCTSegOverlay(
@@ -238,9 +245,7 @@ def displayCTSegOverlay(
     maskSeg = np.ma.masked_where(segImage == 0, segImage)
 
     # Plot slice of CT
-    plt.imshow(
-        ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=ctImage.min(), vmax=ctImage.max()
-    )
+    plt.imshow(ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=ctImage.min(), vmax=ctImage.max())
     # Plot mask of ROI overtop
     plt.imshow(
         maskSeg[sliceIdx, :, :],
@@ -249,7 +254,7 @@ def displayCTSegOverlay(
         vmax=segImage.max(),
         alpha=alpha,
     )
-    plt.axis("off")
+    plt.axis('off')
 
 
 def getROICenterCoords(segImage: sitk.Image):
@@ -308,7 +313,7 @@ def getROIVoxelLabel(segImage: sitk.Image):
         return int(labelValue)
     else:
         raise ValueError(
-            "Multiple label values present in this segmentation. Must all be the same."
+            'Multiple label values present in this segmentation. Must all be the same.'
         )
 
 
@@ -343,8 +348,6 @@ def getCroppedImages(ctImage, segImage, segmentationLabel=None):
         segImage = correctedROIImage
 
     # Crop the image and mask to a bounding box around the mask to reduce volume size to process
-    croppedCT, croppedROI = imageoperations.cropToTumorMask(
-        ctImage, segImage, segBoundingBox
-    )
+    croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, segImage, segBoundingBox)
 
     return croppedCT, croppedROI

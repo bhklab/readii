@@ -11,6 +11,7 @@ from readii.utils import get_logger
 # Create a global logger instance
 logger = get_logger()
 
+
 def loadDicomSITK(imgDirPath: str) -> sitk.Image:
     """Read DICOM series as SimpleITK Image.
 
@@ -25,7 +26,7 @@ def loadDicomSITK(imgDirPath: str) -> sitk.Image:
         The loaded image.
     """
     # Set up the reader for the DICOM series
-    logger.debug(f"Loading DICOM series from directory: {imgDirPath}")
+    logger.debug(f'Loading DICOM series from directory: {imgDirPath}')
     reader = sitk.ImageSeriesReader()
     dicomNames = reader.GetGDCMSeriesFileNames(imgDirPath)
     reader.SetFileNames(dicomNames)
@@ -54,11 +55,11 @@ def loadRTSTRUCTSITK(
         The segmentation label is set to 1.
     """
     # Set up segmentation loader
-    logger.debug(f"Making mask using ROI names: {roiNames}")
+    logger.debug(f'Making mask using ROI names: {roiNames}')
     makeMask = StructureSetToSegmentation(roi_names=roiNames)
 
     # Read in the base image (CT) and segmentation DICOMs into SITK Images
-    logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
+    logger.debug(f'Loading RTSTRUCT from directory: {rtstructPath}')
     baseImage = read_dicom_auto(baseImageDirPath)
     segImage = read_dicom_auto(rtstructPath)
 
@@ -67,7 +68,7 @@ def loadRTSTRUCTSITK(
         segMasks = makeMask(
             segImage,
             baseImage.image,
-            existing_roi_indices={"background": 0},
+            existing_roi_indices={'background': 0},
             ignore_missing_regex=False,
         )
     except ValueError:
@@ -114,25 +115,30 @@ def loadSegmentation(
 
     Examples
     --------
-    >>> segImages = loadSegmentation("/path/to/segmentation/1.dcm", 'RTSTRUCT', '/path/to/CT', 'GTVp.*')
+    >>> segImages = loadSegmentation(
+    ...     '/path/to/segmentation/1.dcm',
+    ...     'RTSTRUCT',
+    ...     '/path/to/CT',
+    ...     'GTVp.*',
+    ... )
     """
 
-    if modality in ["SEG", "seg"]:
+    if modality in ['SEG', 'seg']:
         # Loading SEG requires directory containing file, not the actual file path
         imgFolder, _ = os.path.split(segImagePath)
         segHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
         roiName = segHeader.SegmentSequence[0].SegmentLabel
         return {roiName: loadDicomSITK(imgFolder)}
 
-    elif modality in ["RTSTRUCT", "rtstruct"]:
+    elif modality in ['RTSTRUCT', 'rtstruct']:
         if baseImageDirPath is None:
             raise ValueError(
-                "Missing path to original image segmentation was taken from. RTSTRUCT loader requires original image."
+                'Missing path to original image segmentation was taken from. RTSTRUCT loader requires original image.'
             )
         else:
             return loadRTSTRUCTSITK(segImagePath, baseImageDirPath, roiNames)
 
     else:
         raise ValueError(
-            "This segmentation modality is not supported. Must be one of RTSTRUCT or SEG"
+            'This segmentation modality is not supported. Must be one of RTSTRUCT or SEG'
         )

@@ -37,7 +37,7 @@ def setup_logger(
     logger_name: str = 'root',
     config: Optional[dict] = None,
     extra_handlers: Optional[list] = None,
-  ) -> logging.Logger:
+) -> logging.Logger:
     """Set up a logger with optional custom configuration and log file."""
     valid_loggers = ['devel', 'prod', 'root']
     assert (
@@ -59,6 +59,7 @@ def setup_logger(
 
     return logger
 
+
 def get_logger(config: Optional[dict] = None) -> logging.Logger:
     """Retrieve logger based on the environment, with an optional configuration."""
     env = os.getenv('READII_ENV', 'development')
@@ -66,8 +67,9 @@ def get_logger(config: Optional[dict] = None) -> logging.Logger:
     logger_name = 'devel' if env in ['devel', 'development'] else 'prod'
     return setup_logger(logger_name=logger_name, config=config)
 
+
 # Example usage
-if __name__ == "__main__":
+if __name__ == '__main__':
     logger = get_logger()
-    logger.info("This is an informational message.")
-    logger.debug("This is a debug message.")
+    logger.info('This is an informational message.')
+    logger.debug('This is a debug message.')
