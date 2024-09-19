@@ -40,6 +40,9 @@ def parser():
     parser.add_argument("--random_seed", type=int,
                         help="Value to set random seed to for reproducible negative controls")
 
+    parser.add_argument("--keep_running", action="store_true",
+                        help="Flag to keep pipeline running even when feature extraction for a patient fails. False by default.")
+
     return parser.parse_known_args()[0]
     
 
@@ -106,7 +109,8 @@ def main():
                                                      pyradiomicsParamFilePath = args.pyradiomics_setting,
                                                      outputDirPath = outputDir,
                                                      negativeControl = None,
-                                                     parallel = args.parallel)
+                                                     parallel = args.parallel,
+                                                     keep_running = args.keep_running)
     else:
         logger.info(f"Radiomic features have already been extracted. See {radFeatOutPath}")
 
@@ -127,7 +131,8 @@ def main():
                                                                outputDirPath = outputDir,
                                                                negativeControl = negativeControl,
                                                                randomSeed=args.random_seed,
-                                                               parallel = args.parallel)
+                                                               parallel = args.parallel,
+                                                               keep_running = args.keep_running)
             else:
                 logger.info(f"{negativeControl} radiomic features have already been extracted. See {ncRadFeatOutPath}")
 
