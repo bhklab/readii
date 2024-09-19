@@ -1,0 +1,27 @@
+[project]
+authors = ["Jermiah <jermiahjoseph98@gmail.com>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "readii"
+platforms = ["linux-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+
+[environments]
+dev = { features = ["style"], solve-group = "default" }
+
+############################################## STYLE ###############################################
+# See config/ruff.toml for the configuration
+[feature.style.dependencies]
+ruff = ">=0.4.4"
+
+[feature.style.tasks.lint]
+cmd = "ruff check --config=config/ruff.toml src"
+inputs = ["src", "config/ruff.toml"]
+
+[feature.style.tasks.format]
+cmd = "ruff format --config=config/ruff.toml src"
+inputs = ["src", "config/ruff.toml"]
