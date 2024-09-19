@@ -1,10 +1,9 @@
-from argparse import ArgumentParser
-from ast import arg
 import os
+from argparse import ArgumentParser
 from venv import logger
 
-from readii.metadata import *
 from readii.feature_extraction import *
+from readii.metadata import *
 from readii.utils import get_logger
 
 logger = get_logger()
@@ -17,17 +16,17 @@ def parser():
     # arguments
     parser.add_argument("data_directory", type=str,
                         help="Path to top-level directory of image dataset. Same as med-imagetools.")
-    
+
     parser.add_argument("output_directory", type=str,
                        help="Path to output directory to save radiomic features and metadata.")
-    
+
     parser.add_argument("--roi_names", type=str, default=None,
                         help="Name of region of interest in RTSTRUCT to perform extraction on.")
-    
+
     parser.add_argument("--pyradiomics_setting", type=str, default=None,
                         help="Path to PyRadiomics configuration YAML file. If none provided, will use \
                               default in src/readii/data/.")
-    
+
     parser.add_argument("--negative_controls", type=str, default=None,
                         help="List of negative control types to run feature extraction on. Input as comma-separated list with no spaces.  \
                               Options: randomized_full,randomized_roi,randomized_non_roi,shuffled_full,shuffled_roi,shuffled_non_roi,randomized_sampled_full,randomized_sampled_roi,randomized_sampled_non_roi")
@@ -41,11 +40,11 @@ def parser():
                         help="Value to set random seed to for reproducible negative controls")
 
     return parser.parse_known_args()[0]
-    
 
-    
 
-def main():
+
+
+def main() -> None:
     """Function to run READII radiomic feature extraction pipeline.
     """
     args = parser()
@@ -53,8 +52,8 @@ def main():
     logger.debug(
         f"Arguments:\n\t{pretty_args}"
     )
-    
-    args_dict = vars(args)
+
+    vars(args)
 
     logger.info("Starting readii pipeline...")
 
@@ -89,18 +88,18 @@ def main():
 
     # Check if image metadata file has already been created
     imageMetadataPath = createImageMetadataFile(
-        outputDir, 
-        parentDirPath, 
-        datasetName, 
-        segType, 
-        imageFileListPath, 
+        outputDir,
+        parentDirPath,
+        datasetName,
+        segType,
+        imageFileListPath,
         args.update)
-    
+
     # Check if radiomic feature file already exists
     radFeatOutPath = os.path.join(outputDir, "features/", "radiomicfeatures_original_" + datasetName + ".csv")
     if not os.path.exists(radFeatOutPath) or args.update:
         logger.info("Starting radiomic feature extraction...")
-        radiomicFeatures = radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,
+        radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,
                                                      imageDirPath = parentDirPath,
                                                      roiNames = args.roi_names,
                                                      pyradiomicsParamFilePath = args.pyradiomics_setting,
@@ -111,7 +110,7 @@ def main():
         logger.info(f"Radiomic features have already been extracted. See {radFeatOutPath}")
 
     # Negative control radiomic feature extraction
-    if args.negative_controls != None:
+    if args.negative_controls is not None:
         # Get all negative controls to run
         negativeControlList = args.negative_controls.split(",")
 
@@ -120,7 +119,7 @@ def main():
             ncRadFeatOutPath = os.path.join(outputDir, "features/", "radiomicfeatures_" + negativeControl + "_" + datasetName + ".csv")
             if not os.path.exists(ncRadFeatOutPath) or args.update:
                 logger.info(f"Starting radiomic feature extraction for negative control: {negativeControl}")
-                ncRadiomicFeatures = radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,
+                radiomicFeatureExtraction(imageMetadataPath = imageMetadataPath,
                                                                imageDirPath = parentDirPath,
                                                                roiNames = args.roi_names,
                                                                pyradiomicsParamFilePath = args.pyradiomics_setting,
@@ -131,7 +130,7 @@ def main():
             else:
                 logger.info(f"{negativeControl} radiomic features have already been extracted. See {ncRadFeatOutPath}")
 
-    
+
     logger.info("Pipeline complete.")
 
 if __name__ == "__main__":

@@ -1,6 +1,8 @@
 import os
+from typing import Literal, Optional
+
 import pandas as pd
-from typing import Optional, Literal
+
 from readii.utils import get_logger
 
 logger = get_logger()
@@ -14,7 +16,7 @@ def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imag
         logger.info(f"{update=}, Image metadata file {imageMetadataPath} will be overwritten.")
     else:
         logger.info(f"Image metadata file {imageMetadataPath} not found.. creating...")
-    
+
     if segType == "RTSTRUCT":
         imageFileEdgesPath = os.path.join(parentDirPath + "/.imgtools/imgtools_" + datasetName + "_edges.csv")
         getCTWithSegmentation(imgFileEdgesPath = imageFileEdgesPath,
@@ -30,7 +32,7 @@ def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imag
     return imageMetadataPath
 
 def saveDataframeCSV(
-    dataframe: pd.DataFrame, 
+    dataframe: pd.DataFrame,
     outputFilePath: str
 ) -> None:
     """Function to save a pandas Dataframe as a csv file with the index removed.
@@ -42,14 +44,14 @@ def saveDataframeCSV(
         Pandas dataframe to save out as a csv
     outputFilePath : str
         Full file path to save the dataframe out to.
-            
+
     Raises
     ------
     ValueError
-        If the outputFilePath does not end in .csv, if the dataframe is not a pandas DataFrame, 
+        If the outputFilePath does not end in .csv, if the dataframe is not a pandas DataFrame,
         or if an error occurs while saving the dataframe.
     """
-    
+
     if not outputFilePath.endswith(".csv"):
         raise ValueError(
             "This function saves .csv files, so outputFilePath must end in .csv"
@@ -65,15 +67,15 @@ def saveDataframeCSV(
         # Save out DataFrame
         dataframe.to_csv(outputFilePath, index=False)
     except Exception as e:
-        error_msg = f"An error occurred while saving the DataFrame: {str(e)}"
+        error_msg = f"An error occurred while saving the DataFrame: {e!s}"
         raise ValueError(error_msg) from e
     else:
         return
 
 
 def matchCTtoSegmentation(
-    imgFileListPath: str, 
-    segType: str, 
+    imgFileListPath: str,
+    segType: str,
     outputFilePath: Optional[str] = None,
 ) -> pd.DataFrame:
     """From full list of image files, extract CT and corresponding segmentation files and create new table.
@@ -94,7 +96,7 @@ def matchCTtoSegmentation(
     -------
     pd.Dataframe
         Dataframe containing the CT and corresponding segmentation data for each patient
-    
+
     Raises
     ------
     ValueError
@@ -115,7 +117,7 @@ def matchCTtoSegmentation(
     if not os.path.exists(imgFileListPath):
         logger.error(f"Image file list {imgFileListPath} not found.")
         raise FileNotFoundError("Image file list not found.")
-    
+
     # Load in complete list of patient image directories of all modalities (output from med-imagetools crawl)
     fullDicomList: pd.DataFrame = pd.read_csv(imgFileListPath, index_col=0)
 
@@ -140,13 +142,13 @@ def matchCTtoSegmentation(
     samplesWSeg.sort_values(by="patient_ID", inplace=True)
 
     # Save out the combined list
-    if outputFilePath != None:
+    if outputFilePath is not None:
         saveDataframeCSV(samplesWSeg, outputFilePath)
 
     return samplesWSeg
 
 
-def getCTWithSegmentation(imgFileEdgesPath: str, 
+def getCTWithSegmentation(imgFileEdgesPath: str,
                           segType: str = "RTSTRUCT",
                           outputFilePath: Optional[str] = None,
 ) -> pd.DataFrame:
@@ -168,7 +170,7 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
     -------
     pd.Dataframe
         Dataframe containing the CT and corresponding segmentation data for each patient
-    
+
     Raises
     ------
     ValueError
@@ -184,7 +186,7 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
         raise ValueError(
             "This function expects to load in a .csv file, so imgFileEdgesPath must end in .csv"
         )
-    
+
     # Load in complete list of patient image directories of all modalities and edge types(output from med-imagetools crawl)
     fullDicomEdgeList: pd.DataFrame = pd.read_csv(imgFileEdgesPath)
 
@@ -201,7 +203,7 @@ def getCTWithSegmentation(imgFileEdgesPath: str,
     sortedSamplesWSeg = samplesWSeg.sort_values(by="patient_ID")
 
     # Save out the combined list
-    if outputFilePath != None:
+    if outputFilePath is not None:
         saveDataframeCSV(sortedSamplesWSeg, outputFilePath)
 
     return sortedSamplesWSeg
@@ -222,7 +224,7 @@ def getSegmentationType(
     -------
     str
         Segmentation type (RTSTRUCT or SEG)
-        
+
     Raises
     ------
     ValueError
@@ -242,7 +244,7 @@ def getSegmentationType(
     # Get list of unique modalities
     modalities = list(fullDicomList["modality"].unique())
     logger.debug(f"Modalities found: {modalities}")
-    
+
     if "RTSTRUCT" in modalities:
         segType = "RTSTRUCT"
     elif "SEG" in modalities:

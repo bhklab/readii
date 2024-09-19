@@ -1,11 +1,10 @@
 import os
+from typing import Optional
+
 import pydicom
 import SimpleITK as sitk
-
-from imgtools.ops import StructureSetToSegmentation
 from imgtools.io import read_dicom_auto
-
-from typing import Optional
+from imgtools.ops import StructureSetToSegmentation
 
 from readii.utils import get_logger
 
@@ -126,7 +125,7 @@ def loadSegmentation(
         return {roiName: loadDicomSITK(imgFolder)}
 
     elif modality in ["RTSTRUCT", "rtstruct"]:
-        if baseImageDirPath == None:
+        if baseImageDirPath is None:
             raise ValueError(
                 "Missing path to original image segmentation was taken from. RTSTRUCT loader requires original image."
             )

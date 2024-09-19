@@ -1,18 +1,16 @@
-from dicom_parser import Series
+from typing import Optional
+
 import matplotlib.pyplot as plt
 import numpy as np
 import pydicom
-from radiomics import imageoperations
 import SimpleITK as sitk
-
-from typing import Optional
+from dicom_parser import Series
+from radiomics import imageoperations
 
 from readii.loaders import (
     loadDicomSITK,
-    loadRTSTRUCTSITK,
     loadSegmentation,
 )
-
 
 def flattenImage(image: sitk.Image) -> sitk.Image:
     """Remove axes of image with size one. (ex. shape is [1, 100, 256, 256])
@@ -156,10 +154,10 @@ def padSegToMatchCT(
 
 
 def displayImageSlice(
-    image, 
-    sliceIdx, 
-    cmap=plt.cm.Greys_r, 
-    dispMin=None, 
+    image,
+    sliceIdx,
+    cmap=plt.cm.Greys_r,
+    dispMin=None,
     dispMax=None
 ) -> None:
     """Function to display a 2D slice from a 3D image
@@ -183,9 +181,9 @@ def displayImageSlice(
         image = sitk.GetArrayFromImage(image)
 
     # Get min and max value from image to define range in display
-    if dispMin == None:
+    if dispMin is None:
         dispMin = image.min()
-    if dispMax == None:
+    if dispMax is None:
         dispMax = image.max()
 
     # Display the slice of the image
@@ -333,7 +331,7 @@ def getCroppedImages(ctImage, segImage, segmentationLabel=None):
     croppedROI : sitk.Image
         Segmentation cropped to bounding box around ROI.
     """
-    if segmentationLabel == None:
+    if segmentationLabel is None:
         segmentationLabel = getROIVoxelLabel(segImage)
 
     # Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match

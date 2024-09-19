@@ -1,20 +1,19 @@
-from venv import logger
-import SimpleITK as sitk
-from SimpleITK import Image
-import numpy as np
-import random
-
-from readii.image_processing import alignImages, getROIVoxelLabel
-from readii.utils import get_logger
-
 from typing import Optional, Union
+from venv import logger
+
+import numpy as np
+import SimpleITK as sitk
 from numpy import ndarray
+from SimpleITK import Image
+
+from readii.image_processing import alignImages
+from readii.utils import get_logger
 
 logger = get_logger()
 
 def getArrayFromImageOrArray(imageOrArray: Union[Image, ndarray]) -> ndarray:
     """Function to convert a SimpleITK Image to a numpy array.
-    
+
     Parameters
     ----------
     imageOrArray : sitk.Image | np.ndarray
@@ -24,7 +23,7 @@ def getArrayFromImageOrArray(imageOrArray: Union[Image, ndarray]) -> ndarray:
     -------
     np.ndarray
         Numpy array version of the input image or array.
-        
+
     Raises
     ------
     ValueError
@@ -36,13 +35,13 @@ def getArrayFromImageOrArray(imageOrArray: Union[Image, ndarray]) -> ndarray:
     if isinstance(imageOrArray, Image):
         return sitk.GetArrayFromImage(imageOrArray)
     elif isinstance(imageOrArray, ndarray):
-        return imageOrArray    
+        return imageOrArray
 
 def makeShuffleImage(
     baseImage: Union[Image, ndarray],
     randomSeed: Optional[int] = None,
 ) -> Union[Image, ndarray]:
-    
+
     """Function to shuffle all pixel values in a sitk.Image or np.ndarray (developed for 3D, should work on 2D as well)
 
     Parameters
@@ -51,7 +50,7 @@ def makeShuffleImage(
         Image to shuffle the pixels in. Can be a sitk.Image or np.ndarray.
     randomSeed : int
         Value to initialize random number generator with. Set for reproducible results.
-        
+
     Returns
     -------
     sitk.Image | np.ndarray
@@ -84,7 +83,7 @@ def makeShuffleImage(
 
         # Return the shuffled image
         return alignedShuffledImage
-    
+
     else:
         # Return the shuffled array
         return shuffled3DArrImage
@@ -137,11 +136,11 @@ def makeRandomImage(
 
         # Return the random image
         return alignedRandomImage
-    
+
     else:
         # Return the random array
         return random3DArr
-    
+
 def makeRandomSampleFromDistributionImage(
     baseImage: Union[Image, ndarray],
     randomSeed: Optional[int] = None,
@@ -183,16 +182,16 @@ def makeRandomSampleFromDistributionImage(
 
         # Set the origin/direction/spacing from original image to sampled image
         alignedRandomlySampledImage = alignImages(baseImage, randomlySampledImage)
-        
-        # Return the randomly sampled image 
+
+        # Return the randomly sampled image
         return alignedRandomlySampledImage
     else:
         # Return the randomly sampled array
         return randomlySampled3DArrImage
 
 def negativeControlROIOnly(
-        baseImage: Union[Image, ndarray], 
-        roiMask: Union[Image, ndarray], 
+        baseImage: Union[Image, ndarray],
+        roiMask: Union[Image, ndarray],
         negativeControlType: str = "shuffled",
         randomSeed: Optional[int] = None
         ) -> Union[Image, ndarray]:
@@ -206,9 +205,9 @@ def negativeControlROIOnly(
         Mask of the ROI to apply negative control within. Can be a sitk.Image or np.ndarray.
     negativeControlType : {'shuffled', 'randomized', 'randomized_sampled'}, default 'shuffled'
         Name of negative control to apply.
-    randomSeed : int, default None    
+    randomSeed : int, default None
         Value to initialize random number generator with. Set for reproducible results.
-    
+
     Returns
     -------
     sitk.Image | np.ndarray
@@ -217,17 +216,17 @@ def negativeControlROIOnly(
 
     if negativeControlType not in ["shuffled", "randomized", "randomized_sampled"]:
         raise ValueError("negativeControlType must be one of 'shuffled', 'randomized', or 'randomized_sampled'")
-    
+
     # Check if baseImage is a sitk.Image or np.ndarray
     arrBaseImage = getArrayFromImageOrArray(baseImage)
-    
+
     # Check if roiMask is a sitk.Image or np.ndarray
     arrROIMask = getArrayFromImageOrArray(roiMask)
 
     # Get binary segmentation masks
     # ROI is 1, background is 0
     binROIMask = np.where(arrROIMask > 0, 1, 0)
-    if binROIMask.any() == False:
+    if binROIMask.any() is False:
         raise ValueError("ROI mask is all 0s. No pixels in ROI to apply negative control to. ROI pixels should be > 1.")
 
     # Get just ROI pixels
@@ -249,10 +248,10 @@ def negativeControlROIOnly(
     if type(baseImage) == sitk.Image:
         # Convert back to sitk Image
         ncROIImage = sitk.GetImageFromArray(arrBaseImage)
-        
+
         # Set the origin/direction/spacing from original image to negative control image
         alignedNCROIImage = alignImages(baseImage, ncROIImage)
-        
+
         # Return the negative control image
         return alignedNCROIImage
     else:
@@ -261,8 +260,8 @@ def negativeControlROIOnly(
 
 
 def negativeControlNonROIOnly(
-        baseImage: Union[Image, ndarray], 
-        roiMask: Union[Image, ndarray], 
+        baseImage: Union[Image, ndarray],
+        roiMask: Union[Image, ndarray],
         negativeControlType: str = "shuffled",
         randomSeed: Optional[int] = None
         ) -> Union[Image, ndarray]:
@@ -276,9 +275,9 @@ def negativeControlNonROIOnly(
         Mask of the ROI to keep original image values within. Can be a sitk.Image or np.ndarray.
     negativeControlType : {'shuffled', 'randomized', 'randomized_sampled'}, default 'shuffled'
         Name of negative control to apply.
-    randomSeed : int, default None    
+    randomSeed : int, default None
         Value to initialize random number generator with. Set for reproducible results.
-    
+
     Returns
     -------
     sitk.Image | np.ndarray
@@ -287,7 +286,7 @@ def negativeControlNonROIOnly(
 
     if negativeControlType not in ["shuffled", "randomized", "randomized_sampled"]:
         raise ValueError("negativeControlType must be one of 'shuffled', 'randomized', or 'randomized_sampled'")
-    
+
     # Check if baseImage is a sitk.Image or np.ndarray
     arrBaseImage = getArrayFromImageOrArray(baseImage)
 
@@ -297,7 +296,7 @@ def negativeControlNonROIOnly(
     # Get binary segmentation masks
     # ROI is 1, background is 0
     binNonROIMask = np.where(arrROIMask > 0, 0, 1)
-    if binNonROIMask.any() == False:
+    if binNonROIMask.any() is False:
         raise ValueError("ROI mask is all 0s. No pixels in ROI to apply negative control to. ROI pixels should be > 1.")
 
     # Get just ROI pixels
@@ -310,16 +309,16 @@ def negativeControlNonROIOnly(
                                           negativeControlType = negativeControlType,
                                           negativeControlRegion = "full",
                                           randomSeed = randomSeed)
-    
+
     arrBaseImage[maskIndices] = arrNCNonROIValues
 
     if type(baseImage) == sitk.Image:
         # Convert back to sitk Image
         ncNonROIImage = sitk.GetImageFromArray(arrBaseImage)
-        
+
         # Set the origin/direction/spacing from original image to negative control image
         alignedNCNonROIImage = alignImages(baseImage, ncNonROIImage)
-        
+
         # Return the negative control image
         return alignedNCNonROIImage
     else:
@@ -344,9 +343,9 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
         Name of negative control to apply.
     negativeControlRegion : {'full', 'roi', 'non_roi'}, default 'full'
         Whether to apply the negative control to the entire image, to the ROI, or to the non-ROI pixels.
-    randomSeed : int, default None    
+    randomSeed : int, default None
         Value to initialize random number generator with. Set for reproducible results.
-    
+
     Returns
     -------
     sitk.Image | np.ndarray
@@ -357,7 +356,7 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
         raise ValueError("negativeControlType must be one of 'shuffled', 'randomized', or 'randomized_sampled'")
     if negativeControlRegion not in ["full", "roi", "non_roi"]:
         raise ValueError("regionOfInterest must be one of 'full', 'roi', or 'non_roi'")
-    
+
     if negativeControlRegion == "full":
         if negativeControlType == "shuffled":
             return makeShuffleImage(baseImage, randomSeed)
@@ -365,10 +364,10 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
             return makeRandomImage(baseImage, randomSeed)
         elif negativeControlType == "randomized_sampled":
             return makeRandomSampleFromDistributionImage(baseImage, randomSeed)
-    
+
     assert roiMask is not None, \
         f"ROI mask is None. Must pass ROI mask to negative control function for {negativeControlType} negative control."
-    
+
     if negativeControlRegion == "roi":
         return negativeControlROIOnly(baseImage, roiMask, negativeControlType, randomSeed)
     else: # negativeControlRegion == "non_roi":
@@ -378,8 +377,8 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 ####################### OLD FUNCTIONS ###########################
 #################################################################
 # def makeRandomRoi(
-#     baseImage: sitk.Image, 
-#     baseROI: sitk.Image, 
+#     baseImage: sitk.Image,
+#     baseROI: sitk.Image,
 #     roiLabel: Optional[int] = None,
 #     randomSeed: Optional[int] = None
 # ) -> sitk.Image:
@@ -395,7 +394,7 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 #         The label representing the ROI in baseROI
 #     randomSeed : int
 #         Value to initialize random number generator with for shuffling. Set for reproducible results.
-        
+
 #     Returns
 #     -------
 #     sitk.Image
@@ -445,8 +444,8 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 
 
 # def shuffleROI(
-#     baseImage: sitk.Image, 
-#     baseROI: sitk.Image, 
+#     baseImage: sitk.Image,
+#     baseROI: sitk.Image,
 #     roiLabel: Optional[int] = None,
 #     randomSeed: Optional[int] = None,
 # ) -> sitk.Image:
@@ -462,7 +461,7 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 #         The label representing the ROI in baseROI
 #     randomSeed : int
 #         Value to initialize random number generator with for shuffling. Set for reproducible results.
-        
+
 #     Returns
 #     -------
 #     sitk.Image
@@ -504,7 +503,7 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 
 
 # def makeRandomNonRoi(
-#     baseImage: sitk.Image, 
+#     baseImage: sitk.Image,
 #     baseROI: sitk.Image,
 #     roiLabel: Optional[int] = None,
 #     randomSeed: Optional[int] = None
@@ -582,7 +581,7 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 
 
 # def shuffleNonROI(
-#     baseImage: sitk.Image, 
+#     baseImage: sitk.Image,
 #     baseROI: sitk.Image,
 #     roiLabel: Optional[int] = None,
 #     randomSeed: Optional[int] = None,
@@ -654,8 +653,8 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 
 
 # def makeRandomFromRoiDistribution(
-#     baseImage: sitk.Image, 
-#     baseROI: sitk.Image, 
+#     baseImage: sitk.Image,
+#     baseROI: sitk.Image,
 #     roiLabel: Optional[int] = None,
 #     randomSeed: Optional[int] = None
 # ) -> sitk.Image:
@@ -671,7 +670,7 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 #         The label representing the ROI in baseROI
 #     randomSeed : int
 #         Value to initialize random number generator with for shuffling. Set for reproducible results.
-        
+
 #     Returns
 #     -------
 #     sitk.Image
@@ -717,9 +716,9 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 
 
 # def makeRandomNonRoiFromDistribution(
-#     baseImage: sitk.Image, 
-#     baseROI: sitk.Image, 
-#     roiLabel: Optional[int] = None, 
+#     baseImage: sitk.Image,
+#     baseROI: sitk.Image,
+#     roiLabel: Optional[int] = None,
 #     randomSeed: Optional[int] = None
 # ) -> sitk.Image:
 #     """Function to random sample pixel values outside the Region of Interest uniformly from the distribution of pixel values outside the ROI in a sitk Image
@@ -811,18 +810,18 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 #         The label representing the ROI in baseROI
 #     randomSeed : int
 #         Value to initialize random number generator with for shuffling. Set for reproducible results.
-        
+
 #     Returns
 #     -------
 #     sitk.Image
 #         The output image with the negative control applied
-        
+
 #     Raises
 #     ------
 #     ValueError
 #         If the nc_type is not a valid negative control type
 #     """
-    
+
 #     if nc_type == "randomized_full":
 #         # Make negative control version of ctImage (randomized pixel size)
 #         return makeRandomImage(baseImage, randomSeed)
@@ -832,11 +831,11 @@ def applyNegativeControl(baseImage: Union[Image, ndarray],
 #     elif nc_type == "randomized_sampled_full":
 #         # Make negative control version of ctImage (random sampled pixels from original distribution, same size)
 #         return randomizeImageFromDistributionSampling(baseImage, randomSeed)
-    
+
 #     # typesafety check here to ensure baseROI is not None for the following negative control types
 #     assert baseROI is not None, \
 #         f"baseROI must be provided for {nc_type} negative control type"
-    
+
 #     if nc_type == "randomized_roi":
 #         # Make negative control version of ctImage (randomized pixel size inside the ROI)
 #         return makeRandomRoi(baseImage, baseROI, roiLabel, randomSeed)

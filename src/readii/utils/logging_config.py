@@ -43,7 +43,7 @@ def setup_logger(
     assert (
         logger_name in valid_loggers
     ), f'Invalid logger name. Available options are {valid_loggers}'
-    
+
     # Merge the base config with any custom config
     logging_config = BASE_LOGGING.copy()
     if config:
