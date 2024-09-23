@@ -321,7 +321,7 @@ def radiomicFeatureExtraction(
             ###### END featureExtraction #######
         except Exception as e:
             if keep_running:
-                print(f"Error processing patient {patID}, series {ctSeriesID}: {e}")
+                logger.error(f"Error processing patient {patID}, series {ctSeriesID}: {e}")
                 # Log the error and continue without raising the exception
             else:
                 # Raise the exception if keep_running is False
