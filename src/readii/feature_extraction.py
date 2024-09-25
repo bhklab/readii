@@ -113,6 +113,7 @@ def singleRadiomicFeatureExtraction(
             )
         except Exception as e:
             logger.error(f"Error generating {negativeControl} negative control for CT: {e}")
+            raise
 
         croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage_nc, alignedROIImage, segBoundingBox)
     else:
