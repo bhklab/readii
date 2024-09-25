@@ -48,6 +48,29 @@ The three transformations are:
 
 ## Contributing
 
+Please use the following angular commit message format:
+```
+{
+  <type>(optional scope): short summary in present tense
+
+  (optional body: explains motivation for the change)
+
+  (optional footer: note BREAKING CHANGES here, and issues to be closed)
+}
+```
+`<type>` refers to the kind of change made and is usually one of:
+
+- feat: A new feature.
+- fix: A bug fix.
+- docs: Documentation changes.
+- style: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc).
+- refactor: A code change that neither fixes a bug nor adds a feature.
+- perf: A code change that improves performance.
+- test: Changes to the test framework.
+- build: Changes to the build process or tools.
+
+`scope` is an optional keyword that provides context for where the change was made. It can be anything relevant to your package or development workflow (e.g., it could be the module or function - name affected by the change).
+
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 
 ## License
