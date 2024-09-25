@@ -1,5 +1,47 @@
 # CHANGELOG
 
+## v1.10.0 (2024-09-25)
+
+### Feature
+
+* feat(feature_extraction): add try catch around cropping image step ([`fedf881`](https://github.com/bhklab/readii/commit/fedf88197582e59644da5e9d2974d1e0828bb672))
+
+### Fix
+
+* fix(feature_extraction): actually raise the error for the negative control creation Exception ([`f17fbbc`](https://github.com/bhklab/readii/commit/f17fbbc6074ca68e3378ff4d9ac5865a75b04822))
+
+### Unknown
+
+* Revert &#34;1.9.0&#34;
+
+This reverts commit 50794f4f143cd980421ee3099ea11fa7900976af. ([`cd37991`](https://github.com/bhklab/readii/commit/cd3799167091f6960dd4e14b3cc77a081e9af905))
+
+## v1.9.0 (2024-09-25)
+
+### Documentation
+
+* docs: clean up angular commit formatting in README ([`1f16ad1`](https://github.com/bhklab/readii/commit/1f16ad11c9de5771bc32f3eac399bc30698178ba))
+
+* docs: add angular commit syntax to README ([`c9f76df`](https://github.com/bhklab/readii/commit/c9f76df9b9d10fc7e37cf4738c9f897816fcef2d))
+
+### Feature
+
+* feat(feature_extraction): add catch and logging around negative control creation ([`a90efac`](https://github.com/bhklab/readii/commit/a90efac732c7fe474cf15885c59ba32c6a8f9b3c))
+
+### Unknown
+
+* Merge pull request #38 from bhklab/add_logging
+
+Negative control error catching and angular commit syntax ([`8646cf0`](https://github.com/bhklab/readii/commit/8646cf03f77a50ecd4f0ae66997379093f6719f9))
+
+* Merge pull request #37 from bhklab/keep_running_flag
+
+Created keep_running flag ([`0c95c80`](https://github.com/bhklab/readii/commit/0c95c8025567c47e2b98bdfb98d069e645edb765))
+
+* Added logging ([`f666b4d`](https://github.com/bhklab/readii/commit/f666b4d6be906122636dde727016c7583203f3d9))
+
+* Created keep_running flag, which keeps pipeline running even if a single patient fails. ([`c1fe170`](https://github.com/bhklab/readii/commit/c1fe17097809977fc16b495eb1ec3016a262c8a1))
+
 ## v1.8.0 (2024-09-17)
 
 ### Feature
