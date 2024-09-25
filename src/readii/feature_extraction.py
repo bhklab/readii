@@ -90,35 +90,38 @@ def singleRadiomicFeatureExtraction(
     if correctedROIImage is not None:
         alignedROIImage = correctedROIImage
 
+    try:
+        if negativeControl != None:
+            logger.info(f"Generating {negativeControl} negative control for CT.")
+            # Split negative control type into negative control and region of interest
+            try:
+                if "non_roi" in negativeControl:
+                    negativeControlType =  negativeControl.rsplit("_", 2)[0]
+                    negativeControlRegion = "non_roi"
+                else:
+                    negativeControlComponents = negativeControl.rsplit("_", 1)
+                    negativeControlType = negativeControlComponents[0]
+                    negativeControlRegion = negativeControlComponents[1]
+                logger.debug(f"Negative control region: {negativeControlRegion}")
+                logger.debug(f"Negative control type: {negativeControlType}")
+                # Make negative control version of ctImage
+                ctImage_nc: sitk.Image | np.ndarray = applyNegativeControl(
+                    baseImage=ctImage,
+                    negativeControlType=negativeControlType,
+                    negativeControlRegion=negativeControlRegion,
+                    roiMask=alignedROIImage,
+                    randomSeed=randomSeed
+                )
+            except Exception as e:
+                logger.error(f"Error generating {negativeControl} negative control for CT: {e}")
 
-    if negativeControl != None:
-        logger.info(f"Generating {negativeControl} negative control for CT.")
-        # Split negative control type into negative control and region of interest
-        try:
-            if "non_roi" in negativeControl:
-                negativeControlType =  negativeControl.rsplit("_", 2)[0]
-                negativeControlRegion = "non_roi"
-            else:
-                negativeControlComponents = negativeControl.rsplit("_", 1)
-                negativeControlType = negativeControlComponents[0]
-                negativeControlRegion = negativeControlComponents[1]
-            logger.debug(f"Negative control region: {negativeControlRegion}")
-            logger.debug(f"Negative control type: {negativeControlType}")
-            # Make negative control version of ctImage
-            ctImage_nc: sitk.Image | np.ndarray = applyNegativeControl(
-                baseImage=ctImage,
-                negativeControlType=negativeControlType,
-                negativeControlRegion=negativeControlRegion,
-                roiMask=alignedROIImage,
-                randomSeed=randomSeed
-            )
-        except Exception as e:
-            logger.error(f"Error generating {negativeControl} negative control for CT: {e}")
-
-        croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage_nc, alignedROIImage, segBoundingBox)
-    else:
-        # Crop the image and mask to a bounding box around the mask to reduce volume size to process
-        croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, alignedROIImage, segBoundingBox)
+            croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage_nc, alignedROIImage, segBoundingBox)
+        else:
+            # Crop the image and mask to a bounding box around the mask to reduce volume size to process
+            croppedCT, croppedROI = imageoperations.cropToTumorMask(ctImage, alignedROIImage, segBoundingBox)
+    except Exception as e:
+        logger.error(f"Error cropping image and mask: {e}")
+        raise
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
