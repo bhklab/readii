@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## v1.11.0 (2024-09-25)
+
+### Feature
+
+* feat(feature_extraction): add logging for error raised when cropping CT and segmentation ([`d9d8069`](https://github.com/bhklab/readii/commit/d9d80695a7e28038389aa0caace5b95295aab479))
+
+### Fix
+
+* fix(feature_extraction): actually raise an exception for negative control creation ([`e1a9888`](https://github.com/bhklab/readii/commit/e1a98884308e16055db04846932ce133c34779e0))
+
+### Unknown
+
+* Merge pull request #39 from bhklab/negative_control_error_handling
+
+Negative control error handling ([`2bac7db`](https://github.com/bhklab/readii/commit/2bac7db3d88c24af8b24233b59ec4a62ee5dacaa))
+
+* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`556178e`](https://github.com/bhklab/readii/commit/556178ed18e9507f25dfd896cb68567298918323))
+
 ## v1.10.0 (2024-09-25)
 
 ### Feature
@@ -11,6 +29,8 @@
 * fix(feature_extraction): actually raise the error for the negative control creation Exception ([`f17fbbc`](https://github.com/bhklab/readii/commit/f17fbbc6074ca68e3378ff4d9ac5865a75b04822))
 
 ### Unknown
+
+* Revert &#34;1.9.0&#34; ([`c4d265c`](https://github.com/bhklab/readii/commit/c4d265c02e9b49fd806d3f7c4e05ef665db9453e))
 
 * Revert &#34;1.9.0&#34;
 
