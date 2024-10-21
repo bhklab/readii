@@ -1,0 +1,5 @@
+[build]
+directory = "dist"
+
+[build.targets]
+wheel = { packages = ["../src/readii"] }

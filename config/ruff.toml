@@ -1,0 +1,66 @@
+
+
+target-version = "py39"
+output-format = "full"
+line-length = 99
+fix = true
+
+
+# extend-exclude is used to exclude directories from the flake8 checks
+extend-exclude = [
+  "docs/*",
+  "tests/*",
+  ".pixi/",
+  ]
+
+
+extend-include = []
+
+
+[lint]
+select = [
+  "E",
+  "F",
+  "W",   # flake8
+  "C",   # mccabe
+  "I",   # isort
+  "N",   # pep8-naming
+  "ANN", # flake8-annotations
+  "BLE", # flake8-blind-except
+  "B",   # flake8-bugbear
+  "A",   # flake8-builtins
+  "G",   # flake8-logging-format
+  "ERA", # eradicate
+  "RUF", # Ruff-specific rules
+  "TCH", # flake8-type-checking
+]
+ignore = ["ANN101"]
+unfixable = [
+  "ERA", # Don't remove commented-out code
+]
+
+
+[lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+
+[lint.mccabe]
+max-complexity = 10
+
+
+[lint.isort]
+known-first-party = ["readii"]
+force-wrap-aliases = true
+combine-as-imports = true
+lines-after-imports = 1
+relative-imports-order = "closest-to-furthest"
+
+
+[lint.pydocstyle]
+convention = "google"
+
+
+[format]
+quote-style = "single"
+docstring-code-format = true
+docstring-code-line-length = 20
