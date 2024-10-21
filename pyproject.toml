@@ -114,7 +114,7 @@ python-semantic-release = "*"
 [tool.pixi.feature.release.tasks]
 # Semver task will only work on the main or dev/develop branch (see releaserc.toml:branches)
 semver = 'echo "Next Version is: $(semantic-release version --print)"'
-# release = "semantic-release  version"
+release = "semantic-release version"
 
 [tool.semantic_release]
 version_variables = ["src/readii/__init__.py:__version__"]
