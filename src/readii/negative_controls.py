@@ -1,5 +1,4 @@
 from typing import Optional, Union
-from venv import logger
 
 import numpy as np
 import SimpleITK as sitk
