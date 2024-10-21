@@ -1,8 +1,8 @@
 [project]
 name = "readii"
-version = "1.8.1"
+version = "1.11.0"
 description = "A package to extract radiomic features!"
-authors = [{ name = "Katy Scott", email = "katy.scott@gmail.com" }]
+authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 license = "MIT"
 readme = "README.md"
 dependencies = [
@@ -126,4 +126,4 @@ remove_dist = false                                        # don't remove dists
 patch_without_tag = true                                   # patch release by default
 
 [tool.semantic_release.branches.main]
-match = "(main|master)"
+match = "*"

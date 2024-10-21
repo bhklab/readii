@@ -44,6 +44,70 @@ jobs:
           name: coverage-report
           path: coverage-report
 
+################################################################################################
+  # Semantic-Release: Run semantic-release to automate versioning and publishing
+  ################################################################################################
+  Semantic-Release:
+    permissions:
+      # Read releases read-all
+      contents: write
+      packages: write
+      issues: write
+      pull-requests: write
+
+    needs: [Unit-Tests]
+
+    # if pulling to main, deploy to PyPI
+    if: github.ref == 'refs/heads/main'
+
+    env:
+      PIXI_ENV: "publish"
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.12"]
+
+    # Set up operating system
+    runs-on: ${{ matrix.os }}
+
+    # Concurrency is for preventing multiple runs of the same workflow
+    concurrency: release
+
+    outputs:
+      released: ${{ steps.release.outputs.released }}
+      version: ${{ steps.release.outputs.version }}
+      tag: ${{ steps.release.outputs.tag }}
+
+    # Define job steps
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Pixi
+        uses: prefix-dev/setup-pixi@v0.8.0
+        env:
+          RUNNER_DEBUG: true
+        with:
+          environments: ${{ env.PIXI_ENV }}
+          pixi-version: v0.33.0
+          cache: true
+          locked: false 
+          # cache-key: pixi-ENV_${{ env.PIXI_ENV }}-
+      
+      - name: Print Semver
+        env: 
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: pixi run semver
+          
+      - name: Run semantic-release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        id: release
+        run: pixi run release
 
   ################################################################################################
   # Publish-To-PyPi & Test-PyPi-Installation: Publish to PyPI and test installation
