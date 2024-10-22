@@ -101,7 +101,7 @@ release = "semantic-release version"
 
 [tool.semantic_release]
 version_variables = ["src/readii/__init__.py:__version__"]
-version_toml = ["pyproject.toml:tool.poetry.version"]      # version location
+version_toml = ["pyproject.toml:project.version"]   # version location
 changelog_file = "CHANGELOG.md"                            # changelog file
 dist_path = "dist/"                                        # where to put dists
 upload_to_release = true                                   # auto-create GitHub release
