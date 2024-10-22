@@ -1,33 +1,120 @@
-[tool.poetry]
+[project]
 name = "readii"
 version = "1.11.0"
 description = "A package to extract radiomic features!"
-authors = ["Katy Scott"]
+authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 license = "MIT"
 readme = "README.md"
+dependencies = [
+  "simpleitk>=2.3.1",
+  "matplotlib>=3.9.2,<4",
+  "med-imagetools>=1.2.0.2,<2",
+  "dicom-parser>=1.2.3,<2",
+  "pydicom>=2.3.1,<3",
+  "pyradiomics-bhklab>=3.1.4,<4",
+]
+requires-python = ">=3.9, <3.13"
 
-[tool.poetry.dependencies]
-python = ">=3.9,<4"
-simpleitk = ">=2.3.1"
-pydicom = ">=2.3.1"
-dicom-parser = ">=1.2.3"
-matplotlib = ">=3.8.2"
-med-imagetools = "^1.2.0.2"
-pyarrow = "^15.0.0"
-# pyradiomics = {git = "https://github.com/AIM-Harvard/pyradiomics.git"}
-pyradiomics = "3.0.1a3"
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["linux-64", "osx-arm64"]
 
-[tool.poetry.dev-dependencies]
+[tool.pixi.pypi-dependencies]
+readii = { path = ".", editable = true }
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^7.4.3"
-pytest-cov = "^4.1.0"
-pytest-xdist = "^3.5.0"
-jupyter = "^1.0.0"
-myst-nb = { version = "^1.0.0", python = "^3.9" }
-sphinx-autoapi = "^3.0.0"
-sphinx-rtd-theme = "^1.3.0"
-python-semantic-release = "^8.5.2"
+[tool.pixi.environments]
+dev = { features = ["test", "style", "docs"], solve-group = "default" }
+publish = { features = ["build", "release"], solve-group = "default" }
+py310 = ["py310", "test"]
+py311 = ["py311", "test"]
+py312 = ["py312", "test"]
+
+############################################## python ###############################################
+
+[tool.pixi.feature.py310.dependencies]
+python = "3.10.*"
+[tool.pixi.feature.py311.dependencies]
+python = "3.11.*"
+[tool.pixi.feature.py312.dependencies]
+python = "3.12.*"
+
+############################################## TEST ################################################
+
+[tool.pixi.feature.test.dependencies]
+pytest = "*"
+pytest-cov = "*"
+pytest-xdist = "*"
+
+[tool.pixi.feature.test.tasks.test]
+cmd = [
+  "pytest",
+  "--numprocesses=auto",
+  "-s",
+  "--verbose",
+  "--cov=readii",
+  "--cov-report=xml:coverage-report/coverage.xml",
+  "--cov-config=config/coverage.toml",
+]
+inputs = ["src", "tests", "config/coverage.toml"]
+outputs = ["coverage-report/coverage.xml"]
+description = "Run pytest (Note: run `coverage` task to do both)"
+
+[tool.pixi.feature.test.tasks.coverage]
+cmd = "coverage report --rcfile=config/coverage.toml"
+inputs = ["coverage-report/coverage.xml", "config/coverage.toml"]
+depends-on = ["test"]
+description = "Run pytest and generate coverage report"
+
+############################################## DOCS ################################################
+[tool.pixi.feature.docs.dependencies]
+myst-nb = "*"
+sphinx-autoapi = "*"
+sphinx-rtd-theme = "*"
+
+
+# TODO::add tasks to build documentation
+
+############################################## STYLE ###############################################
+# See config/ruff.toml for the configuration
+[tool.pixi.feature.style.dependencies]
+ruff = ">=0.4.4"
+pre-commit = ">=3.7.1,<3.8"
+
+# TODO::add tasks to run style checks
+# as of 10-21-2024, `ruff check` has 152 errors
+
+#################################### RELEASE & BUILD ###############################################
+
+
+[tool.pixi.feature.build.dependencies]
+hatch = "*"
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.pixi.feature.build.tasks]
+# Builds the package
+build = { cmd = [
+  "hatch",
+  "build",
+  "--clean",
+], inputs = [
+  "src",
+  "config/hatch.toml",
+  "pyproject.toml",
+], outputs = [
+  "dist/*",
+], env = { HATCH_CONFIG = "config/hatch.toml" } }
+
+
+[tool.pixi.feature.release.dependencies]
+python-semantic-release = "*"
+
+[tool.pixi.feature.release.tasks]
+# Semver task will only work on the main or dev/develop branch (see releaserc.toml:branches)
+semver = 'echo "Next Version is: $(semantic-release version --print)"'
+release = "semantic-release version"
 
 [tool.semantic_release]
 version_variables = ["src/readii/__init__.py:__version__"]
@@ -39,11 +126,4 @@ remove_dist = false                                        # don't remove dists
 patch_without_tag = true                                   # patch release by default
 
 [tool.semantic_release.branches.main]
-match = "(main|master)"
-
-[tool.poetry.scripts]
-readii = "readii.pipeline:main"
-
-[build-system]
-requires = ["poetry-core>=1.0.0"]
-build-backend = "poetry.core.masonry.api"
+match = "*"
