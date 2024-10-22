@@ -132,6 +132,19 @@ build = { cmd = [
   "dist/*",
 ], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Build the package" }
 
+# Publishes the package to the main PYPI repository, depends on the build task
+publish-pypi = { cmd = [
+  "hatch",
+  "publish",
+  "--yes",
+  "--repo",
+  "main",
+], inputs = [
+  "dist/*",
+], depends-on = [
+  "build",
+], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Publish to main PyPI" }
+
 publish-test = { cmd = [
   "hatch",
   "publish",

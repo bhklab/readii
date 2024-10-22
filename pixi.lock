@@ -6341,7 +6341,7 @@ packages:
   name: readii
   version: 1.11.0
   path: .
-  sha256: 0c8e8b9cbe3ca1abe8a008d7ac6e1beb439985b30159e6e035c4a794827e9662
+  sha256: 6addd3cbe9ec9215edf5e0be1108341e9b261b826f9be1ec37ed4f218bbfb7ea
   requires_dist:
   - simpleitk>=2.3.1
   - matplotlib>=3.9.2,<4
