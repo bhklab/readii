@@ -165,7 +165,7 @@ jobs:
   ###############################################################################################
   # Publish-To-PyPi & Test-PyPi-Installation: Publish to PyPI and test installation
   ###############################################################################################
-  Publish-To-PyPi:
+  Publish-To-Test-PyPi:
     needs: Semantic-Release
     env:
       PIXI_ENV: "publish"
@@ -195,3 +195,26 @@ jobs:
           HATCH_INDEX_AUTH: ${{ secrets.TEST_PYPI_API_TOKEN }}
         run: |
           pixi run -e ${{ env.PIXI_ENV }} publish-test
+  
+  Test-TestPypi-Installation:
+    needs: [Semantic-Release, Publish-To-Test-PyPi]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.12"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout the code with tag ${{ needs.Semantic-Release.outputs.tag }}
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.Semantic-Release.outputs.tag }}
+
+      - name: setup python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install using TestPyPI
+        run: |
+          pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ readii
