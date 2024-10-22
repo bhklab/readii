@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## v1.13.2 (2024-10-22)
+
+### Bug Fixes
+
+* fix: Remove hatch config and streamline build settings in pyproject.toml for better package management and deployment ([`0cf184c`](https://github.com/bhklab/readii/commit/0cf184ce2eca672918b669559c1b47bb53913e55))
+
+
 ## v1.13.1 (2024-10-22)
 
 ### Bug Fixes
