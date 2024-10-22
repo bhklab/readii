@@ -146,21 +146,21 @@ def loadSegmentation(
     if baseImageDirPath is not None:
         baseImageDirPath = Path(baseImageDirPath)
 
-    if modality in ["SEG", "seg"]:
+    if modality.upper() == "SEG":
         imgFolder = segImagePath.parent
         segHeader = pydicom.dcmread(segImagePath.resolve(), stop_before_pixels=True)
         roiName = segHeader.SegmentSequence[0].SegmentLabel
         return {roiName: loadDicomSITK(imgFolder)}
 
-    elif modality in ["RTSTRUCT", "rtstruct"]:
-        if baseImageDirPath is None:
-            raise ValueError(
-                "Missing path to original image segmentation was taken from. "
-                "RTSTRUCT loader requires original image."
-            )
-        else:
-            return loadRTSTRUCTSITK(
-                segImagePath.resolve(),
-                baseImageDirPath.resolve(),
-                roiNames,
-            )
+    # modality is RTSTRUCT
+    if baseImageDirPath is None:
+        raise ValueError(
+            "When loading RTSTRUCT, must pass baseImageDirPath since "
+            "RTSTRUCT loader requires original image."
+        )
+
+    return loadRTSTRUCTSITK(
+        segImagePath.resolve(),
+        baseImageDirPath.resolve(),
+        roiNames,
+    )
