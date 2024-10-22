@@ -16,6 +16,9 @@ extend-exclude = [
 
 extend-include = []
 
+include = [
+  "src/readii/loaders.py"
+]
 
 [lint]
 select = [
@@ -24,20 +27,17 @@ select = [
   "W",   # flake8
   "C",   # mccabe
   "I",   # isort
-  "N",   # pep8-naming
+  # "N",   # pep8-naming
   "ANN", # flake8-annotations
   "BLE", # flake8-blind-except
   "B",   # flake8-bugbear
   "A",   # flake8-builtins
-  "G",   # flake8-logging-format
+  # "G",   # flake8-logging-format
   "ERA", # eradicate
   "RUF", # Ruff-specific rules
   "TCH", # flake8-type-checking
 ]
 ignore = ["ANN101"]
-unfixable = [
-  "ERA", # Don't remove commented-out code
-]
 
 
 [lint.per-file-ignores]
@@ -57,10 +57,10 @@ relative-imports-order = "closest-to-furthest"
 
 
 [lint.pydocstyle]
-convention = "google"
+convention = "numpy"
 
 
 [format]
-quote-style = "single"
+quote-style = "double"
 docstring-code-format = true
 docstring-code-line-length = 20
