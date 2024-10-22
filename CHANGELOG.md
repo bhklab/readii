@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## v1.13.1 (2024-10-22)
+
+### Bug Fixes
+
+* fix: Update CI/CD workflow for PyPI publishing; enhance publish step, remove TestPyPI, and configure pixi.lock sha256 ([`743ea52`](https://github.com/bhklab/readii/commit/743ea526a09bf442af79903a84b06c679ec76215))
+
+
 ## v1.13.0 (2024-10-22)
 
 ### Bug Fixes
