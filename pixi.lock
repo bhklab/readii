@@ -6341,21 +6341,7 @@ packages:
   name: readii
   version: 1.11.0
   path: .
-  sha256: 043b207d12e065f347cc99c7029121102f1d0a9ca5c34b75dcdf517308472681
-  requires_dist:
-  - simpleitk>=2.3.1
-  - matplotlib>=3.9.2,<4
-  - med-imagetools>=1.2.0.2,<2
-  - dicom-parser>=1.2.3,<2
-  - pydicom>=2.3.1,<3
-  - pyradiomics-bhklab>=3.1.4,<4
-  requires_python: '>=3.9,<3.13'
-  editable: true
-- kind: pypi
-  name: readii
-  version: 1.11.0
-  path: .
-  sha256: f6c60bd538de82af5fafcd18211fda3fd13e48e2317e7f86695a9a650e5f2963
+  sha256: 0c8e8b9cbe3ca1abe8a008d7ac6e1beb439985b30159e6e035c4a794827e9662
   requires_dist:
   - simpleitk>=2.3.1
   - matplotlib>=3.9.2,<4

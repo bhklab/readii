@@ -1,31 +1,42 @@
-import os
+"""DICOM, RTSTRUCT, and SEG loading functions.
+
+This module provides functions to load and process DICOM series and RTSTRUCT
+(Radiotherapy Structure Set) files using SimpleITK. It includes utilities to
+read and convert DICOM images to SimpleITK images, as well as to extract
+specific regions of interest (ROIs) from RTSTRUCT files. The functions can
+handle various DICOM modalities, making it easier to work with medical
+imaging data.
+"""
+
+from pathlib import Path
+from typing import Dict, Optional
+
 import pydicom
 import SimpleITK as sitk
-
+from imgtools import io
 from imgtools.ops import StructureSetToSegmentation
-from imgtools.io import read_dicom_auto
-
-from typing import Optional
 
 from readii.utils import get_logger
 
 # Create a global logger instance
 logger = get_logger()
 
-def loadDicomSITK(imgDirPath: str) -> sitk.Image:
-    """Read DICOM series as SimpleITK Image.
+
+def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
+    """Read a DICOM series as a SimpleITK Image.
 
     Parameters
     ----------
-    img_path : str
-        Path to directory containing the DICOM series to load.
+        imgDirPath (Union[str, Path]): The path to the directory containing the DICOM series to
+        load. It can be either a string or a Path object.
 
     Returns
     -------
-    sitk.Image
-        The loaded image.
+        sitk.Image: The loaded image.
     """
-    # Set up the reader for the DICOM series
+    # Convert to Path if passed as a string
+    imgDirPath = Path(imgDirPath)
+
     logger.debug(f"Loading DICOM series from directory: {imgDirPath}")
     reader = sitk.ImageSeriesReader()
     dicomNames = reader.GetGDCMSeriesFileNames(imgDirPath)
@@ -34,34 +45,37 @@ def loadDicomSITK(imgDirPath: str) -> sitk.Image:
 
 
 def loadRTSTRUCTSITK(
-    rtstructPath: str, baseImageDirPath: str, roiNames: Optional[str] = None
-) -> dict:
+    rtstructPath: str | Path, baseImageDirPath: str | Path, roiNames: Optional[str] = None
+) -> Dict[str, sitk.Image]:
     """Load RTSTRUCT into SimpleITK Image.
 
     Parameters
     ----------
-    rtstructPath : str
-        Path to the DICOM file containing the RTSTRUCT
-    baseImageDirPath : str
-        Path to the directory containing the DICOMS for the original image the segmentation
-        was created from (e.g. CT). This is required to load the RTSTRUCT.
-    roiNames : str
-        Identifier for which region(s) of interest to load from the total segmentation file
+    rtstructPath : str or Path
+        Path to the DICOM file containing the RTSTRUCT.
+    baseImageDirPath : str or Path
+        Path to the directory containing the DICOMs for the original image the segmentation
+        was created from (e.g., CT). This is required to load the RTSTRUCT.
+    roiNames : str, optional
+        Identifier for which region(s) of interest to load from the total segmentation file.
 
     Returns
     -------
     dict
-        A dictionary of mask ROIs from the loaded RTSTRUCT image as a SimpleITK image objects.
-        The segmentation label is set to 1.
+        A dictionary of mask ROIs from the loaded RTSTRUCT image as
+        SimpleITK image objects.
     """
+    # Convert to Path if passed as a string
+    rtstructPath = Path(rtstructPath)
+    baseImageDirPath = Path(baseImageDirPath)
+
+    logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
+    baseImage: io.Scan = io.read_dicom_scan(baseImageDirPath.resolve())
+    segImage: io.StructureSet = io.read_dicom_rtstruct(rtstructPath.resolve())
+
     # Set up segmentation loader
     logger.debug(f"Making mask using ROI names: {roiNames}")
     makeMask = StructureSetToSegmentation(roi_names=roiNames)
-
-    # Read in the base image (CT) and segmentation DICOMs into SITK Images
-    logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
-    baseImage = read_dicom_auto(baseImageDirPath)
-    segImage = read_dicom_auto(rtstructPath)
 
     try:
         # Get the individual ROI masks
@@ -89,51 +103,64 @@ def loadRTSTRUCTSITK(
 
 
 def loadSegmentation(
-    segImagePath: str,
+    segImagePath: str | Path,
     modality: str,
-    baseImageDirPath: Optional[str] = None,
+    baseImageDirPath: Optional[str | Path] = None,
     roiNames: Optional[str] = None,
-) -> dict:
-    """Function to load a segmentation with the correct function.
+) -> Dict[str, sitk.Image]:
+    """Load a segmentation with the correct function.
 
     Parameters
     ----------
-    segImagePath : str
-        Path to the segmentation file to load
+    segImagePath : str or Path
+        Path to the segmentation file to load.
     modality : str
-        Type of image that imgPath points to to load. If RTSTRUCT, must set baseImageDirPath
-    baseImageDirPath : str
-        Path to the directory containing the DICOMS for the original image the segmentation
+        Type of image that segImagePath points to load. If RTSTRUCT, must set baseImageDirPath.
+    baseImageDirPath : str or Path, optional
+        Path to the directory containing the DICOMs for the original image the segmentation
         was created from.
-    roiNames : str
-        Identifier for which region(s) of interest to load from the total segmentation file
+    roiNames : str, optional
+        Identifier for which region(s) of interest to load from the total segmentation file.
 
     Returns
     -------
     dict
-        A dictionary of each of the ROIs and their name in the segmentation image as sitk.Image objects.
+        A dictionary of each of the ROIs and their name in the segmentation
+        image as sitk.Image objects.
 
     Examples
     --------
-    >>> segImages = loadSegmentation("/path/to/segmentation/1.dcm", 'RTSTRUCT', '/path/to/CT', 'GTVp.*')
+    >>> segImages = loadSegmentation(
+    ...     segImagePath="/path/to/segmentation/1.dcm",
+    ...     modality="RTSTRUCT",
+    ...     baseImageDirPath="/path/to/CT",
+    ...     roiNames="GTVp.*",
+    ... )
     """
+    if modality.upper() not in ["SEG", "RTSTRUCT"]:
+        raise ValueError(
+            f"Unsupported segmentation modality '{modality}'. Must be one of 'RTSTRUCT' or 'SEG'."
+        )
+    # Always convert paths to Path objects
+    segImagePath = Path(segImagePath)
+    if baseImageDirPath is not None:
+        baseImageDirPath = Path(baseImageDirPath)
 
-    if modality in ["SEG", "seg"]:
-        # Loading SEG requires directory containing file, not the actual file path
-        imgFolder, _ = os.path.split(segImagePath)
-        segHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
+    if modality.upper() == "SEG":
+        imgFolder = segImagePath.parent
+        segHeader = pydicom.dcmread(segImagePath.resolve(), stop_before_pixels=True)
         roiName = segHeader.SegmentSequence[0].SegmentLabel
         return {roiName: loadDicomSITK(imgFolder)}
 
-    elif modality in ["RTSTRUCT", "rtstruct"]:
-        if baseImageDirPath == None:
-            raise ValueError(
-                "Missing path to original image segmentation was taken from. RTSTRUCT loader requires original image."
-            )
-        else:
-            return loadRTSTRUCTSITK(segImagePath, baseImageDirPath, roiNames)
-
-    else:
+    # modality is RTSTRUCT
+    if baseImageDirPath is None:
         raise ValueError(
-            "This segmentation modality is not supported. Must be one of RTSTRUCT or SEG"
+            "When loading RTSTRUCT, must pass baseImageDirPath since "
+            "RTSTRUCT loader requires original image."
         )
+
+    return loadRTSTRUCTSITK(
+        segImagePath.resolve(),
+        baseImageDirPath.resolve(),
+        roiNames,
+    )
