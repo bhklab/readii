@@ -101,7 +101,7 @@ release = "semantic-release version"
 
 [tool.semantic_release]
 version_variables = ["src/readii/__init__.py:__version__"]
-version_toml = ["pyproject.toml:project.version"]   # version location
+version_toml = ["pyproject.toml:project.version"]          # version location
 changelog_file = "CHANGELOG.md"                            # changelog file
 dist_path = "dist/"                                        # where to put dists
 upload_to_release = true                                   # auto-create GitHub release
@@ -118,6 +118,17 @@ hatch = "*"
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+[tool.hatch.build]
+directory = "dist"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/readii"]
+include = ["pyproject.toml", "README.md", "src/**", "config/hatch.toml"]
+
+[tool.hatch.build.targets.sdist]
+include = ["pyproject.toml", "README.md", "src/", "config/hatch.toml"]
+exclude = ["tests/**"]
+
 [tool.pixi.feature.build.tasks]
 # Builds the package
 build = { cmd = [
@@ -126,11 +137,10 @@ build = { cmd = [
   "--clean",
 ], inputs = [
   "src",
-  "config/hatch.toml",
   "pyproject.toml",
 ], outputs = [
   "dist/*",
-], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Build the package" }
+], description = "Build the package" }
 
 # Publishes the package to the main PYPI repository, depends on the build task
 publish-pypi = { cmd = [
@@ -143,7 +153,7 @@ publish-pypi = { cmd = [
   "dist/*",
 ], depends-on = [
   "build",
-], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Publish to main PyPI" }
+], description = "Publish to main PyPI" }
 
 publish-test = { cmd = [
   "hatch",
@@ -155,4 +165,4 @@ publish-test = { cmd = [
   "dist/*",
 ], depends-on = [
   "build",
-], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Publish to test PyPI" }
+], description = "Publish to test PyPI" }
