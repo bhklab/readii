@@ -71,7 +71,6 @@ myst-nb = "*"
 sphinx-autoapi = "*"
 sphinx-rtd-theme = "*"
 
-
 # TODO::add tasks to build documentation
 
 ############################################## STYLE ###############################################
@@ -80,11 +79,18 @@ sphinx-rtd-theme = "*"
 ruff = ">=0.4.4"
 pre-commit = ">=3.7.1,<3.8"
 
-# TODO::add tasks to run style checks
-# as of 10-21-2024, `ruff check` has 152 errors
+[tool.pixi.feature.style.tasks]
+[tool.pixi.feature.style.tasks.lint]
+cmd = "ruff check  --config=config/ruff.toml"
+inputs = ["src", "config/ruff.toml"]
+description = "Run ruff linter"
+
+[tool.pixi.feature.style.tasks.format]
+cmd = "ruff format --config=config/ruff.toml"
+inputs = ["src", "config/ruff.toml"]
+description = "Run ruff formatter, use `--diff` to see changes only"
 
 #################################### RELEASE & BUILD ###############################################
-
 
 [tool.pixi.feature.build.dependencies]
 hatch = "*"
@@ -92,7 +98,6 @@ hatch = "*"
 [build-system]
 build-backend = "hatchling.build"
 requires = ["hatchling"]
-
 
 [tool.pixi.feature.build.tasks]
 # Builds the package
@@ -107,8 +112,6 @@ build = { cmd = [
 ], outputs = [
   "dist/*",
 ], env = { HATCH_CONFIG = "config/hatch.toml" } }
-
-
 
 [tool.pixi.feature.release.dependencies]
 python-semantic-release = "*"

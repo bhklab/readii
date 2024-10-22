@@ -27,6 +27,7 @@ select = [
   "W",   # flake8
   "C",   # mccabe
   "I",   # isort
+  "D",  # pydocstyle
   # "N",   # pep8-naming
   "ANN", # flake8-annotations
   "BLE", # flake8-blind-except
