@@ -93,6 +93,7 @@ hatch = "*"
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+
 [tool.pixi.feature.build.tasks]
 # Builds the package
 build = { cmd = [
@@ -106,6 +107,7 @@ build = { cmd = [
 ], outputs = [
   "dist/*",
 ], env = { HATCH_CONFIG = "config/hatch.toml" } }
+
 
 
 [tool.pixi.feature.release.dependencies]

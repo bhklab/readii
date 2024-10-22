@@ -1,14 +1,36 @@
 # CHANGELOG
 
+
+## v1.12.0 (2024-10-22)
+
+### Chores
+
+* chore: update CI/CD workflow to use actions/checkout@v3, fix semantic-release task, and update pixi.lock ([`790ae04`](https://github.com/bhklab/readii/commit/790ae04da36e50fd6f7a9087f6f7b7e99c57326f))
+
+* chore: refactor CI/CD workflow with enhanced job structure and add basic config files for coverage and linting ([`994fd75`](https://github.com/bhklab/readii/commit/994fd754e489c95ef044714a9b966aec645ead58))
+
+### Features
+
+* feat: add semantic-release workflow for automated versioning and update readii version to 1.11.0 with new author email ([`92bc4d4`](https://github.com/bhklab/readii/commit/92bc4d4d3d6bc56bf7a92b88d8b876182fdc0197))
+
+* feat: update to use pixi and pyradiomics-bhklab ([`6a67be4`](https://github.com/bhklab/readii/commit/6a67be4ace53c10d4bb98082978ed4bd7413681f))
+
+### Unknown
+
+* Merge pull request #40 from bhklab/jjjermiah/add-pixi
+
+feat: Use Pixi, pyradiomics fork ([`fd582a5`](https://github.com/bhklab/readii/commit/fd582a5db16b3474df798f948c7f533bbb23dc86))
+
+
 ## v1.11.0 (2024-09-25)
 
-### Feature
-
-* feat(feature_extraction): add logging for error raised when cropping CT and segmentation ([`d9d8069`](https://github.com/bhklab/readii/commit/d9d80695a7e28038389aa0caace5b95295aab479))
-
-### Fix
+### Bug Fixes
 
 * fix(feature_extraction): actually raise an exception for negative control creation ([`e1a9888`](https://github.com/bhklab/readii/commit/e1a98884308e16055db04846932ce133c34779e0))
+
+### Features
+
+* feat(feature_extraction): add logging for error raised when cropping CT and segmentation ([`d9d8069`](https://github.com/bhklab/readii/commit/d9d80695a7e28038389aa0caace5b95295aab479))
 
 ### Unknown
 
@@ -16,25 +38,27 @@
 
 Negative control error handling ([`2bac7db`](https://github.com/bhklab/readii/commit/2bac7db3d88c24af8b24233b59ec4a62ee5dacaa))
 
-* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`556178e`](https://github.com/bhklab/readii/commit/556178ed18e9507f25dfd896cb68567298918323))
+* Merge branch 'main' of github.com:bhklab/yarea into main ([`556178e`](https://github.com/bhklab/readii/commit/556178ed18e9507f25dfd896cb68567298918323))
+
 
 ## v1.10.0 (2024-09-25)
 
-### Feature
-
-* feat(feature_extraction): add try catch around cropping image step ([`fedf881`](https://github.com/bhklab/readii/commit/fedf88197582e59644da5e9d2974d1e0828bb672))
-
-### Fix
+### Bug Fixes
 
 * fix(feature_extraction): actually raise the error for the negative control creation Exception ([`f17fbbc`](https://github.com/bhklab/readii/commit/f17fbbc6074ca68e3378ff4d9ac5865a75b04822))
 
+### Features
+
+* feat(feature_extraction): add try catch around cropping image step ([`fedf881`](https://github.com/bhklab/readii/commit/fedf88197582e59644da5e9d2974d1e0828bb672))
+
 ### Unknown
 
-* Revert &#34;1.9.0&#34; ([`c4d265c`](https://github.com/bhklab/readii/commit/c4d265c02e9b49fd806d3f7c4e05ef665db9453e))
+* Revert "1.9.0" ([`c4d265c`](https://github.com/bhklab/readii/commit/c4d265c02e9b49fd806d3f7c4e05ef665db9453e))
 
-* Revert &#34;1.9.0&#34;
+* Revert "1.9.0"
 
 This reverts commit 50794f4f143cd980421ee3099ea11fa7900976af. ([`cd37991`](https://github.com/bhklab/readii/commit/cd3799167091f6960dd4e14b3cc77a081e9af905))
+
 
 ## v1.9.0 (2024-09-25)
 
@@ -44,7 +68,7 @@ This reverts commit 50794f4f143cd980421ee3099ea11fa7900976af. ([`cd37991`](https
 
 * docs: add angular commit syntax to README ([`c9f76df`](https://github.com/bhklab/readii/commit/c9f76df9b9d10fc7e37cf4738c9f897816fcef2d))
 
-### Feature
+### Features
 
 * feat(feature_extraction): add catch and logging around negative control creation ([`a90efac`](https://github.com/bhklab/readii/commit/a90efac732c7fe474cf15885c59ba32c6a8f9b3c))
 
@@ -62,17 +86,18 @@ Created keep_running flag ([`0c95c80`](https://github.com/bhklab/readii/commit/0
 
 * Created keep_running flag, which keeps pipeline running even if a single patient fails. ([`c1fe170`](https://github.com/bhklab/readii/commit/c1fe17097809977fc16b495eb1ec3016a262c8a1))
 
+
 ## v1.8.0 (2024-09-17)
 
-### Feature
+### Features
 
 * feat: make output directory and parents as needed before saving radiomic output ([`bf7600c`](https://github.com/bhklab/readii/commit/bf7600ce681e08eca55fcf4ef6ece028a99ae430))
 
-### Refactor
+### Refactoring
 
 * refactor: change output file from feature extraction without negative control to be radiomicfeatures_original_datasetname.csv ([`7663ce8`](https://github.com/bhklab/readii/commit/7663ce8de4266a29e857d86e6fad0d32cf4dc87a))
 
-### Test
+### Testing
 
 * test(test_feature_extraction): updated for new original image feature extraction output ([`2e53bc8`](https://github.com/bhklab/readii/commit/2e53bc8916c53795d96db00057fa108f9f9422db))
 
@@ -82,15 +107,16 @@ Created keep_running flag ([`0c95c80`](https://github.com/bhklab/readii/commit/0
 
 Change original image output name convention ([`d6af655`](https://github.com/bhklab/readii/commit/d6af65553f97b8f7b7939a1660d75c6404ce313f))
 
+
 ## v1.7.7 (2024-09-12)
 
-### Chore
-
-* chore: update lockfile ([`9c5fa18`](https://github.com/bhklab/readii/commit/9c5fa18fd2b4c53d24a66f12d8987b2c4d7a3f28))
-
-### Fix
+### Bug Fixes
 
 * fix: Remove coloredlogs dependency and logging configuration from the project ([`ba8208f`](https://github.com/bhklab/readii/commit/ba8208fc1925533cda8dfccc165c887fc58bc67d))
+
+### Chores
+
+* chore: update lockfile ([`9c5fa18`](https://github.com/bhklab/readii/commit/9c5fa18fd2b4c53d24a66f12d8987b2c4d7a3f28))
 
 ### Unknown
 
@@ -98,11 +124,13 @@ Change original image output name convention ([`d6af655`](https://github.com/bhk
 
 fix: Remove coloredlogs dependency and logging configuration from the project ([`7616d88`](https://github.com/bhklab/readii/commit/7616d882119e8d608846ab80e875d58f16973aba))
 
+
 ## v1.7.6 (2024-08-27)
 
-### Fix
+### Bug Fixes
 
 * fix: Update ci-cd.yml ([`13cc197`](https://github.com/bhklab/readii/commit/13cc197546d81be42c3ba4c72c476ba2ad1895a7))
+
 
 ## v1.7.5 (2024-08-20)
 
@@ -112,17 +140,18 @@ fix: Remove coloredlogs dependency and logging configuration from the project ([
 
 fix(feature_extraction): add try except around actual feature extract… ([`3e6f211`](https://github.com/bhklab/readii/commit/3e6f211055fd8bcf9a80f8b8dffeb05d60ce88bf))
 
-* Merge branch &#39;main&#39; into add_logging ([`e36ac1b`](https://github.com/bhklab/readii/commit/e36ac1b610f45822652ccd5d517dfa44d800bc44))
+* Merge branch 'main' into add_logging ([`e36ac1b`](https://github.com/bhklab/readii/commit/e36ac1b610f45822652ccd5d517dfa44d800bc44))
+
 
 ## v1.7.4 (2024-08-19)
 
-### Fix
+### Bug Fixes
 
 * fix: use Optional for  pyradiomicsParamFilePath in feature extraction functions for older python versions ([`a9aa977`](https://github.com/bhklab/readii/commit/a9aa977dcb78e24bdbbf2cc7fa4c92dbd9c755e7))
 
 * fix: filter out None values and ensure feature results are properly formatted as lists in radiomicFeatureExtraction function ([`53c68ff`](https://github.com/bhklab/readii/commit/53c68ffc7adc02176e12f78dc1c8a0fd4e2a6283))
 
-### Refactor
+### Refactoring
 
 * refactor: simplify negative control region handling by removing unnecessary elif and raising ValueError in negative_controls.py ([`17ad253`](https://github.com/bhklab/readii/commit/17ad2532f9c5dfdb84b2b91a2b071ff1133d543c))
 
@@ -134,43 +163,47 @@ fix(feature_extraction): add try except around actual feature extract… ([`3e6f
 
 * Merge pull request #33 from bhklab/feature_extraction_typeannt
 
-fix: type annotations &amp; refactor typing issues ([`b1ce1ed`](https://github.com/bhklab/readii/commit/b1ce1ed6c618d506305fc5bdff778fec80a3646e))
+fix: type annotations & refactor typing issues ([`b1ce1ed`](https://github.com/bhklab/readii/commit/b1ce1ed6c618d506305fc5bdff778fec80a3646e))
+
 
 ## v1.7.3 (2024-08-19)
 
-### Fix
+### Bug Fixes
 
 * fix: update CI/CD workflow to specify supported platforms for Docker build, removing unsupported macOS entries ([`d19bf9b`](https://github.com/bhklab/readii/commit/d19bf9b79840b0921bf6d60be212b2947f7dbb47))
 
+
 ## v1.7.2 (2024-08-19)
 
-### Fix
+### Bug Fixes
 
 * fix: update base image in Dockerfile to python:3.11-slim to fix docker image errors ([`0e2cd3a`](https://github.com/bhklab/readii/commit/0e2cd3a2e7ef29b445ae9d81520739d44672f938))
 
+
 ## v1.7.1 (2024-08-19)
 
-### Fix
+### Bug Fixes
 
 * fix: using correct pyradiomics in pyproject ([`980cdda`](https://github.com/bhklab/readii/commit/980cdda937ee07333d14d80454e3818a4757b556))
 
+
 ## v1.7.0 (2024-08-19)
 
-### Chore
-
-* chore(deps): update dependencies ([`0296dbd`](https://github.com/bhklab/readii/commit/0296dbdc687f7e06caed3ef2e2edff16a7cae004))
-
-### Feature
-
-* feat(logging): integrate logging for feature extraction and pipeline; replace print statements with logger calls ([`ed6aed4`](https://github.com/bhklab/readii/commit/ed6aed499fd8d50ca34218e8cfd0b67b4d4b822a))
-
-### Fix
+### Bug Fixes
 
 * fix(feature_extraction): add try except around actual feature extraction call, add logging to end of feature extraction and file saving ([`ba119ad`](https://github.com/bhklab/readii/commit/ba119adde76c32b9bf04d2199b0c09bbcb07349e))
 
 * fix(logging): enhance metadata file logging output with update flag details and adjust logging level to INFO ([`3705110`](https://github.com/bhklab/readii/commit/370511086ab57bb7fa92fcd341b01d9aacdcc855))
 
-### Refactor
+### Chores
+
+* chore(deps): update dependencies ([`0296dbd`](https://github.com/bhklab/readii/commit/0296dbdc687f7e06caed3ef2e2edff16a7cae004))
+
+### Features
+
+* feat(logging): integrate logging for feature extraction and pipeline; replace print statements with logger calls ([`ed6aed4`](https://github.com/bhklab/readii/commit/ed6aed499fd8d50ca34218e8cfd0b67b4d4b822a))
+
+### Refactoring
 
 * refactor(metadata): add createImageMetadataFile function with logging for segmentation; improve error handling and directory creation ([`7e3d07f`](https://github.com/bhklab/readii/commit/7e3d07f86cd9464e6e146e3bee7968ba5f1d3ba7))
 
@@ -180,13 +213,14 @@ fix: type annotations &amp; refactor typing issues ([`b1ce1ed`](https://github.c
 
 feat: Add_logging ([`1255e97`](https://github.com/bhklab/readii/commit/1255e97a97b06a231ab70e69f8f6d09dfc940b03))
 
+
 ## v1.6.4 (2024-08-14)
 
-### Fix
+### Bug Fixes
 
 * fix(feature_extraction): missed variable name change for non-cropped negative control ([`8d0d7bd`](https://github.com/bhklab/readii/commit/8d0d7bd91bb60f669086ef2ef85bf5e210e4ce7d))
 
-### Refactor
+### Refactoring
 
 * refactor(feature_extraction): move cropping to after negative control creation ([`f6e840b`](https://github.com/bhklab/readii/commit/f6e840b5f4b813334a5ec7fb050ac2cb82472564))
 
@@ -200,9 +234,10 @@ fix(feature_extraction): missed variable name change for non-cropped … ([`ffe6
 
 refactor(feature_extraction): move cropping to after negative control… ([`f8db5b0`](https://github.com/bhklab/readii/commit/f8db5b06c47c68d6c1759541b59856b0f5354a3d))
 
+
 ## v1.6.3 (2024-08-08)
 
-### Fix
+### Bug Fixes
 
 * fix(feature_extraction): update negative control component splitting for non_roi options to properly separate the type and region in singleRadiomicFeatureExtraction ([`3bb250e`](https://github.com/bhklab/readii/commit/3bb250e138f7886461bd15613d1bac168c54f3b6))
 
@@ -212,29 +247,31 @@ refactor(feature_extraction): move cropping to after negative control… ([`f8db
 
 fix(feature_extraction): update negative control component splitting … ([`fc6d13d`](https://github.com/bhklab/readii/commit/fc6d13d4b14b6f299bb46f24585a58f86ce5d3ef))
 
+
 ## v1.6.2 (2024-08-07)
 
-### Fix
+### Bug Fixes
 
-* fix(feature_extraction): negative control component split wouldn&#39;t work for randomized_sampled_non_roi, so added specific fix for it for now until readii input is updated ([`241b202`](https://github.com/bhklab/readii/commit/241b2028f34fd66c0b349c4dbe6e574370a37ecd))
+* fix(feature_extraction): negative control component split wouldn't work for randomized_sampled_non_roi, so added specific fix for it for now until readii input is updated ([`241b202`](https://github.com/bhklab/readii/commit/241b2028f34fd66c0b349c4dbe6e574370a37ecd))
 
 ### Unknown
 
 * Merge pull request #27 from bhklab/development_katy
 
-fix(feature_extraction): negative control component split wouldn&#39;t wo… ([`55dac25`](https://github.com/bhklab/readii/commit/55dac2572bf2ff1e8373169d88c0105359693baf))
+fix(feature_extraction): negative control component split wouldn't wo… ([`55dac25`](https://github.com/bhklab/readii/commit/55dac2572bf2ff1e8373169d88c0105359693baf))
+
 
 ## v1.6.1 (2024-08-06)
 
-### Performance
+### Performance Improvements
 
 * perf(negative_controls): improved efficiency for ROI and Non-ROI negative control generation ([`00f3ab2`](https://github.com/bhklab/readii/commit/00f3ab266b16b820a8d92bed52e444ded1feb566))
 
-### Refactor
+### Refactoring
 
 * refactor(feature_extraction): update for new negative control functions, remove unnecessary imports, add print statement when starting feature extraction to differentiate from negative control creation ([`5669919`](https://github.com/bhklab/readii/commit/566991945fc4c8ff079149ff6c54759f84fa7920))
 
-### Test
+### Testing
 
 * test(test_negative_controls): updated test functions to match new negative control generation functions ([`fa78177`](https://github.com/bhklab/readii/commit/fa781775c2de8a887464836a526fe770580446ad))
 
@@ -248,23 +285,24 @@ Improved efficiency negative control functions ([`8d9bcb6`](https://github.com/b
 
 * Coded up improved speed functions for ROI and Non-ROI negative control generation using matrix math ([`bc825cd`](https://github.com/bhklab/readii/commit/bc825cdee4b6970abd453ab2b761a2f52554e4e9))
 
+
 ## v1.6.0 (2024-07-31)
 
-### Feature
-
-* feat(metadata.py): add saving out samples with segmentations to getCTWithSegmentation ([`b575f31`](https://github.com/bhklab/readii/commit/b575f3110f1b3be64e635cbe2252c668a6725382))
-
-### Fix
+### Bug Fixes
 
 * fix(metadata): drop _CT suffix from patient ID column in output of getCTWithSegmentation ([`5e31b73`](https://github.com/bhklab/readii/commit/5e31b739e74edab76d4a2d248098e68fed8c2f52))
 
-### Refactor
+### Features
+
+* feat(metadata.py): add saving out samples with segmentations to getCTWithSegmentation ([`b575f31`](https://github.com/bhklab/readii/commit/b575f3110f1b3be64e635cbe2252c668a6725382))
+
+### Refactoring
 
 * refactor(pipeline.py): use new getCTWithSegmentation function, utilizes imgtools edges output ([`f1dd879`](https://github.com/bhklab/readii/commit/f1dd8792692dff0dbaa132a47f47bf39e0d53d6a))
 
 * refactor(metdata.py): in matchCTtoSegmentation change outputDir to outputFilePath ([`4219a1a`](https://github.com/bhklab/readii/commit/4219a1ac90673ce7fbfc71c907c6101da8928f97))
 
-### Test
+### Testing
 
 * test(test_metadata): fix outputFilePath argument for matchCTtoSegmentation, add output test for getCTWithSegmentation ([`a9fec18`](https://github.com/bhklab/readii/commit/a9fec1876d649e02c5097f80cf9f37d8d6d9eea0))
 
@@ -280,15 +318,16 @@ New get CT with RTSTRUCTs function ([`5c31b26`](https://github.com/bhklab/readii
 
 * getCTWithSegmentation works for RTSTRUCT ([`bd8d0a0`](https://github.com/bhklab/readii/commit/bd8d0a074db517b84434bb523df956782adf45df))
 
+
 ## v1.5.0 (2024-07-31)
 
-### Feature
-
-* feat(metadata.py): using imgtools edges crawl output to get matched CT to RTSTRUCT list ([`dce17fc`](https://github.com/bhklab/readii/commit/dce17fc4b353a7f3971f5eebaffd79ac5da5a522))
-
-### Style
+### Code Style
 
 * style(metadata): Update error message to say READII instead of YAREA ([`d6fc791`](https://github.com/bhklab/readii/commit/d6fc7917140bafb645fc07f8a77d582d73dd3410))
+
+### Features
+
+* feat(metadata.py): using imgtools edges crawl output to get matched CT to RTSTRUCT list ([`dce17fc`](https://github.com/bhklab/readii/commit/dce17fc4b353a7f3971f5eebaffd79ac5da5a522))
 
 ### Unknown
 
@@ -300,37 +339,42 @@ New CT to RTSTRUCT matching method and start of testing new negative control gen
 
 * notebooks: working on improving efficiency of negative control generation ([`bccb4f5`](https://github.com/bhklab/readii/commit/bccb4f5676df90a690e6846e5f04849e512b8884))
 
+
 ## v1.4.4 (2024-05-30)
 
-### Fix
+### Bug Fixes
 
 * fix: update docker image reference ([`91b3c05`](https://github.com/bhklab/readii/commit/91b3c057507e316df375a5fab34428cc47622922))
 
+
 ## v1.4.3 (2024-05-30)
 
-### Chore
-
-* chore: update dependencies and workflow for continuous deployment ([`d400520`](https://github.com/bhklab/readii/commit/d4005204a85adacceea20cf00ceb22f51f684df4))
-
-### Fix
+### Bug Fixes
 
 * fix: force build ([`45cab79`](https://github.com/bhklab/readii/commit/45cab79004e661b955157d7c4284351d532d50b4))
 
+### Chores
+
+* chore: update dependencies and workflow for continuous deployment ([`d400520`](https://github.com/bhklab/readii/commit/d4005204a85adacceea20cf00ceb22f51f684df4))
+
+
 ## v1.4.2 (2024-05-30)
 
-### Fix
+### Bug Fixes
 
 * fix: tag version in dockerfile ([`1b06ed8`](https://github.com/bhklab/readii/commit/1b06ed8a4c196f1e794c34717c700fff75a93f48))
 
+
 ## v1.4.1 (2024-05-30)
 
-### Fix
+### Bug Fixes
 
 * fix: add auto build docker ([`e1a58cd`](https://github.com/bhklab/readii/commit/e1a58cd94c2a2a99b0d71f9a536451b734f4f718))
 
+
 ## v1.4.0 (2024-05-29)
 
-### Feature
+### Features
 
 * feat(pipeline): added random seed command line argument for negative control creation ([`405fa74`](https://github.com/bhklab/readii/commit/405fa74f80c257c8e616d838dcc64b3865ac5bc9))
 
@@ -342,9 +386,10 @@ New CT to RTSTRUCT matching method and start of testing new negative control gen
 
 Adding negative control to main pipeline and feature extraction functions ([`0afc838`](https://github.com/bhklab/readii/commit/0afc83833fcb80f2e158712bc1c8fd91e3b070e1))
 
+
 ## v1.3.4 (2024-05-16)
 
-### Fix
+### Bug Fixes
 
 * fix: poetry lock ([`0632d5a`](https://github.com/bhklab/readii/commit/0632d5ae3aa619387f2e3c8ff064c243dd5b3ee4))
 
@@ -352,23 +397,26 @@ Adding negative control to main pipeline and feature extraction functions ([`0af
 
 * fix: pyradiomics original ([`9513427`](https://github.com/bhklab/readii/commit/9513427f2cf7a9d7a59adb250d8d1a76d5e45773))
 
+
 ## v1.3.3 (2024-05-16)
 
-### Fix
+### Bug Fixes
 
 * fix: install poetry ([`c1a905a`](https://github.com/bhklab/readii/commit/c1a905a7c3304d31e6edddb8332d98701b1ede18))
 
+
 ## v1.3.2 (2024-05-16)
 
-### Fix
+### Bug Fixes
 
 * fix: update lock ([`18054bd`](https://github.com/bhklab/readii/commit/18054bdadda30253b29eb06839dccaca356fbf1f))
 
 * fix: no docker buils ([`e0a8e63`](https://github.com/bhklab/readii/commit/e0a8e63c584d0fcedbd5fcba42523d5d52a22a4d))
 
+
 ## v1.3.1 (2024-05-16)
 
-### Fix
+### Bug Fixes
 
 * fix: update readme with docker link
 
@@ -376,29 +424,10 @@ fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readi
 
 * fix: update readme with docker link ([`2f9a437`](https://github.com/bhklab/readii/commit/2f9a43707510154f207ff1b1ba31ddb879fb6e2d))
 
+
 ## v1.3.0 (2024-05-16)
 
-### Build
-
-* build(poetry.lock): updated package versions ([`811b748`](https://github.com/bhklab/readii/commit/811b748184992b090fb96b0ec10ae5768cd6fa1d))
-
-### Documentation
-
-* docs(negative_controls): add random seed description to shuffleImage function header ([`df9a7d3`](https://github.com/bhklab/readii/commit/df9a7d3fa3cc9992a965e670a0474a19b9291cd2))
-
-* docs(example.ipynb): update notebook to use med-imagetools CT DICOM loader ([`e6339b7`](https://github.com/bhklab/readii/commit/e6339b738f8cf05c04f12d5ae88b0e7baabc8685))
-
-### Feature
-
-* feat(negative_controls): added random seed to all random functions and the apply negative control function ([`280b465`](https://github.com/bhklab/readii/commit/280b46578b6320dd8c9e66ee822dc0ffb7ac9d98))
-
-* feat(negative_controls): add random seed to shuffleNonROI ([`a402ee5`](https://github.com/bhklab/readii/commit/a402ee57b9300558cd796bffe3ed3d8afa1e1654))
-
-* feat(negative_controls): add random seed to shuffleROI ([`826b00d`](https://github.com/bhklab/readii/commit/826b00ddd92ae7fa1e4441426970066de66f8af4))
-
-* feat(negative_controls): added random seed to shuffleImage function, now using numpy RNG and shuffle function ([`a2556ae`](https://github.com/bhklab/readii/commit/a2556aef0afe87f162bf3f6d12c572af23f9a9dc))
-
-### Fix
+### Bug Fixes
 
 * fix(negative_controls): set random generated pixel value to int to work with SetPixel ([`8d9b071`](https://github.com/bhklab/readii/commit/8d9b0717428231ff8e8b96c5150953e487ce6038))
 
@@ -408,13 +437,33 @@ fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readi
 
 * fix(test_negative_controls): makeRandomImage test was using incorrect function (shuffleImage) ([`143712a`](https://github.com/bhklab/readii/commit/143712a7885d957bbd63552a716b51ecbb4a9704))
 
-### Style
+### Build System
+
+* build(poetry.lock): updated package versions ([`811b748`](https://github.com/bhklab/readii/commit/811b748184992b090fb96b0ec10ae5768cd6fa1d))
+
+### Code Style
 
 * style(feature_extraction): fix typo in randomizeImageFromDistributionSampling import ([`79dc539`](https://github.com/bhklab/readii/commit/79dc539c6802bc235347e16ba4025c39e3cfef4f))
 
 * style(negative_controls): fix spelling of distribution in randomizeImageFromDistributionSampling ([`4a01f5c`](https://github.com/bhklab/readii/commit/4a01f5cb6eb448429d3cdac236ab06a3c6441282))
 
-### Test
+### Documentation
+
+* docs(negative_controls): add random seed description to shuffleImage function header ([`df9a7d3`](https://github.com/bhklab/readii/commit/df9a7d3fa3cc9992a965e670a0474a19b9291cd2))
+
+* docs(example.ipynb): update notebook to use med-imagetools CT DICOM loader ([`e6339b7`](https://github.com/bhklab/readii/commit/e6339b738f8cf05c04f12d5ae88b0e7baabc8685))
+
+### Features
+
+* feat(negative_controls): added random seed to all random functions and the apply negative control function ([`280b465`](https://github.com/bhklab/readii/commit/280b46578b6320dd8c9e66ee822dc0ffb7ac9d98))
+
+* feat(negative_controls): add random seed to shuffleNonROI ([`a402ee5`](https://github.com/bhklab/readii/commit/a402ee57b9300558cd796bffe3ed3d8afa1e1654))
+
+* feat(negative_controls): add random seed to shuffleROI ([`826b00d`](https://github.com/bhklab/readii/commit/826b00ddd92ae7fa1e4441426970066de66f8af4))
+
+* feat(negative_controls): added random seed to shuffleImage function, now using numpy RNG and shuffle function ([`a2556ae`](https://github.com/bhklab/readii/commit/a2556aef0afe87f162bf3f6d12c572af23f9a9dc))
+
+### Testing
 
 * test(negative_controls): added tests for no roiLabel input for ROI and non-ROI negative control functions ([`c083878`](https://github.com/bhklab/readii/commit/c083878e86f8196ccbf2cf15eecb8b6c01f42754))
 
@@ -432,7 +481,7 @@ fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readi
 
 * test(negative_controls): updated shuffle pixel check that values are the same as original ([`52dda33`](https://github.com/bhklab/readii/commit/52dda337b321b71b61922bbcb20363cea05c23eb))
 
-* test(negative_controls): added random seed to rest of functions, changed conversion to pixels to include whole image not just region that&#39;s been altered ([`28db728`](https://github.com/bhklab/readii/commit/28db7280944c3e99dffa56e99fb297e27710d563))
+* test(negative_controls): added random seed to rest of functions, changed conversion to pixels to include whole image not just region that's been altered ([`28db728`](https://github.com/bhklab/readii/commit/28db7280944c3e99dffa56e99fb297e27710d563))
 
 * test(negative_controls): added random seed to shuffleROI and randomROI tests, updated negative control image variable to be clearer ([`e09c142`](https://github.com/bhklab/readii/commit/e09c14282427a2c854d06e25b69556b3ae6351ef))
 
@@ -450,9 +499,14 @@ fix: update readme with docker link ([`4584af7`](https://github.com/bhklab/readi
 
 Adding random seed to all negative controls for reproducible results ([`26d8cbc`](https://github.com/bhklab/readii/commit/26d8cbcd74aa0343634332de60dab3ca3b3a2cd6))
 
+
 ## v1.2.1 (2024-03-27)
 
-### Build
+### Bug Fixes
+
+* fix: no development branch ([`e3349db`](https://github.com/bhklab/readii/commit/e3349dbc68dd3f8c4f72afe351148f8af2ef846f))
+
+### Build System
 
 * build: Update pytest command to run tests in parallel ([`e8f67b9`](https://github.com/bhklab/readii/commit/e8f67b9108f254431c0542a2812c674578db0794))
 
@@ -462,11 +516,11 @@ Adding random seed to all negative controls for reproducible results ([`26d8cbc`
 
 * build: add pytest-xdist for development parallel tests ([`d52a5a3`](https://github.com/bhklab/readii/commit/d52a5a3189cef9fc7599687f6dc1558378d87506))
 
-### Fix
+### Code Style
 
-* fix: no development branch ([`e3349db`](https://github.com/bhklab/readii/commit/e3349dbc68dd3f8c4f72afe351148f8af2ef846f))
+* style(feature_extraction.py): changed some function call spacing ([`09331a3`](https://github.com/bhklab/readii/commit/09331a3d7f9b6459ab151b9b3611877c04f4d265))
 
-### Refactor
+### Refactoring
 
 * refactor: format with black, explicit imports, and update type annotations ([`04bada5`](https://github.com/bhklab/readii/commit/04bada5a9d1933f840d647c4ef383329a6e9d2e7))
 
@@ -490,10 +544,6 @@ refactor: Fixes, updates, formatting ([`998f299`](https://github.com/bhklab/read
 
 * refactor: update type annotations to handle optional parameters, format with black for readability, refactor applyNegativeControl function to raise AssertionErrror for optional baseROI, handle edge case and raise error if none of the nc_types. ([`11f0d92`](https://github.com/bhklab/readii/commit/11f0d92a3f86e1c1db328172d338b92b09654f46))
 
-### Style
-
-* style(feature_extraction.py): changed some function call spacing ([`09331a3`](https://github.com/bhklab/readii/commit/09331a3d7f9b6459ab151b9b3611877c04f4d265))
-
 ### Unknown
 
 * Merge pull request #15 from bhklab/dockerfile
@@ -502,15 +552,12 @@ Refactor: Add dockerfile, fix some type errors, update type annotations, add som
 
 * fixed wrong docker repo ([`8ca1a93`](https://github.com/bhklab/readii/commit/8ca1a9349c7e0ac3bf13da572aa13d691d1cb56d))
 
-* Merge branch &#39;dockerfile&#39; of github.com:bhklab/readii into dockerfile ([`6bb042d`](https://github.com/bhklab/readii/commit/6bb042de6bf31a5869f0bfa016b7f38b229e5249))
+* Merge branch 'dockerfile' of github.com:bhklab/readii into dockerfile ([`6bb042d`](https://github.com/bhklab/readii/commit/6bb042de6bf31a5869f0bfa016b7f38b229e5249))
+
 
 ## v1.2.0 (2024-03-15)
 
-### Feature
-
-* feat: adding dockerfile and gha to build and deploy ([`b7d6b73`](https://github.com/bhklab/readii/commit/b7d6b734ef6b955e5b61ff2d980a08893dc2dddb))
-
-### Fix
+### Bug Fixes
 
 * fix: wrong group in toml ([`b55baab`](https://github.com/bhklab/readii/commit/b55baabb4800e074f0f08684874947052ecb9195))
 
@@ -518,25 +565,31 @@ Refactor: Add dockerfile, fix some type errors, update type annotations, add som
 
 * fix: test deployment ([`aa1dcb4`](https://github.com/bhklab/readii/commit/aa1dcb479720f8eec295071ad0b45aedaaf275d2))
 
+### Features
+
+* feat: adding dockerfile and gha to build and deploy ([`b7d6b73`](https://github.com/bhklab/readii/commit/b7d6b734ef6b955e5b61ff2d980a08893dc2dddb))
+
 ### Unknown
 
 * Update ci-cd.yml and pyproject.toml ([`fa35141`](https://github.com/bhklab/readii/commit/fa35141d0d9b1772ac4d6242d942f4ad9c0061d3))
 
+
 ## v1.1.3 (2024-03-06)
 
-### Build
-
-* build: updating package versions ([`3f3a593`](https://github.com/bhklab/readii/commit/3f3a59358eaa7b5a81b12b8b45589d17f117df9c))
-
-### Fix
+### Bug Fixes
 
 * fix(pipeline): need to exit when catching the no segmentation type error ([`bd1a93b`](https://github.com/bhklab/readii/commit/bd1a93bf0ac9d1104d3df2a46988b14b3401622b))
+
+### Build System
+
+* build: updating package versions ([`3f3a593`](https://github.com/bhklab/readii/commit/3f3a59358eaa7b5a81b12b8b45589d17f117df9c))
 
 ### Unknown
 
 * Merge pull request #14 from bhklab/development_katy
 
 Another fix for catching no segmentation type error ([`6e3e8fc`](https://github.com/bhklab/readii/commit/6e3e8fc8486334e7e3c1c438fc5ce757eb8a5585))
+
 
 ## v1.1.2 (2024-03-06)
 
@@ -562,9 +615,14 @@ Added ROI Name Quality Check  for Negative Controls ([`308ceaf`](https://github.
 
 docs: update README with randomized sampled negative controls, add de… ([`0c90846`](https://github.com/bhklab/readii/commit/0c908463559da5f8cd0a4a0fcc59eaa294ab4dd6))
 
+
 ## v1.1.1 (2024-02-08)
 
-### Build
+### Bug Fixes
+
+* fix: update version number ([`3b90606`](https://github.com/bhklab/readii/commit/3b9060652fa39f8480691c5e5edc9e77c61131e9))
+
+### Build System
 
 * build: add pyarrow as dependency for pandas ([`0050dc1`](https://github.com/bhklab/readii/commit/0050dc156940aaab895a367c57307764d580c7d6))
 
@@ -575,10 +633,6 @@ docs: update README with randomized sampled negative controls, add de… ([`0c90
 * build: changed pyradiomics dependency to 3.0.1 as 3.1.0 has installation issues ([`9c89227`](https://github.com/bhklab/readii/commit/9c89227c7c97dadcacd94b7f450668c046c955a1))
 
 * build: update dependencies versions ([`8b1af18`](https://github.com/bhklab/readii/commit/8b1af187f9e55dea34685b3a03c0abc80b318035))
-
-### Fix
-
-* fix: update version number ([`3b90606`](https://github.com/bhklab/readii/commit/3b9060652fa39f8480691c5e5edc9e77c61131e9))
 
 ### Unknown
 
@@ -596,21 +650,22 @@ Development katy ([`0f1cc66`](https://github.com/bhklab/readii/commit/0f1cc665d2
 
 * bug(image_processing): force ROI voxel label to int to be compatible with pyradiomics 3.0.1a3 ([`38e7653`](https://github.com/bhklab/readii/commit/38e76532853573b1de204760a11f2833a235001a))
 
+
 ## v1.1.0 (2024-01-31)
 
-### Feature
-
-* feat(image_processing): made cropping CT and segmentation its own function ([`5202cc2`](https://github.com/bhklab/readii/commit/5202cc2113f392a0fce92c555bf58ff3085d3d97))
-
-* feat(image_processing): add option to display CT and segmentation cropped to ROI ([`120524c`](https://github.com/bhklab/readii/commit/120524c17d89d3a2cee0c168b16243b385217cc2))
-
-### Fix
+### Bug Fixes
 
 * fix(pipeline): fixed check for existing radiomic features file, had incorrect file name ([`1819d3d`](https://github.com/bhklab/readii/commit/1819d3d1e45132c195fed8e06c301005d05e18bf))
 
 * fix(negative_controls): fixed function call for randomized_sample_full in applyNegativeControl ([`06a2f9c`](https://github.com/bhklab/readii/commit/06a2f9cf14be028ea46e8f29c371fbc7770791e6))
 
 * fix(image_processing): moved crop to top of displayOverlay function to get correct centre slice index and array conversion happens after crop ([`c1037d9`](https://github.com/bhklab/readii/commit/c1037d9c7a353ab689b5688780a872d18184e2cd))
+
+### Features
+
+* feat(image_processing): made cropping CT and segmentation its own function ([`5202cc2`](https://github.com/bhklab/readii/commit/5202cc2113f392a0fce92c555bf58ff3085d3d97))
+
+* feat(image_processing): add option to display CT and segmentation cropped to ROI ([`120524c`](https://github.com/bhklab/readii/commit/120524c17d89d3a2cee0c168b16243b385217cc2))
 
 ### Unknown
 
@@ -628,6 +683,7 @@ Fixed CTtoSegmentation merge issue and fixed negative control settings ([`7bbf3b
 
 * added new negative controls to --negative_control flag ([`9aaf76c`](https://github.com/bhklab/readii/commit/9aaf76c9c1f5edc968734fde5d03e86f2aa988c3))
 
+
 ## v1.0.0 (2024-01-26)
 
 ### Unknown
@@ -636,7 +692,7 @@ Fixed CTtoSegmentation merge issue and fixed negative control settings ([`7bbf3b
 
 Name change from yarea to readii ([`2374af4`](https://github.com/bhklab/readii/commit/2374af46b6522ef617f6366a5b4d4d7e442a5d2c))
 
-* Merge branch &#39;main&#39; into name_change ([`480b596`](https://github.com/bhklab/readii/commit/480b59601294bd1a298fda026b6ebaecd570dfd1))
+* Merge branch 'main' into name_change ([`480b596`](https://github.com/bhklab/readii/commit/480b59601294bd1a298fda026b6ebaecd570dfd1))
 
 * Merge pull request #5 from bhklab/development_mogtaba
 
@@ -645,6 +701,7 @@ Created 3 new negative controls by sampling original image and tests ([`2f95cf7`
 * Created 3 new negative controls by sampling original image and added tests for them ([`ec3dd21`](https://github.com/bhklab/readii/commit/ec3dd21f3100ea22bcccd846020f55c052e204ad))
 
 * merged changes ([`db63a6c`](https://github.com/bhklab/readii/commit/db63a6c766b1bd6e98dd10369336128038c2b7a1))
+
 
 ## v0.6.0 (2024-01-19)
 
@@ -658,7 +715,7 @@ BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhkla
 
 * docs(README): update package headline for READII acronym ([`1294d44`](https://github.com/bhklab/readii/commit/1294d44ed87a45567e6a957db77f9738817b37b4))
 
-### Feature
+### Features
 
 * feat(pipeline): change parallel input argument to be false by default ([`3f8c46a`](https://github.com/bhklab/readii/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
 
@@ -668,11 +725,18 @@ BREAKING CHANGE: yarea name no longer used ([`3bcb4f9`](https://github.com/bhkla
 
 feat(pipeline): change parallel input argument to be false by default ([`8d0626d`](https://github.com/bhklab/readii/commit/8d0626d08acad7f9e2ca3d31560ea4d532f86e2e))
 
-* Removed test that doesn&#39;t take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/readii/commit/28ab19e652531095338935d9b6b655f7c3508d02))
+* Removed test that doesn't take into account shuffling edge case. ([`28ab19e`](https://github.com/bhklab/readii/commit/28ab19e652531095338935d9b6b655f7c3508d02))
+
 
 ## v0.5.0 (2024-01-17)
 
-### Build
+### Bug Fixes
+
+* fix(image_processing): fixed remaining instances of imgArray variable ([`84de500`](https://github.com/bhklab/readii/commit/84de5003d65c8726d925108f087cdba3be9288ad))
+
+* fix(image_processing): fixed image vs. imgArray variable mixup in displayImageSlice ([`c9ea3d6`](https://github.com/bhklab/readii/commit/c9ea3d6f1ae6637139c41651a3c66d133b6d6c5f))
+
+### Build System
 
 * build: updated dependency versions ([`44de606`](https://github.com/bhklab/readii/commit/44de60655fef29716ef5d4edbd6e1e18f8e508d1))
 
@@ -684,19 +748,13 @@ feat(pipeline): change parallel input argument to be false by default ([`8d0626d
 
 * docs: require python 3.9 in conda env setup ([`480b199`](https://github.com/bhklab/readii/commit/480b1997788be447a53a2699a952df076b7b5262))
 
-### Feature
+### Features
 
 * feat(image_processing): add function to display CT slice with segmentation overlaid ([`73342ef`](https://github.com/bhklab/readii/commit/73342efbd24757ac349124ba332dc26f89544ae9))
 
 * feat(image_processing): add function to find center slice and coordinates of ROI in image ([`78d69b2`](https://github.com/bhklab/readii/commit/78d69b227ab1e2006ce46badd2b0a37384f45f40))
 
-### Fix
-
-* fix(image_processing): fixed remaining instances of imgArray variable ([`84de500`](https://github.com/bhklab/readii/commit/84de5003d65c8726d925108f087cdba3be9288ad))
-
-* fix(image_processing): fixed image vs. imgArray variable mixup in displayImageSlice ([`c9ea3d6`](https://github.com/bhklab/readii/commit/c9ea3d6f1ae6637139c41651a3c66d133b6d6c5f))
-
-### Test
+### Testing
 
 * test(test_image_processing): added test for getROICenterCoords ([`8745fe7`](https://github.com/bhklab/readii/commit/8745fe752a27204eed7359aed4525c962481d2db))
 
@@ -710,13 +768,14 @@ Added some new functions focused on displaying the CT with a segmentation overla
 
 docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhklab/readii/commit/390d6e6f094968d0d19191484e14da16294e046e))
 
+
 ## v0.4.0 (2024-01-17)
 
 ### Documentation
 
 * docs: add installation and usage details to README ([`4281620`](https://github.com/bhklab/readii/commit/4281620f5f791030a020cb4fe91b08318d63426b))
 
-### Feature
+### Features
 
 * feat: added command line example runs to notebook ([`48d8d40`](https://github.com/bhklab/readii/commit/48d8d40e24796491cb6491046b3f12f2424df128))
 
@@ -724,7 +783,7 @@ docs: require python 3.9 in conda env setup ([`390d6e6`](https://github.com/bhkl
 
 * add tests/output/ to gitignore to not commit output files ([`fa713ff`](https://github.com/bhklab/readii/commit/fa713ff38977b1d2758aae32bde5fa07f0500931))
 
-* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`1327e22`](https://github.com/bhklab/readii/commit/1327e22ab994212e24e4658313897791bef39c82))
+* Merge branch 'main' of github.com:bhklab/yarea into main ([`1327e22`](https://github.com/bhklab/readii/commit/1327e22ab994212e24e4658313897791bef39c82))
 
 * Fixed error with the path for CT and SEG files in the tests for negative controls ([`5ea6e2c`](https://github.com/bhklab/readii/commit/5ea6e2caa601f3aa3eefd806c1c09cdbef0c6e23))
 
@@ -738,7 +797,7 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * merged conflicts ([`d78fb5f`](https://github.com/bhklab/readii/commit/d78fb5f101d3532b656a63f5134ac05d281f0bcf))
 
-* Merge branch &#39;main&#39; into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/readii/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
+* Merge branch 'main' into negative_control_tests ([`c6ff12e`](https://github.com/bhklab/readii/commit/c6ff12ea94eb70691a71a9fb9fda7b655f272669))
 
 * Finished testing suite for the negative controls ([`6d81739`](https://github.com/bhklab/readii/commit/6d81739841318c201508eb787f46d1024f78039b))
 
@@ -746,37 +805,12 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * Fixed error with wrong variable names, for CT folder path ([`302a284`](https://github.com/bhklab/readii/commit/302a284b904ceee539fee64b52b22c1e03f28fe1))
 
-* Merge branch &#39;main&#39; of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/readii/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
+* Merge branch 'main' of github.com:bhklab/yarea into main ([`cee3c0f`](https://github.com/bhklab/readii/commit/cee3c0fe50b35d8ac491704d09d9a85e7ddbf2c4))
+
 
 ## v0.3.0 (2023-12-21)
 
-### Build
-
-* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/readii/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
-
-* build: updated semantic release variables ([`5e24044`](https://github.com/bhklab/readii/commit/5e240446bc561cc34640a24d315edaf376cd244f))
-
-* build: updated semantic release and added package build steps ([`5a51e07`](https://github.com/bhklab/readii/commit/5a51e078a8fbf3c0f14c7d0b429d14b830097142))
-
-* build: remove publish to PyPI ([`f276b76`](https://github.com/bhklab/readii/commit/f276b767ae452eb7aceb702f607100e1c925c1c8))
-
-### Documentation
-
-* docs(pipeline): fixed typo in data directory help message ([`7a19b5a`](https://github.com/bhklab/readii/commit/7a19b5a3d53ff24a6a800a7bcd75add2aff2d741))
-
-### Feature
-
-* feat: add ability to run pipeline using poetry run ([`ced5e67`](https://github.com/bhklab/readii/commit/ced5e6771e3f7b688f2f394f0ec0f8b4ff92bf7a))
-
-* feat(gitignore): ignore vscode directory with configurations ([`7e30be2`](https://github.com/bhklab/readii/commit/7e30be22e0a56c6f5f438e7ff51ebc9ba2b900f3))
-
-* feat(pipeline): main pipeline function to run radiomic feature extraction ([`929573d`](https://github.com/bhklab/readii/commit/929573d50a22746fae29beceacd8d0169cd3dde3))
-
-* feat(metadata): added check for csv type on imgFileListPath argument ([`ac09625`](https://github.com/bhklab/readii/commit/ac09625fd36622e5a0388ce8e4e74209ed4c9c4c))
-
-* feat(metadata): made function to find the segmentation type from the list of image files ([`8dd4ddf`](https://github.com/bhklab/readii/commit/8dd4ddf858c47377d6bac0e9853282772d15dd43))
-
-### Fix
+### Bug Fixes
 
 * fix(test_feature_extraction): fixed expected output path for radiomicFeatureExtraction ([`53c9db3`](https://github.com/bhklab/readii/commit/53c9db3bc31a35e332f9eeda35b82f42c84f5ab1))
 
@@ -788,15 +822,41 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * fix: change radiomic features file output name ([`ea0b963`](https://github.com/bhklab/readii/commit/ea0b963c7c7caa0a39ab6149fa86d8783717bc32))
 
-* fix(feature_extraction): add check for None in pyradiomics parameter file spot, use default if that&#39;s the case ([`5340f57`](https://github.com/bhklab/readii/commit/5340f57c8ab18818e6bb45cecda96fcb7aba4f5a))
+* fix(feature_extraction): add check for None in pyradiomics parameter file spot, use default if that's the case ([`5340f57`](https://github.com/bhklab/readii/commit/5340f57c8ab18818e6bb45cecda96fcb7aba4f5a))
 
 * fix(yarea): renamed this file because it had import issues being named the same as the package ([`833c5b4`](https://github.com/bhklab/readii/commit/833c5b460140783d0292b7a1991bca7cbd0e5c64))
 
-### Style
+### Build System
+
+* build: add publish to PyPI back in ([`e7f182e`](https://github.com/bhklab/readii/commit/e7f182e6b2da527ca9e0a747557bff1bc9dc0b6b))
+
+* build: updated semantic release variables ([`5e24044`](https://github.com/bhklab/readii/commit/5e240446bc561cc34640a24d315edaf376cd244f))
+
+* build: updated semantic release and added package build steps ([`5a51e07`](https://github.com/bhklab/readii/commit/5a51e078a8fbf3c0f14c7d0b429d14b830097142))
+
+* build: remove publish to PyPI ([`f276b76`](https://github.com/bhklab/readii/commit/f276b767ae452eb7aceb702f607100e1c925c1c8))
+
+### Code Style
 
 * style(feature_extraction): changed ctFolderPath to ctDirPath for consistency ([`b7b452e`](https://github.com/bhklab/readii/commit/b7b452ea2d0c6f930cc727ec026b03de5d539121))
 
-### Test
+### Documentation
+
+* docs(pipeline): fixed typo in data directory help message ([`7a19b5a`](https://github.com/bhklab/readii/commit/7a19b5a3d53ff24a6a800a7bcd75add2aff2d741))
+
+### Features
+
+* feat: add ability to run pipeline using poetry run ([`ced5e67`](https://github.com/bhklab/readii/commit/ced5e6771e3f7b688f2f394f0ec0f8b4ff92bf7a))
+
+* feat(gitignore): ignore vscode directory with configurations ([`7e30be2`](https://github.com/bhklab/readii/commit/7e30be22e0a56c6f5f438e7ff51ebc9ba2b900f3))
+
+* feat(pipeline): main pipeline function to run radiomic feature extraction ([`929573d`](https://github.com/bhklab/readii/commit/929573d50a22746fae29beceacd8d0169cd3dde3))
+
+* feat(metadata): added check for csv type on imgFileListPath argument ([`ac09625`](https://github.com/bhklab/readii/commit/ac09625fd36622e5a0388ce8e4e74209ed4c9c4c))
+
+* feat(metadata): made function to find the segmentation type from the list of image files ([`8dd4ddf`](https://github.com/bhklab/readii/commit/8dd4ddf858c47377d6bac0e9853282772d15dd43))
+
+### Testing
 
 * test(test_metadata): testing for getSegmentationType function ([`57768cf`](https://github.com/bhklab/readii/commit/57768cfe22fa0a7a3a59b65e25fe768848025ce0))
 
@@ -806,9 +866,32 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * updated version ([`3a063cf`](https://github.com/bhklab/readii/commit/3a063cf057fdfe3c056ca86af325f060c3c65cf3))
 
+
 ## v0.2.0 (2023-12-19)
 
-### Build
+### Bug Fixes
+
+* fix: need to see test outputs for actions ([`6e95d0e`](https://github.com/bhklab/readii/commit/6e95d0e287a105c9f71d2f245fcdf10719913daf))
+
+* fix: fixed default Pyradiomics parameter file path ([`84f16db`](https://github.com/bhklab/readii/commit/84f16db1d0032fa81dbf7b30422a74a0ec386984))
+
+* fix: fixed inconsistencies and mistakes in variable names ([`7dd0d30`](https://github.com/bhklab/readii/commit/7dd0d3050916b4c2b1945ca772342f9599cc1b03))
+
+* fix: incorrect indent in saveDataframeCSV ([`dd6d2f5`](https://github.com/bhklab/readii/commit/dd6d2f51bb55ae5bf5940b511862a7800c4a4fe1))
+
+* fix: forgot to import pytest ([`6e978ca`](https://github.com/bhklab/readii/commit/6e978ca088971fe2ef80be629dcc6d7556c7cbd7))
+
+* fix: fixed pyradiomics parameter file path and moved print statement of which ROI is processed back to radiomicFeatureExtraction ([`427eff7`](https://github.com/bhklab/readii/commit/427eff77663c66f919cfe239ae10b9080e4b0ef1))
+
+* fix: missing pytest import and passing flattened SEG to alignImages ([`bab47e4`](https://github.com/bhklab/readii/commit/bab47e48a1f71d2ad8cde43ab9640c83b1337e00))
+
+* fix: was missing pytest import ([`b38e7a4`](https://github.com/bhklab/readii/commit/b38e7a492a2bfd435ce21c4755268006cb226c44))
+
+* fix: updated image file paths ([`588ba46`](https://github.com/bhklab/readii/commit/588ba465ce459c64a62857ca97830def18a8f4cf))
+
+* fix: RTSTRUCT loader had incorrect variable for baseImageDirPath ([`6cfb08c`](https://github.com/bhklab/readii/commit/6cfb08cb52314931e98a71e3e9de5e0906debeb3))
+
+### Build System
 
 * build: add PSR as dev dependency ([`17cb2da`](https://github.com/bhklab/readii/commit/17cb2da3352995c9e716733c79fb1bb8f09de23f))
 
@@ -816,7 +899,7 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * build: add med-imagetools as a dependency ([`84aef0f`](https://github.com/bhklab/readii/commit/84aef0fe589a1177e8145e30f7b6df15b79de140))
 
-### Feature
+### Features
 
 * feat: changed outputFilePath to outputDirPath so output files can be standardized ([`d3ad8e8`](https://github.com/bhklab/readii/commit/d3ad8e8312dacb2315aace95722da777c3013e14))
 
@@ -840,29 +923,7 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * feat: add seg label finder function ([`d575dee`](https://github.com/bhklab/readii/commit/d575dee223c8908eaedaa41312d361f113c9f768))
 
-### Fix
-
-* fix: need to see test outputs for actions ([`6e95d0e`](https://github.com/bhklab/readii/commit/6e95d0e287a105c9f71d2f245fcdf10719913daf))
-
-* fix: fixed default Pyradiomics parameter file path ([`84f16db`](https://github.com/bhklab/readii/commit/84f16db1d0032fa81dbf7b30422a74a0ec386984))
-
-* fix: fixed inconsistencies and mistakes in variable names ([`7dd0d30`](https://github.com/bhklab/readii/commit/7dd0d3050916b4c2b1945ca772342f9599cc1b03))
-
-* fix: incorrect indent in saveDataframeCSV ([`dd6d2f5`](https://github.com/bhklab/readii/commit/dd6d2f51bb55ae5bf5940b511862a7800c4a4fe1))
-
-* fix: forgot to import pytest ([`6e978ca`](https://github.com/bhklab/readii/commit/6e978ca088971fe2ef80be629dcc6d7556c7cbd7))
-
-* fix: fixed pyradiomics parameter file path and moved print statement of which ROI is processed back to radiomicFeatureExtraction ([`427eff7`](https://github.com/bhklab/readii/commit/427eff77663c66f919cfe239ae10b9080e4b0ef1))
-
-* fix: missing pytest import and passing flattened SEG to alignImages ([`bab47e4`](https://github.com/bhklab/readii/commit/bab47e48a1f71d2ad8cde43ab9640c83b1337e00))
-
-* fix: was missing pytest import ([`b38e7a4`](https://github.com/bhklab/readii/commit/b38e7a492a2bfd435ce21c4755268006cb226c44))
-
-* fix: updated image file paths ([`588ba46`](https://github.com/bhklab/readii/commit/588ba465ce459c64a62857ca97830def18a8f4cf))
-
-* fix: RTSTRUCT loader had incorrect variable for baseImageDirPath ([`6cfb08c`](https://github.com/bhklab/readii/commit/6cfb08cb52314931e98a71e3e9de5e0906debeb3))
-
-### Test
+### Testing
 
 * test: check output from radiomicFeatureExtraction ([`c525247`](https://github.com/bhklab/readii/commit/c525247f88029b70f17b1249fd2fdedfa6eb3ddf))
 
@@ -908,7 +969,7 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * Moved to named dataset folder ([`5077821`](https://github.com/bhklab/readii/commit/50778219cbffa6d86241a3e4bd28855606a24609))
 
-* &#34;feat: add example data and datasets module&#34; ([`aaeded7`](https://github.com/bhklab/readii/commit/aaeded70258a8704df66994d0174a425050f8071))
+* "feat: add example data and datasets module" ([`aaeded7`](https://github.com/bhklab/readii/commit/aaeded70258a8704df66994d0174a425050f8071))
 
 * More renaming fixes ([`0776f25`](https://github.com/bhklab/readii/commit/0776f2564493315d54752ff6a0c17f3da6e20d88))
 
@@ -916,9 +977,16 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * Renamed package to yarea ([`7519c43`](https://github.com/bhklab/readii/commit/7519c43e3950f907e6774a35095124ce4a2d630d))
 
+
 ## v0.1.0 (2023-11-23)
 
-### Build
+### Bug Fixes
+
+* fix: correct conversion of sitk Image to array ([`34ddb65`](https://github.com/bhklab/readii/commit/34ddb6525983e69996671940e9f13f5107c69369))
+
+* fix: updated segImagePath variable ([`166831c`](https://github.com/bhklab/readii/commit/166831ccfb0c37b4e057dde254cc387e6a016fc6))
+
+### Build System
 
 * build: added dev dependencies for docs ([`0e87a13`](https://github.com/bhklab/readii/commit/0e87a13807786bfb59aad4e5be9e9812033274fb))
 
@@ -934,19 +1002,13 @@ Created testing suite for negative controls and fixed errors in image_processing
 
 * docs: updated docstrings for all functions ([`dbe6b84`](https://github.com/bhklab/readii/commit/dbe6b84ac9ecec6a5e5c2282d10ead56085de197))
 
-### Feature
+### Features
 
 * feat: added image processing functions ([`b0ac044`](https://github.com/bhklab/readii/commit/b0ac04443cdf39addc601678cea5f49f44f1f89f))
 
 * feat: add image loader functions ([`73f67f5`](https://github.com/bhklab/readii/commit/73f67f55dbb59c5967f0d70cd7d7d146118e634e))
 
-### Fix
-
-* fix: correct conversion of sitk Image to array ([`34ddb65`](https://github.com/bhklab/readii/commit/34ddb6525983e69996671940e9f13f5107c69369))
-
-* fix: updated segImagePath variable ([`166831c`](https://github.com/bhklab/readii/commit/166831ccfb0c37b4e057dde254cc387e6a016fc6))
-
-### Test
+### Testing
 
 * test: add unit test for loadDicomSITK ([`bef39f7`](https://github.com/bhklab/readii/commit/bef39f731363d1693f859ffbcdd6686540c1e98d))
 
