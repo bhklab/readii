@@ -1,3 +1,13 @@
+"""DICOM, RTSTRUCT, and SEG loading functions.
+
+This module provides functions to load and process DICOM series and RTSTRUCT
+(Radiotherapy Structure Set) files using SimpleITK. It includes utilities to
+read and convert DICOM images to SimpleITK images, as well as to extract
+specific regions of interest (ROIs) from RTSTRUCT files. The functions can
+handle various DICOM modalities, making it easier to work with medical
+imaging data.
+"""
+
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -13,18 +23,16 @@ logger = get_logger()
 
 
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
-    """Read DICOM series as SimpleITK Image.
+    """Read a DICOM series as a SimpleITK Image.
 
     Parameters
     ----------
-    imgDirPath : str or Path
-        Path to the directory containing the DICOM series to load. Can be
-        provided as a string or a Path object.
+        imgDirPath (Union[str, Path]): The path to the directory containing the DICOM series to
+        load. It can be either a string or a Path object.
 
     Returns
     -------
-    sitk.Image
-        The loaded image.
+        sitk.Image: The loaded image.
     """
     # Convert to Path if passed as a string
     imgDirPath = Path(imgDirPath)
@@ -100,7 +108,7 @@ def loadSegmentation(
     baseImageDirPath: Optional[str | Path] = None,
     roiNames: Optional[str] = None,
 ) -> Dict[str, sitk.Image]:
-    """Function to load a segmentation with the correct function.
+    """Load a segmentation with the correct function.
 
     Parameters
     ----------
@@ -129,7 +137,6 @@ def loadSegmentation(
     ...     roiNames="GTVp.*",
     ... )
     """
-
     # Always convert paths to Path objects
     segImagePath = Path(segImagePath)
     if baseImageDirPath is not None:
