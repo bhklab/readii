@@ -1,6 +1,59 @@
 # CHANGELOG
 
 
+## v1.13.0 (2024-10-22)
+
+### Bug Fixes
+
+* fix: update CI/CD workflow to trigger only on pushes to main branch ([`2cc686f`](https://github.com/bhklab/readii/commit/2cc686f88d5270a21b97e4e85ea524222cdf77f8))
+
+* fix: correct version location in pyproject.toml configuration ([`bdb49ea`](https://github.com/bhklab/readii/commit/bdb49ea83ac6676248cb864e3ab45e95629e9aad))
+
+* fix: improve modality handling in loadSegmentation by reinforcing RTSTRUCT validation and simplifying modality checks ([`5d1fef6`](https://github.com/bhklab/readii/commit/5d1fef65288f57e39c40ecb35ac2d81a5d07d31a))
+
+* fix: update ruff configuration and linting rules, switch docstring style to numpy, and enhance loader type annotations ([`0142860`](https://github.com/bhklab/readii/commit/0142860bf572b5e3ff7c3f0132deeabdcd611482))
+
+### Chores
+
+* chore: refine CI-CD workflow for Publish-To-PyPi and update pixi.lock SHA for dependency consistency ([`3c904e1`](https://github.com/bhklab/readii/commit/3c904e17ada58031cd10ab37f28ef7ec28aac56f))
+
+* chore: add Ruff linter to CI-CD workflow and update project config for linting and formatting tasks ([`ecebe9a`](https://github.com/bhklab/readii/commit/ecebe9a6f0ff3333102fb08a7bb4c63f9d2f6175))
+
+* chore: adjust CI-CD workflow to trigger on any branch for pull requests and comment out previous push configuration ([`3c77975`](https://github.com/bhklab/readii/commit/3c779750af8b68940236d725264acb4df2e5313c))
+
+* chore: add Codecov badge to README for improved visibility of test coverage ([`9472ab6`](https://github.com/bhklab/readii/commit/9472ab686f61e990ec85f1023ae1c71ee0a781f2))
+
+* chore: add Codecov step in CI/CD workflow to track coverage and report using coverage.xml ([`fcbe561`](https://github.com/bhklab/readii/commit/fcbe561ce0c6adec16d06eba6f01b1558c7b9eac))
+
+### Continuous Integration
+
+* ci: clean up .github/workflows/ci-cd.yml by removing unnecessary whitespace and ensuring proper formatting at end of file ([`a6298ab`](https://github.com/bhklab/readii/commit/a6298ab30d7fcb1ead133ef3fbbe31f143a5d36f))
+
+* ci: update CI-CD workflow to include Ruff as a dependency for the Unit-Tests job before deployment to PyPI ([`5d6a7f3`](https://github.com/bhklab/readii/commit/5d6a7f3a055120a67eb0ac95dd44c59e7e08e1f4))
+
+### Documentation
+
+* docs: update README with installation + badges ([`7bdf5d3`](https://github.com/bhklab/readii/commit/7bdf5d3a27fad5fa70b92f9fbd63053be7158e29))
+
+### Features
+
+* feat: enhance segmentation loading by adding validation for unsupported modalities in loadSegmentation function ([`9ee6931`](https://github.com/bhklab/readii/commit/9ee69315703135ae2951196cb17281a5c2567732))
+
+* feat: rename job to Publish-To-Test-PyPi and add Test-TestPypi-Installation steps for verifying package deployment ([`336185f`](https://github.com/bhklab/readii/commit/336185fb4486de95abe99ad099dd2f714fb42559))
+
+* feat: update CI-CD workflow to include publishing to TestPyPI with new environment variables for authentication ([`d645af1`](https://github.com/bhklab/readii/commit/d645af141f1d47fac296c0952c86b71bd0c85a9c))
+
+* feat: expand pyproject.toml with publish-test command for deploying to test PyPI and add description for build task ([`f309346`](https://github.com/bhklab/readii/commit/f3093465bdcd079ec403324b9a5f3eb29b8aa967))
+
+### Unknown
+
+* Merge pull request #42 from bhklab/jjjermiah/refactor/main
+
+feat: Enhance CI/CD Workflow with TestPyPI Publishing, Linting Improvements, and minor docs update ([`376b414`](https://github.com/bhklab/readii/commit/376b4140feb49c1470f7f3b639824e08f7c8e046))
+
+* doc: enhance docstrings in loaders.py, providing clearer descriptions and improving module documentation for DICOM and RTSTRUCT functions ([`249238c`](https://github.com/bhklab/readii/commit/249238ca60ef8e7ebaff65d85c5eaf755e7d5616))
+
+
 ## v1.12.0 (2024-10-22)
 
 ### Chores
