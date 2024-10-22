@@ -1,52 +1,41 @@
 
 
-target-version = "py39"
+target-version = "py312"
 output-format = "full"
-line-length = 99
+line-length = 79
 fix = true
 
-
-# extend-exclude is used to exclude directories from the flake8 checks
-extend-exclude = [
-  "docs/*",
-  "tests/*",
-  ".pixi/",
-  ]
-
+exclude = ["docs/*", "tests/*", ".pixi/"]
 
 extend-include = []
-
 
 [lint]
 select = [
   "E",
   "F",
-  "W",   # flake8
-  "C",   # mccabe
-  "I",   # isort
-  "N",   # pep8-naming
+  "W", # flake8
+  "C", # mccabe
+  "I", # isort
+  "D", # pydocstyle
+  # "N",   # pep8-naming
   "ANN", # flake8-annotations
   "BLE", # flake8-blind-except
   "B",   # flake8-bugbear
   "A",   # flake8-builtins
-  "G",   # flake8-logging-format
+  # "G",   # flake8-logging-format
   "ERA", # eradicate
   "RUF", # Ruff-specific rules
   "TCH", # flake8-type-checking
+  "PTH", # Checks for uses of os.path.join.
 ]
-ignore = ["ANN101"]
+# ignore = ["ANN101"]
 unfixable = [
   "ERA", # Don't remove commented-out code
 ]
 
 
-[lint.per-file-ignores]
-"tests/*" = ["S101"]
-
-
 [lint.mccabe]
 max-complexity = 10
-
 
 [lint.isort]
 known-first-party = ["readii"]
@@ -55,12 +44,33 @@ combine-as-imports = true
 lines-after-imports = 1
 relative-imports-order = "closest-to-furthest"
 
-
 [lint.pydocstyle]
-convention = "google"
+convention = "numpy"
 
 
 [format]
-quote-style = "single"
+# Like Black, use double quotes for strings.
+quote-style = "double"
+
+# Like Black, indent with spaces, rather than tabs.
+indent-style = "space"
+
+# Like Black, respect magic trailing commas.
+skip-magic-trailing-comma = false
+
+# Like Black, automatically detect the appropriate line ending.
+line-ending = "auto"
+
+# Enable auto-formatting of code examples in docstrings. Markdown,
+# reStructuredText code/literal blocks and doctests are all supported.
+#
+# This is currently disabled by default, but it is planned for this
+# to be opt-out in the future.
 docstring-code-format = true
-docstring-code-line-length = 20
+
+# Set the line length limit used when formatting code snippets in
+# docstrings.
+#
+# This only has an effect when the `docstring-code-format` setting is
+# enabled.
+docstring-code-line-length = "dynamic"

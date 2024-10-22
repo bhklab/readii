@@ -71,7 +71,6 @@ myst-nb = "*"
 sphinx-autoapi = "*"
 sphinx-rtd-theme = "*"
 
-
 # TODO::add tasks to build documentation
 
 ############################################## STYLE ###############################################
@@ -84,7 +83,6 @@ pre-commit = ">=3.7.1,<3.8"
 # as of 10-21-2024, `ruff check` has 152 errors
 
 #################################### RELEASE & BUILD ###############################################
-
 
 [tool.pixi.feature.build.dependencies]
 hatch = "*"
@@ -106,7 +104,6 @@ build = { cmd = [
 ], outputs = [
   "dist/*",
 ], env = { HATCH_CONFIG = "config/hatch.toml" } }
-
 
 [tool.pixi.feature.release.dependencies]
 python-semantic-release = "*"
