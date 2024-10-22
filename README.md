@@ -1,5 +1,6 @@
 # READII
 [![Docker Pulls](https://img.shields.io/docker/pulls/bhklab/readii)](https://hub.docker.com/r/bhklab/readii)
+[![codecov](https://codecov.io/gh/bhklab/readii/graph/badge.svg?token=obsN5dhXPx)](https://codecov.io/gh/bhklab/readii)
 
 ![GitHub Release](https://img.shields.io/github/v/release/bhklab/readii)
 
