@@ -189,6 +189,9 @@ jobs:
           cache: true
           locked: false # wont be the same because of the tag
 
-      - name: Test Build
+      - name: Publish to TestPyPI
+        env:
+          HATCH_INDEX_USER: __token__
+          HATCH_INDEX_AUTH: ${{ secrets.TEST_PYPI_API_TOKEN }}
         run: |
-            pixi run -e ${{ env.PIXI_ENV }} build
+          pixi run -e ${{ env.PIXI_ENV }} publish-test
