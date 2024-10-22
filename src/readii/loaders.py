@@ -137,6 +137,10 @@ def loadSegmentation(
     ...     roiNames="GTVp.*",
     ... )
     """
+    if modality.upper() not in ["SEG", "RTSTRUCT"]:
+        raise ValueError(
+            f"Unsupported segmentation modality '{modality}'. Must be one of 'RTSTRUCT' or 'SEG'."
+        )
     # Always convert paths to Path objects
     segImagePath = Path(segImagePath)
     if baseImageDirPath is not None:
@@ -160,7 +164,3 @@ def loadSegmentation(
                 baseImageDirPath.resolve(),
                 roiNames,
             )
-
-    raise ValueError(
-        "This segmentation modality is not supported. Must be one of RTSTRUCT or SEG."
-    )
