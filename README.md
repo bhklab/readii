@@ -1,9 +1,16 @@
 # READII
-[![Docker Pulls](https://img.shields.io/docker/pulls/bhklab/readii)](https://hub.docker.com/r/bhklab/readii)
 [![codecov](https://codecov.io/gh/bhklab/readii/graph/badge.svg?token=obsN5dhXPx)](https://codecov.io/gh/bhklab/readii)
+[![CI-CD](https://github.com/bhklab/readii/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/bhklab/readii/actions/workflows/ci-cd.yml)
+[![CodeFactor](https://www.codefactor.io/repository/github/bhklab/readii/badge)](https://www.codefactor.io/repository/github/bhklab/readii)
 
 ![GitHub Release](https://img.shields.io/github/v/release/bhklab/readii)
+[![pixi-badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/prefix-dev/pixi/main/assets/badge/v0.json&style=flat-square)](https://github.com/prefix-dev/pixi)
 
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/readii)](https://pypi.org/project/readii/)
+[![PyPI - Version](https://img.shields.io/pypi/v/readii)](https://pypi.org/project/readii/)
+[![PyPI - Format](https://img.shields.io/pypi/format/readii)](https://pypi.org/project/readii/)
+[![Downloads](https://static.pepy.tech/badge/readii)](https://pepy.tech/project/readii)
+[![Docker Pulls](https://img.shields.io/docker/pulls/bhklab/readii)](https://hub.docker.com/r/bhklab/readii)
 
 **R**adiomic **E**xtraction and **A**nalysis for **DI**COM **I**mages
 
@@ -13,6 +20,14 @@ A package to extract radiomic features from DICOM CT images.
 
 ```bash
 $ pip install readii
+```
+
+### (recommended) Create new `pixi` environment for a project
+```bash
+mkdir my_project
+cd my_project
+pixi init
+pixi add --pypi readii
 ```
 
 ### (recommended) Create new conda virtual environment
