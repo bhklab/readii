@@ -111,8 +111,21 @@ build = { cmd = [
   "pyproject.toml",
 ], outputs = [
   "dist/*",
-], env = { HATCH_CONFIG = "config/hatch.toml" } }
+], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Build the package" }
 
+publish-test = { cmd = [
+  "hatch",
+  "publish",
+  "--yes",
+  "--repo",
+  "test",
+], inputs = [
+  "dist/*",
+], depends-on = [
+  "build",
+], env = { HATCH_CONFIG = "config/hatch.toml" }, description = "Publish to test PyPI" }
+
+# Publishes the package to the TEST-PYPI repository, depends on the build task
 [tool.pixi.feature.release.dependencies]
 python-semantic-release = "*"
 
