@@ -97,6 +97,7 @@ class NegativeControl(ABC):
         -------
         sitk.Image or np.ndarray
             The image with the negative control applied.
+            Return type depends on the type of BaseImage that is passed in.
         """
         pass
 
@@ -117,7 +118,7 @@ class NegativeControl(ABC):
             return sitk.GetArrayFromImage(input_data)
         return input_data
 
-    def _apply_to_roi_or_full(
+    def apply_to_region(
         self,
         baseImage: T,
         roiMask: Optional[T],

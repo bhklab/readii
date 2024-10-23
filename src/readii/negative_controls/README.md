@@ -3,6 +3,7 @@
 ## Main Idea
 
 Users should be able to apply a variety of transformations to their radiomics images
+
 - 3 defined types of negative controls (e.g., shuffled, randomized, randomized_sampled)
 - or their own custom negative controls
 
@@ -19,6 +20,72 @@ The `negative_controls` module provides a standardized way to apply transformati
 3. **Abstract Base Class (`NegativeControl`)**: Defines a consistent interface for all controls.
 4. **Registry (`NegativeControlRegistry`)**: Manages available controls, enabling easy extension and integration.
 5. **Factory (`NegativeControlFactory`)**: Creates instances of controls based on type and region.
+
+```mermaid
+classDiagram
+    %% Abstract Base Class
+    class NegativeControl {
+        <<Abstract>>
+        - NegativeControlType control_type
+        - NegativeControlRegion control_region
+        + apply()
+        + to_array()
+        + apply_to_region()
+    }
+
+    %% Concrete Implementations
+    class ShuffledNegativeControl {
+        - shuffle_image()
+        + apply()
+    }
+    class RandomizedNegativeControl {
+        + apply()
+    }
+    class RandomizedSampledNegativeControl {
+        - random_sample_image()
+        + apply()
+    }
+
+    %% Registry
+    class NegativeControlRegistry {
+        - controls: Dict
+        + register_control(name)
+        + get_control(name)
+    }
+
+    %% Factory
+    class NegativeControlFactory {
+        + create(control_type, control_region): NegativeControl
+    }
+
+    %% Enums
+    class NegativeControlType {
+        <<Enumeration>>
+        SHUFFLED
+        RANDOMIZED
+        RANDOMIZED_SAMPLED
+    }
+    class NegativeControlRegion {
+        <<Enumeration>>
+        FULL
+        ROI
+        NON_ROI
+    }
+
+    %% Relationships
+    NegativeControl <|-- ShuffledNegativeControl : Implements
+    NegativeControl <|-- RandomizedNegativeControl : Implements
+    NegativeControl <|-- RandomizedSampledNegativeControl : Implements
+
+    %% Factory and Registry Usage
+    NegativeControlFactory ..> NegativeControlRegistry : Uses
+    NegativeControlFactory ..> NegativeControl : Creates
+    NegativeControlRegistry o-- NegativeControl : Registers
+
+    %% Enum Associations
+    NegativeControl *-- NegativeControlType : Uses
+    NegativeControl *-- NegativeControlRegion : Uses
+```
 
 ## Flow Diagram
 
@@ -60,14 +127,14 @@ Adding new types of negative controls involves three simple steps:
    ```python
    from readii.negative_controls.base import NegativeControl
    from readii.negative_controls.enums import NegativeControlType
-  
+
    # This is how it would be defined in the library, using the enums
    @NegativeControlRegistry.register(NegativeControlType.SHUFFLED)
    class ShuffledControl(NegativeControl):
        def apply(self, baseImage, roiMask=None, randomSeed=None):
            # Define how the image will be shuffled
            pass
-  
+
    # Custom Noise Negative Control
    @NegativeControlRegistry.register(
       "custom_noise",
@@ -86,7 +153,7 @@ Adding new types of negative controls involves three simple steps:
    Note: The decorator takes a single argument, which is the unique identifier for your control type. This allows you to define the main library NC types but also custom ones (e.g., NegativeControlType.SHUFFLED or "custom_noise").
 
 3. Implementing the `apply` method:
-   
+
    The `apply` method is the core of the transformation.
    It is abstract and is assumed to be implemented by subclasses.
 
@@ -100,21 +167,45 @@ Adding new types of negative controls involves three simple steps:
    ```python
    from readii.negative_controls.factory import NegativeControlFactory
    from readii.negative_controls.enums import NegativeControlType, NegativeControlRegion
+   from readii.negative_controls.registry import NegativeControlRegistry
 
-   control_instance = NegativeControlFactory.create(
+   control_instances = NegativeControlFactory.create(
        control_type=NegativeControlType.SHUFFLED,
        control_region=NegativeControlRegion.ROI
    )
    ```
 
-  What does this do?
+### What does this do?
 
-  1. It will check if there is a class registered with the given type. If not, it will raise a `ValueError`.
-  2. It will instantiate the class with the given type and region.
-  3. It will return the instantiated class.
+1. It will check if there is a class registered with the given type.
+2. It will instantiate the class with the given type and region.
+3. It will return the instantiated class.
 
+```mermaid
+flowchart TD
+    %% Start of the Flowchart
+    Start["User Calls Factory: create(type, region)"]:::StartEnd --> CheckRegistry["Check: Does 'type' exist in Registry?"]:::Decision
 
+    %% Decision Point: Does the Key Exist in the Registry?
+    CheckRegistry -->|Yes| RetrieveClass["Retrieve Control Class from Registry"]:::Process
+    CheckRegistry -->|No| Error["Raise ValueError: Control Type Not Registered"]:::StartEnd
 
-## Conclusion
+    %% Instantiate and Apply
+    RetrieveClass --> Instantiate["Instantiate Control Class with (type, region)"]:::Process
+    Instantiate --> CheckRegion["Check: Is the 'region' parameter supported?"]:::Decision
 
-The `negative_controls` module is designed for flexibility and ease of use. It allows users to add new transformations by defining, registering, and dynamically creating instances through a consistent interface. This approach ensures that the system can be extended to meet specific research or analysis needs.
+    %% Decision on Region
+    CheckRegion -->|Yes| ReturnInstance["Return Instantiated NegativeControl Object"]:::StartEnd
+    CheckRegion -->|No| UnsupportedRegionError["Raise ValueError: Unsupported Region for Control Type"]:::StartEnd
+
+    %% Additional Flow for Custom Controls
+    CustomPath["Custom Control"]:::SubProcess --> DefineCustomClass["Define New Subclass of NegativeControl"]:::Process
+    DefineCustomClass --> RegisterCustomClass["Register Using @NegativeControlRegistry.register('custom_key')"]:::Process
+    RegisterCustomClass --> Start
+
+    %% Styling Suggestions
+    classDef StartEnd fill:#f96,stroke:#333,stroke-width:2px;
+    classDef Decision fill:#fff,stroke:#000,stroke-width:2px,stroke-dasharray: 5 5;
+    classDef Process fill:#ace,stroke:#333,stroke-width:2px;
+    classDef SubProcess fill:#ffe,stroke:#333,stroke-width:2px;
+```

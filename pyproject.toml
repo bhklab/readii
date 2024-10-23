@@ -23,7 +23,7 @@ platforms = ["linux-64", "osx-arm64"]
 readii = { path = ".", editable = true }
 
 [tool.pixi.environments]
-dev = { features = ["test", "style", "docs"], solve-group = "default" }
+dev = { features = ["test", "style", "docs", "dev"], solve-group = "default" }
 publish = { features = ["build", "release"], solve-group = "default" }
 py310 = ["py310", "test"]
 py311 = ["py311", "test"]
@@ -37,6 +37,14 @@ python = "3.10.*"
 python = "3.11.*"
 [tool.pixi.feature.py312.dependencies]
 python = "3.12.*"
+
+############################################## DEV ################################################
+
+[tool.pixi.feature.dev.dependencies]
+ipython = ">=8.28.0,<9"
+ipykernel = ">=6.29.5,<7"
+
+
 
 ############################################## TEST ################################################
 

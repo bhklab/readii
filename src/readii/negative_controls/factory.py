@@ -6,7 +6,6 @@ from readii.negative_controls.base import NegativeControl
 from readii.negative_controls.enums import NegativeControlRegion, NegativeControlType
 from readii.negative_controls.registry import NegativeControlRegistry
 
-
 class NegativeControlFactory:
     """Factory for creating instances of Negative Controls.
 
