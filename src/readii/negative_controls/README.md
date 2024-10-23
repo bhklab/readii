@@ -181,34 +181,86 @@ Adding new types of negative controls involves three simple steps:
 2. It will instantiate the class with the given type and region.
 3. It will return the instantiated class.
 
-> Warning: This flowchart is now incorrect
-> (kinda)
+## EXAMPLE CLI TOOL
 
-```mermaid
-flowchart TD
-    %% Start of the Flowchart
-    Start["User Calls Factory: create(type, region)"]:::StartEnd --> CheckRegistry["Check: Does 'type' exist in Registry?"]:::Decision
+### Usage
+```bash
+python src/readii/negative_controls/cli.py
+Usage: cli.py [OPTIONS] COMMAND [ARGS]...
 
-    %% Decision Point: Does the Key Exist in the Registry?
-    CheckRegistry -->|Yes| RetrieveClass["Retrieve Control Class from Registry"]:::Process
-    CheckRegistry -->|No| Error["Raise ValueError: Control Type Not Registered"]:::StartEnd
+  CLI Tool for Applying Negative Controls to Radiomics Images.
 
-    %% Instantiate and Apply
-    RetrieveClass --> Instantiate["Instantiate Control Class with (type, region)"]:::Process
-    Instantiate --> CheckRegion["Check: Is the 'region' parameter supported?"]:::Decision
+Options:
+  -h, --help  Show this message and exit.
 
-    %% Decision on Region
-    CheckRegion -->|Yes| ReturnInstance["Return Instantiated NegativeControl Object"]:::StartEnd
-    CheckRegion -->|No| UnsupportedRegionError["Raise ValueError: Unsupported Region for Control Type"]:::StartEnd
+Commands:
+  apply          Example CLI tool for applying negative controls to...
+  list-controls  List all registered negative control types.
+```
 
-    %% Additional Flow for Custom Controls
-    CustomPath["Custom Control"]:::SubProcess --> DefineCustomClass["Define New Subclass of NegativeControl"]:::Process
-    DefineCustomClass --> RegisterCustomClass["Register Using @NegativeControlRegistry.register('custom_key')"]:::Process
-    RegisterCustomClass --> Start
+### Listing Registered Controls
+```bash
+# this will only print REGISTERED negative controls. 
+python src/readii/negative_controls/cli.py list-controls
+['SHUFFLED_FULL', 'SHUFFLED_ROI', 'SHUFFLED_NON_ROI', 'custom_noise_FULL', 'custom_noise_ROI', 'custom_noise_NON_ROI']
+```
 
-    %% Styling Suggestions
-    classDef StartEnd fill:#f96,color:#fff,stroke:#333,stroke-width:2px;
-    classDef Decision stroke:#00F,stroke-width:5px,stroke-dasharray: 5 5;
-    classDef Process stroke:#333,stroke-width:2px;
-    classDef SubProcess stroke:#333,stroke-width:2px;
+### Applying Negative Controls (concept)
+
+**USAGE**
+```bash
+python src/readii/negative_controls/cli.py apply --help
+Usage: cli.py apply [OPTIONS] BASE_IMAGE_PATH
+
+  Example CLI tool for applying negative controls to radiomics images.
+
+  Example!: All this does is print out the arguments passed in for now.
+  BASE_IMAGE_PATH: The path to the base image file.
+
+Options:
+  --roi-mask-path FILE            Path to the ROI mask image (optional).
+  --negative-controls, --nc TEXT  Negative control types to apply (multiple).
+                                  subcommand list_controls for options.
+  --random-seed INTEGER           Random seed for reproducibility.
+  -h, --help                      Show this message and exit.
+```
+
+**Example**
+```bash
+python src/readii/negative_controls/cli.py apply --nc SHUFFLED_FULL,custom_noise_FULL --nc SHUFFLED_NON_ROI .
+You passed in BASE_IMAGE_PATH: /home/bioinf/bhklab/radiomics/repos/readii,
+You passed in ROI_MASK_PATH: None,
+You passed in NEGATIVE_CONTROLS: ['SHUFFLED_FULL', 'custom_noise_FULL', 'SHUFFLED_NON_ROI'],
+You passed in RANDOM_SEED: None
+```
+
+**Example Error**
+passing in duplicate negative controls
+```bash
+python src/readii/negative_controls/cli.py apply \
+--nc SHUFFLED_FULL,custom_noise_FULL \
+--nc SHUFFLED_NON_ROI \
+--nc SHUFFLED_NON_ROI \
+--nc custom_noise_FULL \
+.
+
+Usage: cli.py apply [OPTIONS] BASE_IMAGE_PATH
+Try 'cli.py apply -h' for help.
+
+Error: Invalid value for '--negative-controls' / '--nc': 
+        Duplicate negative controls detected: SHUFFLED_NON_ROI, custom_noise_FULL
+```
+
+**Example Error 2**
+passing in a path
+```bash
+python src/readii/negative_controls/cli.py apply \
+--nc SHUFFLED_FULL,custom_noise_FULL \
+--nc SHUFFLED_NON_ROI \
+/path/to/nonexistest/baseimgdir
+
+Usage: cli.py apply [OPTIONS] BASE_IMAGE_PATH
+Try 'cli.py apply -h' for help.
+
+Error: Invalid value for 'BASE_IMAGE_PATH': Path '/path/to/nonexistest/baseimgdir' does not exist.
 ```
