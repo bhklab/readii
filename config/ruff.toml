@@ -64,4 +64,4 @@ convention = "numpy"
 [format]
 quote-style = "double"
 docstring-code-format = true
-docstring-code-line-length = 20
+docstring-code-line-length = 60
