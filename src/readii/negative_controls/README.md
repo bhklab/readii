@@ -181,6 +181,9 @@ Adding new types of negative controls involves three simple steps:
 2. It will instantiate the class with the given type and region.
 3. It will return the instantiated class.
 
+> Warning: This flowchart is now incorrect
+> (kinda)
+
 ```mermaid
 flowchart TD
     %% Start of the Flowchart
@@ -204,8 +207,8 @@ flowchart TD
     RegisterCustomClass --> Start
 
     %% Styling Suggestions
-    classDef StartEnd fill:#f96,stroke:#333,stroke-width:2px;
-    classDef Decision fill:#fff,stroke:#000,stroke-width:2px,stroke-dasharray: 5 5;
-    classDef Process fill:#ace,stroke:#333,stroke-width:2px;
-    classDef SubProcess fill:#ffe,stroke:#333,stroke-width:2px;
+    classDef StartEnd fill:#f96,color:#fff,stroke:#333,stroke-width:2px;
+    classDef Decision stroke:#00F,stroke-width:5px,stroke-dasharray: 5 5;
+    classDef Process stroke:#333,stroke-width:2px;
+    classDef SubProcess stroke:#333,stroke-width:2px;
 ```
