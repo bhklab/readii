@@ -151,3 +151,4 @@ tests/output/*
 .pixi
 *.egg-info
 .old
+src/readii/_dont_conmmit.txt
