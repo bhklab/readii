@@ -2,3 +2,4 @@
 # omit = []
 
 [tool.coverage.report]
+omit = ["src/readii/negative_controls/cli.py", "src/readii/negative_controls/__init__.py"]

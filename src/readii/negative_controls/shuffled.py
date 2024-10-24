@@ -10,7 +10,7 @@ from readii.negative_controls.registry import NegativeControlRegistry
 
 
 # This is how it would be defined in the library, using the enums
-@NegativeControlRegistry.register(NegativeControlType.SHUFFLED)
+@NegativeControlRegistry.register(control_type="sejin")
 class ShuffledControl(NegativeControl):
     """Shuffle the image."""
 

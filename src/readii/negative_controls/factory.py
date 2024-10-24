@@ -6,6 +6,7 @@ from readii.negative_controls.base import NegativeControl
 from readii.negative_controls.enums import NegativeControlRegion, NegativeControlType
 from readii.negative_controls.registry import NegativeControlRegistry
 
+
 class NegativeControlFactory:
     """Factory for creating instances of Negative Controls.
 
@@ -23,7 +24,8 @@ class NegativeControlFactory:
 
     @staticmethod
     def create(
-        control_type: Union[NegativeControlType, str], control_region: NegativeControlRegion
+        control_type: Union[NegativeControlType, str],
+        control_region: Union[NegativeControlRegion, str],
     ) -> NegativeControl:
         """Create an instance of the appropriate NegativeControl subclass.
 
@@ -31,7 +33,7 @@ class NegativeControlFactory:
         ----------
         control_type : Union[NegativeControlType, str]
             The type of negative control to instantiate (e.g., SHUFFLED, "custom_noise").
-        control_region : NegativeControlRegion
+        control_region : NegativeControlRegion or str
             The region where the control will be applied (e.g., FULL, ROI, NON_ROI).
 
         Returns
@@ -50,6 +52,15 @@ class NegativeControlFactory:
         if not control_class:
             raise ValueError(f"Control type '{control_type}' is not registered.")
 
+        # Convert the control region to a NegativeControlRegion enum
+        if isinstance(control_region, str):
+            try:
+                control_region = NegativeControlRegion(control_region.upper())
+            except ValueError as e:
+                raise ValueError(
+                    f"Invalid region '{control_region}'"
+                    f"Must be one of {[e.name for e in NegativeControlRegion]}"
+                ) from e
         # Instantiate and return the control.
         return control_class(control_type, control_region)
 

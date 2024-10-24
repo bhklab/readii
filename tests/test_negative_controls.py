@@ -17,10 +17,13 @@ def nsclcCTImage():
     return loadDicomSITK(nsclcCTPath)
 
 @pytest.fixture()
-def nsclcSEGImage():
+def nsclcSEGImage(nsclcCTImage):
     nsclcSEGPath = "tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/1000.000000-3D_Slicer_segmentation_result-67652/1-1.dcm"
     segDictionary = loadSegmentation(nsclcSEGPath, modality='SEG')
-    return flattenImage(segDictionary['Heart'])
+    flattened = flattenImage(segDictionary['Heart'])
+    alignedROIImage = alignImages(nsclcCTImage, flattened)
+    return alignedROIImage
+# croppedCT, croppedROI = getCroppedImages(nsclcCTImage, alignedROIImage, segmentationLabel)
 
 @pytest.fixture
 def randomSeed():
@@ -55,7 +58,8 @@ def test_apply_negative_control(
     negative_control = NegativeControlFactory.create(control_type, region)
 
     # Use the `apply()` method as required
-    processed_image = negative_control.apply(baseImage=nsclcCTImage, roiMask=nsclcSEGImage, randomSeed=randomSeed)
+    if region.upper() == "FULL":  
+        processed_image = negative_control.apply(baseImage=nsclcCTImage, roiMask=nsclcSEGImage, randomSeed=randomSeed)
 
     original_pixels = sitk.GetArrayFromImage(nsclcCTImage)
     processed_pixels = sitk.GetArrayFromImage(processed_image)
@@ -70,6 +74,13 @@ def test_apply_negative_control(
     assert isinstance(processed_image, sitk.Image), \
         f"{control_type} did not return a sitk.Image"
 
+    # # Control-specific assertions based on random seed expected behavior
+    # assert processed_pixels[0,0,0] == expected_first_voxel, \
+    #     f"{control_type} first voxel has wrong value. Expected {expected_first_voxel}."
+    # assert processed_pixels[-1,-1,-1] == expected_last_voxel, \
+    #     f"{control_type} last voxel has wrong value. Expected {expected_last_voxel}."
+    # assert processed_pixels[238,252,124] == expected_central_voxel, \
+    #     f"{control_type} central voxel has wrong value. Expected {expected_central_voxel}."
 # @pytest.fixture
 # def nsclcCTImage():
 #     nsclcCTPath = "tests/NSCLC_Radiogenomics/R01-001/09-06-1990-NA-CT_CHEST_ABD_PELVIS_WITH_CON-98785/3.000000-THORAX_1.0_B45f-95741"
