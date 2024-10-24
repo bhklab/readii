@@ -2,16 +2,16 @@ import logging
 import logging.config
 import os
 from typing import Optional
-
+import pythonjsonlogger
 BASE_LOGGING: dict = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        # 'json': {
-        #     'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
-        #     'format': '%(asctime)s %(name)s %(levelname)s %(module)s %(message)s %(pathname)s %(lineno)s %(funcName)s %(threadName)s %(thread)s %(process)s %(processName)s',  # noqa: E501
-        #     'datefmt': '%Y-%m-%d %H:%M:%S',
-        # },
+        'json': {
+            'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(name)s %(levelname)s %(module)s %(message)s %(pathname)s %(lineno)s %(funcName)s %(threadName)s %(thread)s %(process)s %(processName)s',  # noqa: E501
+            'datefmt': '%Y-%m-%d %H:%M:%S',
+        },
         'stdout': {
             'format': '%(asctime)s %(levelname)s: %(message)s (%(module)s:%(funcName)s:%(lineno)d)',
             'datefmt': '%Y-%m-%d %H:%M:%S',
@@ -22,10 +22,16 @@ BASE_LOGGING: dict = {
             'class': 'logging.StreamHandler',
             'formatter': 'stdout',
         },
+        'json': {
+          'class': 'logging.FileHandler',
+          'formatter': 'json',
+          'filename': 'log.json',
+          'mode': 'w'
+        }
     },
     'loggers': {
         'devel': {
-            'handlers': ['console'],
+            'handlers': ['console', 'json'],
             'level': os.getenv('READII_VERBOSITY', 'INFO'),
             'propagate': True,
         },

@@ -51,8 +51,12 @@ def lung4DRTSTRUCTImage():
 if __name__ == "__main__":
     ct = lung4DCTImage()
     seg = lung4DRTSTRUCTImage()
+    import logging
+    
 
     logger = get_logger()
+    # globally defined formatter exists called 'json'
+    
     radiomics_logger = radiomics.logger
     radiomics_logger.handlers.clear()
     for handler in logger.handlers:
