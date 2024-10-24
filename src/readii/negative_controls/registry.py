@@ -5,7 +5,6 @@ from typing import Callable, ClassVar, Dict, List, Type, Union
 from readii.negative_controls.base import NegativeControl
 from readii.negative_controls.enums import NegativeControlType
 
-
 class NegativeControlRegistry:
     """Singleton registry to keep track of all available NegativeControl types.
 
@@ -61,16 +60,12 @@ class NegativeControlRegistry:
         # Convert enums to their name for registration consistency
         control_type_key: str = (
             control_type.name if isinstance(control_type, NegativeControlType) else control_type
-        )
+        ).upper()
 
         if control_type_key in cls._registry:
             raise ValueError(f"Negative control type '{control_type_key}' is already registered.")
         elif (
-            not control_type_key
-            .replace("-", "")
-            .replace("_", "")
-            .replace(".", "")
-            .isalnum()
+            not control_type_key.replace("-", "").replace("_", "").replace(".", "").isalnum()
         ):  # ensure the key is alphanumeric
             # if not alphanumeric, raise an error
             raise KeyError(
@@ -108,7 +103,8 @@ class NegativeControlRegistry:
         """
         control_type_key = (
             control_type.name if isinstance(control_type, NegativeControlType) else control_type
-        )
+        ).upper()
+
         negative_control_class = cls._registry.get(control_type_key)
 
         if negative_control_class is None:
@@ -127,27 +123,3 @@ class NegativeControlRegistry:
 
         """
         return list(cls._registry.keys())
-
-
-###############################################################################
-# EXAMPLES
-
-
-# This is how it would be defined in the library, using the enums
-@NegativeControlRegistry.register(NegativeControlType.SHUFFLED)
-class ShuffledControl(NegativeControl):  # noqa: D101
-    def apply(self, baseImage, roiMask=None, randomSeed=None):  # noqa: ANN001, ANN201, D102
-        # Define how the image will be shuffled
-        pass
-
-
-# Custom Noise Negative Control
-@NegativeControlRegistry.register(
-    "custom_noise",
-)
-class CustomNoiseControl(NegativeControl):  # noqa: D101
-    def apply(self, baseImage, roiMask=None, randomSeed=None):  # noqa: ANN001, ANN201, D102
-        # Define how the image will be modified
-        # can literally be any function that takes in the baseImage (and roiMask if applicable)
-        # and returns the modified image
-        pass

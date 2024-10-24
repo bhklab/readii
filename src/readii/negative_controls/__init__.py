@@ -1,3 +1,17 @@
+from .base import NegativeControl  # noqa: I001
+from .enums import NegativeControlRegion, NegativeControlType
+from .factory import NegativeControlFactory
+from .registry import NegativeControlRegistry
+
+# Import the implemented classes so they get registered along with the registry
+#      This is because if module (e.g. randomized.py) is never imported, then it isn't run and 
+#      thus not registered with the registry
+# Alternatively, can use a more plugin-like approach where all modules are dynamically
+# imported and thus registered using pkgutil and importlib
+from .random_sample import RandomizedSampledControl
+from .randomized import RandomizedControl
+from .shuffled import ShuffledControl
+
 from venv import logger
 import SimpleITK as sitk
 from SimpleITK import Image

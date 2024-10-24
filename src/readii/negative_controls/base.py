@@ -49,6 +49,8 @@ class NegativeControl(ABC):
         The type of negative control (e.g., SHUFFLED, RANDOMIZED).
     control_region : NegativeControlRegion
         The region to apply the control to (e.g., FULL, ROI, NON_ROI).
+    random_seed : int, optional
+        Seed for random number generation to ensure reproducibility. Default
 
     Methods
     -------
@@ -60,6 +62,7 @@ class NegativeControl(ABC):
         self,
         control_type: Union[NegativeControlType, str],
         control_region: NegativeControlRegion,
+        random_seed: Optional[int] = None,
     ) -> None:
         """Initialize the negative control with type and region.
 
@@ -71,7 +74,12 @@ class NegativeControl(ABC):
             Region to apply the control (e.g., FULL, ROI, NON_ROI).
         """
         self.control_type = control_type
-        self.control_region = control_region
+        self.control_region = NegativeControlRegion(control_region)
+        self._random_seed = random_seed
+
+    def __post_init__(self) -> None:
+        """Validate class attributes after initialization."""
+        assert self.control_region in [e.name for e in NegativeControlRegion]
 
     @abstractmethod
     def apply(
@@ -142,9 +150,15 @@ class NegativeControl(ABC):
         """
         base_array = self.to_array(baseImage)
 
-        if self.control_region == NegativeControlRegion.FULL or roiMask is None:
+        if self.control_region == NegativeControlRegion.FULL:
             # Apply the function to the full image.
             transformed_array = apply_func(base_array)
+        elif roiMask is None:
+            raise ValueError(
+                "ROI mask is None. "
+                "Must pass ROI mask to negative control "
+                "function for {self.control_type} negative control."
+            )
         else:
             # Convert ROI mask and base image to arrays
             mask_array = self.to_array(roiMask)
@@ -167,3 +181,18 @@ class NegativeControl(ABC):
             return transformed_image
 
         return transformed_array
+
+    @property
+    def random_seed(self) -> Optional[int]:
+        """Get the random seed for the negative control."""
+        return self._random_seed
+
+    @random_seed.setter
+    def random_seed(self, value: Optional[int]) -> None:
+        """Set the random seed for the negative control."""
+        self._random_seed = value
+
+    @random_seed.deleter
+    def random_seed(self) -> None:
+        """Delete the random seed for the negative control."""
+        del self._random_seed

@@ -89,7 +89,7 @@ class NegativeControlFactory:
         # Iterate over the list of control types.
         for nc in nc_types:
             # Split the type into the control type and region.
-            control_type, region = nc.split(".")
+            control_type, region = nc.split("_", maxsplit=1)
 
             if NegativeControlRegion(region) is None:
                 raise ValueError(

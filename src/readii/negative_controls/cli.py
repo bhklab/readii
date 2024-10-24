@@ -6,10 +6,7 @@ from typing import List, Optional
 
 import click
 
-from readii.negative_controls.base import NegativeControl
-from readii.negative_controls.enums import NegativeControlRegion
-from readii.negative_controls.factory import NegativeControlFactory
-from readii.negative_controls.registry import NegativeControlRegistry
+from readii.negative_controls import NegativeControlRegion, NegativeControlRegistry
 
 def negative_control_types() -> List[str]:
     """Return a list of all registered negative control types.
@@ -28,7 +25,7 @@ def negative_control_types() -> List[str]:
     return [f"{nc_type}_{region}" for nc_type, region in product(negative_control_types, regions)]
 
 
-def parse_negative_controls(ctx, param, value) -> list: # noqa: ANN001, ANN201
+def parse_negative_controls(ctx, param, value) -> list:  # noqa: ANN001, ANN201
     """Parse the negative controls input, allowing comma-separated and multiple uses.
 
     Raises an error if duplicate values are detected.
@@ -49,10 +46,19 @@ def parse_negative_controls(ctx, param, value) -> list: # noqa: ANN001, ANN201
             f"\n\tDuplicate negative controls detected: {', '.join(duplicates)}"
         )
 
+    # Check if all controls are valid
+    invalid = [control for control in controls if control not in negative_control_types()]
+    if invalid:
+        raise click.BadParameter(
+            f"\n\tInvalid negative controls detected: {', '.join(invalid)}"
+        )
+
     return controls
 
 
-@click.group(context_settings={'help_option_names': ['-h', '--help']},)
+@click.group(
+    context_settings={"help_option_names": ["-h", "--help"]},
+)
 def cli() -> None:
     """CLI Tool for Applying Negative Controls to Radiomics Images."""
     pass
@@ -95,12 +101,12 @@ def apply(
     negative_controls: Optional[List[str]],
     random_seed: Optional[int],
 ) -> None:
-    """Example CLI tool for applying negative controls to radiomics images.
+    """Apply negative controls to radiomics images.
 
     Example!: All this does is print out the arguments passed in for now.
     BASE_IMAGE_PATH: The path to the base image file.
 
-    """ # noqa: D401
+    """
     print(
         f"You passed in BASE_IMAGE_PATH: {base_image_path},\n"
         f"You passed in ROI_MASK_PATH: {roi_mask_path},\n"
@@ -109,11 +115,11 @@ def apply(
     )
 
 
-
 @cli.command()
 def list_controls() -> None:
     """List all registered negative control types."""
-    print(f"{negative_control_types()}")
+    print("\n".join(nc for nc in negative_control_types()))
+
 
 if __name__ == "__main__":
     cli()
