@@ -1,5 +1,3 @@
-from token import OP
-from venv import logger
 from imgtools.io import read_dicom_series
 from itertools import chain
 from joblib import Parallel, delayed
@@ -13,7 +11,6 @@ import SimpleITK as sitk
 from readii.image_processing import (
     flattenImage, 
     alignImages, 
-    padSegToMatchCT, 
     getROIVoxelLabel, 
     displayImageSlice, 
     displayCTSegOverlay, 
@@ -276,9 +273,16 @@ def radiomicFeatureExtraction(
                                         f"roiImage.GetSize(): {roiImage.GetSize()}"
                                         "Padding segmentation to match."
                                     )
-                                    roiImage = padSegToMatchCT(
-                                        ctDirPath, segFilePath, ctImage, roiImage
-                                    )
+                                    try:
+                                        roiImage = padSegToMatchCT(
+                                            ctDirPath, segFilePath, ctImage, roiImage
+                                        )
+                                    except Exception as e:
+                                        logger.error(
+                                            f"Error padding segmentation to match CT for {patID}: {e}"
+                                            f" padSegToMatchCT is deprecated, please raise an issue on GitHub."
+                                        )
+                                        raise NotImplementedError("Deprecated function.") from e
                                     logger.warning(
                                         f"Padded segmentation to match CT for {patID}."
                                         "roiImage.GetSize() after padding: {roiImage.GetSize()}"
