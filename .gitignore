@@ -152,6 +152,7 @@ tests/output/*
 *.egg-info
 
 
-./data
+data/
+!src/readii/data/
 .old
 trash
