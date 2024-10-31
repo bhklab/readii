@@ -152,7 +152,6 @@ tests/output/*
 *.egg-info
 
 
-
+./data
 .old
-data
 trash
