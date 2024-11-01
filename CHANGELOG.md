@@ -1,6 +1,29 @@
 # CHANGELOG
 
 
+## v1.14.0 (2024-11-01)
+
+### Features
+
+* feat: remove dicom-parser, update mit, deprecate padSeg (#51)
+
+* fix: Update med-imagetools dependency and handle deprecated padSegToMatchCT function in feature_extraction.py with error logging
+
+* chore: Update .gitignore to exclude .old, data, and trash directories for working dir
+
+* Update src/readii/feature_extraction.py
+
+Co-authored-by: coderabbitai[bot] <136622811+coderabbitai[bot]@users.noreply.github.com>
+
+* fix: change gitignore data
+
+* better handling of data ignore
+
+---------
+
+Co-authored-by: coderabbitai[bot] <136622811+coderabbitai[bot]@users.noreply.github.com> ([`a6658e7`](https://github.com/bhklab/readii/commit/a6658e7fa137b94329ba0dc303d25eab4be4c2f2))
+
+
 ## v1.13.2 (2024-10-22)
 
 ### Bug Fixes
