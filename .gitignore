@@ -150,4 +150,9 @@ tests/output/*
 # pixi environments
 .pixi
 *.egg-info
+
+
+data/
+!src/readii/data/
 .old
+trash

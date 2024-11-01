@@ -1,4 +1,3 @@
-from dicom_parser import Series
 import matplotlib.pyplot as plt
 import numpy as np
 import pydicom
@@ -95,6 +94,7 @@ def padSegToMatchCT(
     >>> tumourSeg = loadSegmentation("/path/to/segmentation/1.dcm", 'SEG')
     >>> paddedSeg = padSegToMatchCT("/path/to/CT", ctImage = lungCT, alignedSegImage = tumourSeg)
     """
+    from dicom_parser import Series
 
     # Load the CT image to align the segmentation to if not passed as argument
     if ctImage is None:

@@ -1,5 +1,3 @@
-from token import OP
-from venv import logger
 from imgtools.io import read_dicom_series
 from itertools import chain
 from joblib import Parallel, delayed
@@ -13,7 +11,6 @@ import SimpleITK as sitk
 from readii.image_processing import (
     flattenImage, 
     alignImages, 
-    padSegToMatchCT, 
     getROIVoxelLabel, 
     displayImageSlice, 
     displayCTSegOverlay, 
@@ -276,9 +273,24 @@ def radiomicFeatureExtraction(
                                         f"roiImage.GetSize(): {roiImage.GetSize()}"
                                         "Padding segmentation to match."
                                     )
-                                    roiImage = padSegToMatchCT(
-                                        ctDirPath, segFilePath, ctImage, roiImage
-                                    )
+                                    from warnings import warn
+                                    from readii.image_processing import padSegToMatchCT
+
+                                    try:
+                                        roiImage = padSegToMatchCT(
+                                            ctDirPath, segFilePath, ctImage, roiImage
+                                        )
+                                        warn(
+                                            "padSegToMatchCT is deprecated and will be removed in a future version. "
+                                            "Please raise an issue on GitHub to discuss migration options.",
+                                            DeprecationWarning,
+                                            stacklevel=2
+                                        )
+                                    except Exception as e:
+                                        logger.error(
+                                            f"Error padding segmentation to match CT for {patID}: {e}"
+                                        )
+                                        raise
                                     logger.warning(
                                         f"Padded segmentation to match CT for {patID}."
                                         "roiImage.GetSize() after padding: {roiImage.GetSize()}"
