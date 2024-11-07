@@ -1,6 +1,13 @@
 # CHANGELOG
 
 
+## v1.14.1 (2024-11-07)
+
+### Bug Fixes
+
+* fix: add readii cli entry point to pyproject (#58) ([`1710b72`](https://github.com/bhklab/readii/commit/1710b7294b7e36273a7cc239b97593c676638463))
+
+
 ## v1.14.0 (2024-11-01)
 
 ### Features
