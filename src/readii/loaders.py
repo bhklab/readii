@@ -21,7 +21,6 @@ from readii.utils import get_logger
 # Create a global logger instance
 logger = get_logger()
 
-
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
     """Read a DICOM series as a SimpleITK Image.
 
@@ -37,7 +36,7 @@ def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
     # Convert to Path if passed as a string
     imgDirPath = Path(imgDirPath)
 
-    logger.debug(f"Loading DICOM series from directory: {imgDirPath}")
+    logger.debug(f"Loading DICOM series", dir=imgDirPath)
     reader = sitk.ImageSeriesReader()
     dicomNames = reader.GetGDCMSeriesFileNames(imgDirPath)
     reader.SetFileNames(dicomNames)
@@ -65,28 +64,34 @@ def loadRTSTRUCTSITK(
         A dictionary of mask ROIs from the loaded RTSTRUCT image as
         SimpleITK image objects.
     """
+
     # Convert to Path if passed as a string
     rtstructPath = Path(rtstructPath)
     baseImageDirPath = Path(baseImageDirPath)
 
-    logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
+    logger.debug(f"Loading RTSTRUCT")
     baseImage: io.Scan = io.read_dicom_scan(baseImageDirPath.resolve())
     segImage: io.StructureSet = io.read_dicom_rtstruct(rtstructPath.resolve())
 
     # Set up segmentation loader
-    logger.debug(f"Making mask using ROI names: {roiNames}")
-    makeMask = StructureSetToSegmentation(roi_names=roiNames)
+    logger.debug(f"Creating StructureSetToSegmentation object", roiNames=roiNames)
+    try:
+        makeMask = StructureSetToSegmentation(roi_names=roiNames)
+    except IndexError as ve:
+        logger.exception(f"Error creating StructureSetToSegmentation object: {ve}")
+        raise ve
 
     try:
         # Get the individual ROI masks
+        logger.debug(f"Making mask", segImage=segImage,)
         segMasks = makeMask(
             segImage,
             baseImage.image,
             existing_roi_indices={"background": 0},
             ignore_missing_regex=False,
         )
-    except ValueError:
-        return {}
+    except ValueError as ve:
+        logger.exception(f"Error making mask: {ve}")
 
     # Get list of ROIs present in this rtstruct
     loadedROINames = segMasks.raw_roi_names
@@ -164,3 +169,15 @@ def loadSegmentation(
         baseImageDirPath.resolve(),
         roiNames,
     )
+
+
+if __name__ == "__main__":
+    from pathlib import Path
+    data = Path(__file__).parent.parent.parent / "tests"
+
+    lung = {
+        "RTSTRUCT" : data / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
+        "CT" : data / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543"
+    }
+
+    loadSegmentation(lung["RTSTRUCT"], "RTSTRUCT", baseImageDirPath=lung["CT"])

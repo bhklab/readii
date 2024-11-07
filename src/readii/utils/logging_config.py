@@ -1,73 +1,106 @@
-import logging
-import logging.config
-import os
-from typing import Optional
+import structlog
+from structlog.typing import Processor
+from typing import Optional, List, Union
+import sys
+from structlog.processors import CallsiteParameter
+from pathlib import Path
+import json
+from structlog.contextvars import (
+    bind_contextvars,
+    bound_contextvars,
+    clear_contextvars,
+    merge_contextvars,
+    unbind_contextvars,
+)
 
-BASE_LOGGING: dict = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        # 'json': {
-        #     'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
-        #     'format': '%(asctime)s %(name)s %(levelname)s %(module)s %(message)s %(pathname)s %(lineno)s %(funcName)s %(threadName)s %(thread)s %(process)s %(processName)s',  # noqa: E501
-        #     'datefmt': '%Y-%m-%d %H:%M:%S',
-        # },
-        'stdout': {
-            'format': '%(asctime)s %(levelname)s: %(message)s (%(module)s:%(funcName)s:%(lineno)d)',
-            'datefmt': '%Y-%m-%d %H:%M:%S',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'stdout',
-        },
-    },
-    'loggers': {
-        'devel': {
-            'handlers': ['console'],
-            'level': os.getenv('READII_VERBOSITY', 'INFO'),
-            'propagate': True,
-        },
-    },
-}
+class PathPrettifier:
+    """A processor for printing paths.
+
+    Changes all pathlib.Path objects.
+
+    1. Remove PosixPath(...) wrapper by calling str() on the path.
+    2. If path is relative to current working directory,
+       print it relative to working directory.
+
+    Note that working directory is determined when configuring structlog.
+    """
+
+    def __init__(self, base_dir: Optional[Path] = None):
+        self.base_dir = base_dir or Path.cwd()
+
+    def __call__(self, _, __, event_dict):
+        for key, path in event_dict.items():
+            if not isinstance(path, Path):
+                continue
+            path = event_dict[key]
+            try:
+                path = path.relative_to(self.base_dir)
+            except ValueError:
+                pass  # path is not relative to cwd
+            event_dict[key] = str(path)
+
+        return event_dict
+
+def callsite_formatter(_, __, event_dict):
+    module = event_dict.pop('module', '')
+    func_name = event_dict.pop('func_name', '')
+    lineno = event_dict.pop('lineno', '')
+    event_dict['call'] = f"{module}:{func_name}:{lineno}"
+    return event_dict
+
+# to print the callside like (loaders:loadRTSTRUCTSITK:90) 
+# we need to add that info to the event_dict, then run callsite_formatter which removes the info 
+# and formats it for the event_dict
+extra_processors: List[Processor] = [
+    structlog.processors.CallsiteParameterAdder([
+        CallsiteParameter.MODULE,
+        CallsiteParameter.FUNC_NAME,
+        CallsiteParameter.LINENO,
+    ]),
+    callsite_formatter,
+]
 
 
-def setup_logger(
-    logger_name: str = 'root',
-    config: Optional[dict] = None,
-    extra_handlers: Optional[list] = None,
-  ) -> logging.Logger:
-    """Set up a logger with optional custom configuration and log file."""
-    valid_loggers = ['devel', 'prod', 'root']
-    assert (
-        logger_name in valid_loggers
-    ), f'Invalid logger name. Available options are {valid_loggers}'
-    
-    # Merge the base config with any custom config
-    logging_config = BASE_LOGGING.copy()
-    if config:
-        logging_config.update(config)
-    logging.config.dictConfig(logging_config)
+shared_processors: list[Processor] =[
+    structlog.processors.TimeStamper(fmt="%y-%m-%d %H:%M:%S"),
+    structlog.processors.add_log_level,
+]
 
-    logger = logging.getLogger(logger_name)
 
-    # Add any extra handlers provided
-    if extra_handlers:
-        for handler in extra_handlers:
-            logger.addHandler(handler)
+shared_processors = shared_processors + extra_processors
 
-    return logger
+if not sys.stdout.isatty():
+    processors = shared_processors + [
+        structlog.dev.ConsoleRenderer(
+            colors=False,
+            exception_formatter=structlog.dev.plain_traceback
+        ),
+    ]
+elif sys.stderr.isatty() and sys.stdout.isatty():
+    processors = shared_processors + [
+        PathPrettifier(),
+        structlog.dev.ConsoleRenderer(
+            exception_formatter=structlog.dev.rich_traceback,
+        ),
+    ]
 
-def get_logger(config: Optional[dict] = None) -> logging.Logger:
-    """Retrieve logger based on the environment, with an optional configuration."""
-    env = os.getenv('READII_ENV', 'development')
+if not sys.stderr.isatty():
+    processors = shared_processors + [
+        structlog.processors.dict_tracebacks,
+        structlog.processors.JSONRenderer(serializer=json.dumps, indent=4),
+    ]
 
-    logger_name = 'devel' if env in ['devel', 'development'] else 'prod'
-    return setup_logger(logger_name=logger_name, config=config)
+structlog.configure(
+    processors=processors,
+)
 
-# Example usage
+logger = structlog.get_logger()
+
+def get_logger() -> structlog.stdlib.BoundLogger:
+    """Retrieve a structlog logger."""
+    return structlog.get_logger()
+
 if __name__ == "__main__":
-    logger = get_logger()
-    logger.info("This is an informational message.")
-    logger.debug("This is a debug message.")
+    initfile = Path(__file__).parent / "__init__.py"
+
+    logger.info("This is an informational message.", initfile=initfile)

@@ -33,7 +33,7 @@ from readii.negative_controls import (
     applyNegativeControl,
 )
 
-from readii.utils import get_logger
+from readii.utils.logging_config import get_logger
 
 from typing import Optional, Any
 from collections import OrderedDict

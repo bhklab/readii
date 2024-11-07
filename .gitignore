@@ -156,3 +156,5 @@ data/
 !src/readii/data/
 .old
 trash
+
+logs
