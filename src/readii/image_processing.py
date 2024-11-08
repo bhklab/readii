@@ -11,6 +11,7 @@ from readii.loaders import (
     loadRTSTRUCTSITK,
     loadSegmentation,
 )
+from readii.utils.logging_config import logger
 
 
 def flattenImage(image: sitk.Image) -> sitk.Image:

@@ -5,12 +5,11 @@ import numpy as np
 import random
 
 from readii.image_processing import alignImages, getROIVoxelLabel
-from readii.utils import get_logger
 
 from typing import Optional, Union
 from numpy import ndarray
 
-logger = get_logger()
+from readii.utils.logging_config import logger
 
 def getArrayFromImageOrArray(imageOrArray: Union[Image, ndarray]) -> ndarray:
     """Function to convert a SimpleITK Image to a numpy array.

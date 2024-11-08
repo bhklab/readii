@@ -1,8 +1,9 @@
 from imgtools.io import read_dicom_series
 from itertools import chain
 from joblib import Parallel, delayed
-from radiomics import featureextractor, imageoperations, logging
 
+# from readii.utils.logging_config import logger  # Updated import
+from radiomics import featureextractor, imageoperations
 import os
 import pandas as pd
 import numpy as np
@@ -11,34 +12,29 @@ import SimpleITK as sitk
 from readii.image_processing import (
     flattenImage, 
     alignImages, 
-    getROIVoxelLabel, 
-    displayImageSlice, 
-    displayCTSegOverlay, 
-    getROICenterCoords, 
-    getCroppedImages,    
+    getROIVoxelLabel,    
 )
 
 from readii.loaders import (
-    loadDicomSITK, 
-    loadRTSTRUCTSITK, 
     loadSegmentation,
 ) 
 
 from readii.metadata import (
-    saveDataframeCSV, 
-    matchCTtoSegmentation,
-    getSegmentationType,
+    saveDataframeCSV,
 )
 from readii.negative_controls import (
     applyNegativeControl,
 )
 
-from readii.utils.logging_config import get_logger
-
 from typing import Optional, Any
 from collections import OrderedDict
 
-logger = get_logger()
+import logging
+
+from readii.utils.logging_config import logger
+
+# disable radiomics logging
+logging.getLogger("radiomics").setLevel(logging.ERROR)
 
 def singleRadiomicFeatureExtraction(
     ctImage: sitk.Image,
@@ -181,9 +177,6 @@ def radiomicFeatureExtraction(
     pd.DataFrame
         Dataframe containing the image metadata and extracted radiomic features.
     """
-    # Setting pyradiomics verbosity lower
-    radiomics_logger: logging.Logger = logging.getLogger("radiomics")
-    radiomics_logger.setLevel(logging.ERROR)
 
     # If no pyradiomics paramater file passed, use default
     if pyradiomicsParamFilePath == None:
@@ -205,7 +198,6 @@ def radiomicFeatureExtraction(
         plogger = logger.bind(patient=patID)
 
         try:
-
             # Get absolute path to CT image files
             ctDirPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]["folder_CT"])
             # Load CT by passing in specific series to find in a directory
@@ -253,57 +245,32 @@ def radiomicFeatureExtraction(
                         roiNum = roiCount + 1
 
                         # Extract features listed in the parameter file
-                        plogger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
+                        plogger.info(
+                            f"Calculating radiomic features for segmentation: {roiImageName}"
+                        )
 
                         # Get sitk Image object for this ROI
                         roiImage = segImages[roiImageName]
 
-                        # Exception catch for if the segmentation dimensions do not match that original image
-                        try:
-                            # Check if segmentation just has an extra axis with a size of 1 and remove it
-                            if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:
-                                roiImage = flattenImage(roiImage)
+                        # Check if segmentation just has an extra axis with a size of 1 and remove it
+                        if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:
+                            roiImage = flattenImage(roiImage)
 
-                            # Check that image and segmentation mask have the same dimensions
-                            if ctImage.GetSize() != roiImage.GetSize():
-                                # Checking if number of segmentation slices is less than CT
-                                if ctImage.GetSize()[2] > roiImage.GetSize()[2]:
-                                    plogger.warning(
-                                        f"Slice number mismatch between CT and segmentation for {patID}."
-                                        f"ctImage.GetSize(): {ctImage.GetSize()}"
-                                        f"roiImage.GetSize(): {roiImage.GetSize()}"
-                                        "Padding segmentation to match."
-                                    )
-                                    from warnings import warn
-                                    from readii.image_processing import padSegToMatchCT
-
-                                    try:
-                                        roiImage = padSegToMatchCT(
-                                            ctDirPath, segFilePath, ctImage, roiImage
-                                        )
-                                        warn(
-                                            "padSegToMatchCT is deprecated and will be removed in a future version. "
-                                            "Please raise an issue on GitHub to discuss migration options.",
-                                            DeprecationWarning,
-                                            stacklevel=2
-                                        )
-                                    except Exception as e:
-                                        plogger.exception(
-                                            f"Error padding segmentation to match CT for {patID}: {e}"
-                                        )
-                                        raise
-                                    plogger.warning(
-                                        f"Padded segmentation to match CT for {patID}."
-                                        "roiImage.GetSize() after padding: {roiImage.GetSize()}"
-                                    )
-                                else:
-                                    raise RuntimeError(
-                                        "CT and ROI dimensions do not match."
-                                    )
-
-                        # Catching CT and segmentation size mismatch error
-                        except RuntimeError as e:
-                            plogger.error(str(e))
+                        # Check that image and segmentation mask have the same dimensions
+                        if ctImage.GetSize() != roiImage.GetSize():
+                            plogger.error(
+                                "Segmentation mask is smaller than the CT.",
+                                ct_size=ctImage.GetSize(),
+                                roi_size=roiImage.GetSize(),
+                                ctSeriesID=ctSeriesID,
+                                segSeriesID=segSeriesID,
+                            )
+                            raise RuntimeError(
+                                "CT and ROI dimensions do not match. "
+                                "This is likely due to a segmentation mask that is smaller than the CT. "
+                                "The padding workaround has been disabled. Please raise an issue on GitHub"
+                                " to discuss migration options."
+                            )
 
                         # Extract radiomic features from this CT/segmentation pair
                         idFeatureVector = singleRadiomicFeatureExtraction(
@@ -311,7 +278,7 @@ def radiomicFeatureExtraction(
                             roiImage=roiImage,
                             pyradiomicsParamFilePath=pyradiomicsParamFilePath,
                             negativeControl=negativeControl,
-                            randomSeed=randomSeed
+                            randomSeed=randomSeed,
                         )
 
                         # Create dictionary of image metadata to append to front of output table
@@ -341,8 +308,12 @@ def radiomicFeatureExtraction(
 
             return ctAllData
             ###### END featureExtraction #######
+        except RuntimeError as re:
+            raise re
         except Exception as e:
-            plogger.error(f"Error processing patient", ctSeriesID=ctSeriesID) #  {patID}, series {ctSeriesID}: {e}
+            plogger.error(
+                f"Error processing patient", ctSeriesID=ctSeriesID
+            )  #  {patID}, series {ctSeriesID}: {e}
             if keep_running:
                 # Log the error and continue without raising the exception
                 return
@@ -358,7 +329,6 @@ def radiomicFeatureExtraction(
         features = Parallel(n_jobs=-1, require="sharedmem")(
             delayed(featureExtraction)(ctSeriesID) for ctSeriesID in ctSeriesIDList
         )
-
 
     logger.info("Finished feature extraction.")
 

@@ -16,10 +16,7 @@ import SimpleITK as sitk
 from imgtools import io
 from imgtools.ops import StructureSetToSegmentation
 
-from readii.utils import get_logger
-
-# Create a global logger instance
-logger = get_logger()
+from readii.utils.logging_config import logger
 
 
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
@@ -34,14 +31,18 @@ def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
     -------
         sitk.Image: The loaded image.
     """
-    # Convert to Path if passed as a string
     imgDirPath = Path(imgDirPath)
-
-    logger.debug(f"Loading DICOM series", dir=imgDirPath)
-    reader = sitk.ImageSeriesReader()
-    dicomNames = reader.GetGDCMSeriesFileNames(imgDirPath)
-    reader.SetFileNames(dicomNames)
-    return reader.Execute()
+    try:
+        logger.debug(f"Loading DICOM series from directory: {imgDirPath}")
+        reader = sitk.ImageSeriesReader()
+        dicomNames = reader.GetGDCMSeriesFileNames(str(imgDirPath))
+        if not dicomNames:
+            raise ValueError(f"No DICOM files found in directory: {imgDirPath}")
+        reader.SetFileNames(dicomNames)
+        return reader.Execute()
+    except Exception as e:
+        logger.exception("Error loading DICOM series: %s", e)
+        raise
 
 
 def loadRTSTRUCTSITK(
@@ -72,14 +73,13 @@ def loadRTSTRUCTSITK(
     rtstructPath = Path(rtstructPath)
     baseImageDirPath = Path(baseImageDirPath)
 
-    logger.debug(f"Loading RTSTRUCT")
+    logger.debug("Loading RTSTRUCT")
     baseImage: io.Scan = io.read_dicom_scan(baseImageDirPath.resolve())
     segImage: io.StructureSet = io.read_dicom_rtstruct(rtstructPath.resolve())
 
-    # Set up segmentation loader
     try:
         logger.debug(
-            f"Creating StructureSetToSegmentation object",
+            "Creating StructureSetToSegmentation object",
             roiNames=roiNames,
             continuous=True,
         )
@@ -92,22 +92,22 @@ def loadRTSTRUCTSITK(
             ignore_missing_regex=False,
         )
     except IndexError as ie:
-        logger.exception(f"Error making mask: {ie}")
+        logger.exception("Error making mask:")
         raise
-
     except ValueError as ve:
         logger.exception(f"Error making mask: {ve}")
+        raise
 
-    logger.debug(f"Finished making mask", seg_roi_names=segMasks.raw_roi_names)
+    logger.debug("Finished making mask", seg_roi_names=segMasks.raw_roi_names)
 
     # Get list of ROIs present in this rtstruct
     loadedROINames = segMasks.raw_roi_names
     # Initialize dictionary to store ROI names and images
     roiStructs = {}
     # Get each roi and its label and store in dictionary
-    for name, label in loadedROINames.items():
+    for name in loadedROINames:
         # Get the mask for this ROI
-        roiMask = segMasks.get_label(label=label, name=name)
+        roiMask = segMasks.get_label(name=name)
         # Store the ROI name and image
         roiStructs[name] = roiMask
 
@@ -194,8 +194,11 @@ if __name__ == "__main__":
         "RTSTRUCT": data / "HNSCC/HNSCC-01-0002/Study-57976/RTSTRUCT-56680/1.dcm",
         "CT": data / "HNSCC/HNSCC-01-0002/Study-57976/CT-57922",
     }
-
-    # loadSegmentation(lung["RTSTRUCT"], "RTSTRUCT", baseImageDirPath=lung["CT"])
+    y = loadSegmentation(
+        lung["RTSTRUCT"],
+        "RTSTRUCT",
+        baseImageDirPath=lung["CT"],
+    )
 
     x = loadSegmentation(
         HNSCC0002["RTSTRUCT"],
@@ -203,5 +206,3 @@ if __name__ == "__main__":
         baseImageDirPath=HNSCC0002["CT"],
         roiNames="^(GTVp.*|GTV)$",
     )
-
-    # print(x)
