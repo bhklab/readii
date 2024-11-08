@@ -198,12 +198,13 @@ def radiomicFeatureExtraction(
     def featureExtraction(ctSeriesID):
         """Function to extract PyRadiomics features for all ROIs present in a CT. Inner function so it can be run in parallel with joblib."""
         # Get all info rows for this ctSeries
+        ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
+        patID = ctSeriesInfo.iloc[0]["patient_ID"]
+
+        logger.info(f"Processing {patID}")
+        plogger = logger.bind(patient=patID)
 
         try:
-            ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
-            patID = ctSeriesInfo.iloc[0]["patient_ID"]
-
-            logger.info(f"Processing {patID}")
 
             # Get absolute path to CT image files
             ctDirPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]["folder_CT"])
@@ -243,7 +244,7 @@ def radiomicFeatureExtraction(
                 # Check that this series has ROIs to extract from (dictionary isn't empty)
                 if not segImages:
                     log_msg = f"CT {ctSeriesID} and segmentation {segSeriesID} has no ROIs or no ROIs with the label {roiNames}. Moving to next segmentation."
-                    logger.warning(log_msg)
+                    plogger.warning(log_msg)
 
                 else:
                     # Loop over each ROI contained in the segmentation to perform radiomic feature extraction
@@ -252,7 +253,7 @@ def radiomicFeatureExtraction(
                         roiNum = roiCount + 1
 
                         # Extract features listed in the parameter file
-                        logger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
+                        plogger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
 
                         # Get sitk Image object for this ROI
                         roiImage = segImages[roiImageName]
@@ -267,7 +268,7 @@ def radiomicFeatureExtraction(
                             if ctImage.GetSize() != roiImage.GetSize():
                                 # Checking if number of segmentation slices is less than CT
                                 if ctImage.GetSize()[2] > roiImage.GetSize()[2]:
-                                    logger.warning(
+                                    plogger.warning(
                                         f"Slice number mismatch between CT and segmentation for {patID}."
                                         f"ctImage.GetSize(): {ctImage.GetSize()}"
                                         f"roiImage.GetSize(): {roiImage.GetSize()}"
@@ -287,11 +288,11 @@ def radiomicFeatureExtraction(
                                             stacklevel=2
                                         )
                                     except Exception as e:
-                                        logger.error(
+                                        plogger.exception(
                                             f"Error padding segmentation to match CT for {patID}: {e}"
                                         )
                                         raise
-                                    logger.warning(
+                                    plogger.warning(
                                         f"Padded segmentation to match CT for {patID}."
                                         "roiImage.GetSize() after padding: {roiImage.GetSize()}"
                                     )
@@ -302,7 +303,7 @@ def radiomicFeatureExtraction(
 
                         # Catching CT and segmentation size mismatch error
                         except RuntimeError as e:
-                            logger.error(str(e))
+                            plogger.error(str(e))
 
                         # Extract radiomic features from this CT/segmentation pair
                         idFeatureVector = singleRadiomicFeatureExtraction(
@@ -341,12 +342,11 @@ def radiomicFeatureExtraction(
             return ctAllData
             ###### END featureExtraction #######
         except Exception as e:
+            plogger.error(f"Error processing patient", ctSeriesID=ctSeriesID) #  {patID}, series {ctSeriesID}: {e}
             if keep_running:
-                logger.error(f"Error processing patient {patID}, series {ctSeriesID}: {e}")
                 # Log the error and continue without raising the exception
-            else:
-                # Raise the exception if keep_running is False
-                raise e
+                return
+            raise e
 
     # Extract radiomic features for each CT, get a list of dictionaries
     # Each dictioary contains features for each ROI in a single CT

@@ -21,6 +21,7 @@ from readii.utils import get_logger
 # Create a global logger instance
 logger = get_logger()
 
+
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
     """Read a DICOM series as a SimpleITK Image.
 
@@ -44,7 +45,9 @@ def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
 
 
 def loadRTSTRUCTSITK(
-    rtstructPath: str | Path, baseImageDirPath: str | Path, roiNames: Optional[str] = None
+    rtstructPath: str | Path,
+    baseImageDirPath: str | Path,
+    roiNames: Optional[str] = None,
 ) -> Dict[str, sitk.Image]:
     """Load RTSTRUCT into SimpleITK Image.
 
@@ -74,35 +77,39 @@ def loadRTSTRUCTSITK(
     segImage: io.StructureSet = io.read_dicom_rtstruct(rtstructPath.resolve())
 
     # Set up segmentation loader
-    logger.debug(f"Creating StructureSetToSegmentation object", roiNames=roiNames)
     try:
-        makeMask = StructureSetToSegmentation(roi_names=roiNames)
-    except IndexError as ve:
-        logger.exception(f"Error creating StructureSetToSegmentation object: {ve}")
-        raise ve
-
-    try:
+        logger.debug(
+            f"Creating StructureSetToSegmentation object",
+            roiNames=roiNames,
+            continuous=True,
+        )
+        makeMask = StructureSetToSegmentation(roi_names=roiNames, continuous=True)
         # Get the individual ROI masks
-        logger.debug(f"Making mask", segImage=segImage,)
         segMasks = makeMask(
             segImage,
             baseImage.image,
             existing_roi_indices={"background": 0},
             ignore_missing_regex=False,
         )
+    except IndexError as ie:
+        logger.exception(f"Error making mask: {ie}")
+        raise
+
     except ValueError as ve:
         logger.exception(f"Error making mask: {ve}")
+
+    logger.debug(f"Finished making mask", seg_roi_names=segMasks.raw_roi_names)
 
     # Get list of ROIs present in this rtstruct
     loadedROINames = segMasks.raw_roi_names
     # Initialize dictionary to store ROI names and images
     roiStructs = {}
     # Get each roi and its label and store in dictionary
-    for roi in loadedROINames:
+    for name, label in loadedROINames.items():
         # Get the mask for this ROI
-        roiMask = segMasks.get_label(name=roi)
+        roiMask = segMasks.get_label(label=label, name=name)
         # Store the ROI name and image
-        roiStructs[roi] = roiMask
+        roiStructs[name] = roiMask
 
     return roiStructs
 
@@ -173,11 +180,28 @@ def loadSegmentation(
 
 if __name__ == "__main__":
     from pathlib import Path
-    data = Path(__file__).parent.parent.parent / "tests"
+
+    data = Path(__file__).parent.parent.parent / "TRASH"
 
     lung = {
-        "RTSTRUCT" : data / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
-        "CT" : data / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543"
+        "RTSTRUCT": data
+        / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
+        "CT": data
+        / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543",
     }
 
-    loadSegmentation(lung["RTSTRUCT"], "RTSTRUCT", baseImageDirPath=lung["CT"])
+    HNSCC0002 = {
+        "RTSTRUCT": data / "HNSCC/HNSCC-01-0002/Study-57976/RTSTRUCT-56680/1.dcm",
+        "CT": data / "HNSCC/HNSCC-01-0002/Study-57976/CT-57922",
+    }
+
+    # loadSegmentation(lung["RTSTRUCT"], "RTSTRUCT", baseImageDirPath=lung["CT"])
+
+    x = loadSegmentation(
+        HNSCC0002["RTSTRUCT"],
+        "RTSTRUCT",
+        baseImageDirPath=HNSCC0002["CT"],
+        roiNames="^(GTVp.*|GTV)$",
+    )
+
+    # print(x)

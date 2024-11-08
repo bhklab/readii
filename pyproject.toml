@@ -14,9 +14,12 @@ dependencies = [
   "pydicom>=2.3.1,<3",
   "pyradiomics-bhklab>=3.1.4,<4",
   "structlog>=24.4.0,<25",
-  "rich>=13.0",
 ]
+
 requires-python = ">=3.10, <3.13"
+
+[project.optional-dependencies]
+rich = ["rich"]
 
 classifiers = [
   "License :: OSI Approved :: MIT License",
@@ -187,3 +190,6 @@ publish-test = { cmd = [
 ], depends-on = [
   "build",
 ], description = "Publish to test PyPI" }
+
+[tool.pixi.dependencies]
+rich = ">=13.9.4,<14"
