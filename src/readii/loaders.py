@@ -18,7 +18,6 @@ from imgtools.ops import StructureSetToSegmentation
 
 from readii.utils.logging_config import logger
 
-
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
     """Read a DICOM series as a SimpleITK Image.
 
@@ -68,7 +67,6 @@ def loadRTSTRUCTSITK(
         A dictionary of mask ROIs from the loaded RTSTRUCT image as
         SimpleITK image objects.
     """
-
     # Convert to Path if passed as a string
     rtstructPath = Path(rtstructPath)
     baseImageDirPath = Path(baseImageDirPath)
@@ -91,7 +89,7 @@ def loadRTSTRUCTSITK(
             existing_roi_indices={"background": 0},
             ignore_missing_regex=False,
         )
-    except IndexError as ie:
+    except IndexError:
         logger.exception("Error making mask:")
         raise
     except ValueError as ve:
@@ -175,34 +173,4 @@ def loadSegmentation(
         segImagePath.resolve(),
         baseImageDirPath.resolve(),
         roiNames,
-    )
-
-
-if __name__ == "__main__":
-    from pathlib import Path
-
-    data = Path(__file__).parent.parent.parent / "TRASH"
-
-    lung = {
-        "RTSTRUCT": data
-        / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
-        "CT": data
-        / "4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543",
-    }
-
-    HNSCC0002 = {
-        "RTSTRUCT": data / "HNSCC/HNSCC-01-0002/Study-57976/RTSTRUCT-56680/1.dcm",
-        "CT": data / "HNSCC/HNSCC-01-0002/Study-57976/CT-57922",
-    }
-    y = loadSegmentation(
-        lung["RTSTRUCT"],
-        "RTSTRUCT",
-        baseImageDirPath=lung["CT"],
-    )
-
-    x = loadSegmentation(
-        HNSCC0002["RTSTRUCT"],
-        "RTSTRUCT",
-        baseImageDirPath=HNSCC0002["CT"],
-        roiNames="^(GTVp.*|GTV)$",
     )
