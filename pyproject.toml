@@ -18,9 +18,6 @@ dependencies = [
 
 requires-python = ">=3.10, <3.13"
 
-[project.optional-dependencies]
-rich = ["rich"]
-
 classifiers = [
   "License :: OSI Approved :: MIT License",
   "Natural Language :: English",
@@ -29,6 +26,7 @@ classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
+
 
 [project.scripts]
 readii = "readii.pipeline:main"
@@ -61,6 +59,7 @@ python = "3.12.*"
 ipython = "*"
 jupyter = "*"
 ipykernel = "*"
+rich = ">=13.9.4,<14"
 
 ############################################## TEST ################################################
 
@@ -190,6 +189,3 @@ publish-test = { cmd = [
 ], depends-on = [
   "build",
 ], description = "Publish to test PyPI" }
-
-[tool.pixi.dependencies]
-rich = ">=13.9.4,<14"
