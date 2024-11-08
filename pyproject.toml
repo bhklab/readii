@@ -1,6 +1,6 @@
 [project]
 name = "readii"
-version = "1.14.1"
+version = "1.15.0-rc.1+logrefactor.20241108"
 description = "A package to extract radiomic features!"
 authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 
@@ -140,6 +140,11 @@ patch_without_tag = true                                   # patch release by de
 
 [tool.semantic_release.branches.main]
 match = "(main|development)"
+
+[tool.semantic_release.branches.dev]
+match = "*"
+prerelease = true
+prerelease_token = "rc"
 
 [tool.pixi.feature.build.dependencies]
 hatch = "*"

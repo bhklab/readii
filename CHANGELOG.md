@@ -1,6 +1,31 @@
 # CHANGELOG
 
 
+## v1.15.0-rc.1+logrefactor.20241108 (2024-11-08)
+
+### Bug Fixes
+
+* fix: project order ([`d83e07f`](https://github.com/bhklab/readii/commit/d83e07fbde792e6ea1ebee61d474bd3fd0d84f73))
+
+### Features
+
+* feat: enhance error handling and improve user feedback ([`c0a9ac3`](https://github.com/bhklab/readii/commit/c0a9ac326674c6397679b75463d00a12762ab9dc))
+
+* feat: refactor logging setup and enhance debug messages; update dependencies ([`86a0a52`](https://github.com/bhklab/readii/commit/86a0a52a6c269869fc15cfd0681bcffbb5eb71c2))
+
+### Refactoring
+
+* refactor: clean up unused code and improve exception handling ([`e327b04`](https://github.com/bhklab/readii/commit/e327b04df508e00ca8b368ef1af7ea8f61d6af2d))
+
+### Unknown
+
+* major refactor ([`f19499d`](https://github.com/bhklab/readii/commit/f19499d36dd37937111fbab960a390e48837cded))
+
+* setup a dev environment ([`2a4f8ba`](https://github.com/bhklab/readii/commit/2a4f8ba853c0ec4f7c997d17204501bdb8ce4e9c))
+
+* improve logging ([`294f474`](https://github.com/bhklab/readii/commit/294f474a1bc3623ea55fdaaab22784a6bb82a191))
+
+
 ## v1.14.1 (2024-11-07)
 
 ### Bug Fixes
