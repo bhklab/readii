@@ -1,10 +1,11 @@
 [project]
 name = "readii"
-version = "1.15.0-rc.1+logrefactor.20241108"
+version = "1.15.0-rc.1+logrefactor.20241109"
 description = "A package to extract radiomic features!"
 authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 
 license = "MIT"
+
 readme = "README.md"
 dependencies = [
   "simpleitk>=2.3.1",
@@ -19,14 +20,14 @@ dependencies = [
 requires-python = ">=3.10, <3.13"
 
 classifiers = [
-  "License :: OSI Approved :: MIT License",
-  "Natural Language :: English",
   "Operating System :: OS Independent",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
 ]
-
+[project.urls]
+"Homepage" = "https://github.com/bhklab/readii"
+"Bug Tracker" = "https://github.com/bhklab/readii/issues"
 
 [project.scripts]
 readii = "readii.pipeline:main"
@@ -148,6 +149,7 @@ prerelease_token = "rc"
 
 [tool.pixi.feature.build.dependencies]
 hatch = "*"
+twine = "*"
 
 [build-system]
 build-backend = "hatchling.build"
@@ -158,10 +160,10 @@ directory = "dist"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/readii"]
-include = ["pyproject.toml", "README.md", "src/**", "config/hatch.toml"]
+include = ["pyproject.toml", "README.md", "src/**"]
 
 [tool.hatch.build.targets.sdist]
-include = ["pyproject.toml", "README.md", "src/", "config/hatch.toml"]
+include = ["pyproject.toml", "README.md", "src/"]
 exclude = ["tests/**"]
 
 [tool.pixi.feature.build.tasks]
@@ -201,3 +203,4 @@ publish-test = { cmd = [
 ], depends-on = [
   "build",
 ], description = "Publish to test PyPI" }
+
