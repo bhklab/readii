@@ -1,6 +1,6 @@
 [project]
 name = "readii"
-version = "1.15.0-rc.1+logrefactor.20241109"
+version = "1.15.0-rc.2"
 description = "A package to extract radiomic features!"
 authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 
