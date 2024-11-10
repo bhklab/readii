@@ -15,6 +15,7 @@ dependencies = [
   "pyradiomics-bhklab>=3.1.4,<4",
   "structlog>=24.4.0,<25",
   "rich>=13.9.4,<14",
+  "click>=8.1.7,<9",
 ]
 
 requires-python = ">=3.10, <3.13"
@@ -203,4 +204,3 @@ publish-test = { cmd = [
 ], depends-on = [
   "build",
 ], description = "Publish to test PyPI" }
-
