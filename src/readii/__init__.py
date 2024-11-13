@@ -1,4 +1,4 @@
 # read version from installed package
 from importlib.metadata import version
-__version__ = "1.14.1"
+__version__ = "1.16.0"
 
