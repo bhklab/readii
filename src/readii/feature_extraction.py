@@ -12,22 +12,14 @@ from readii.image_processing import (
     flattenImage, 
     alignImages, 
     getROIVoxelLabel, 
-    displayImageSlice, 
-    displayCTSegOverlay, 
-    getROICenterCoords, 
-    getCroppedImages,    
 )
 
 from readii.loaders import (
-    loadDicomSITK, 
-    loadRTSTRUCTSITK, 
     loadSegmentation,
 ) 
 
 from readii.metadata import (
     saveDataframeCSV, 
-    matchCTtoSegmentation,
-    getSegmentationType,
 )
 from readii.negative_controls import (
     applyNegativeControl,
@@ -196,12 +188,13 @@ def radiomicFeatureExtraction(
     def featureExtraction(ctSeriesID):
         """Function to extract PyRadiomics features for all ROIs present in a CT. Inner function so it can be run in parallel with joblib."""
         # Get all info rows for this ctSeries
-
+        ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
+        patID = ctSeriesInfo.iloc[0]["patient_ID"]
+        plogger = logger.bind(patient_ID=patID, series_CT=ctSeriesID)
         try:
-            ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
-            patID = ctSeriesInfo.iloc[0]["patient_ID"]
 
-            logger.info(f"Processing {patID}")
+
+            plogger.info(f"Processing {patID}")
 
             # Get absolute path to CT image files
             ctDirPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]["folder_CT"])
@@ -230,6 +223,7 @@ def radiomicFeatureExtraction(
                 segFilePath = os.path.join(
                     imageDirPath, segSeriesInfo.iloc[0]["file_path_seg"]
                 )
+                logger.debug(f"Processing segmentation {segFilePath}")
                 # Get dictionary of ROI sitk Images for this segmentation file
                 segImages = loadSegmentation(
                     segFilePath,
@@ -241,7 +235,7 @@ def radiomicFeatureExtraction(
                 # Check that this series has ROIs to extract from (dictionary isn't empty)
                 if not segImages:
                     log_msg = f"CT {ctSeriesID} and segmentation {segSeriesID} has no ROIs or no ROIs with the label {roiNames}. Moving to next segmentation."
-                    logger.warning(log_msg)
+                    plogger.warning(log_msg)
 
                 else:
                     # Loop over each ROI contained in the segmentation to perform radiomic feature extraction
@@ -250,57 +244,30 @@ def radiomicFeatureExtraction(
                         roiNum = roiCount + 1
 
                         # Extract features listed in the parameter file
-                        logger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
+                        plogger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
 
                         # Get sitk Image object for this ROI
                         roiImage = segImages[roiImageName]
 
-                        # Exception catch for if the segmentation dimensions do not match that original image
-                        try:
-                            # Check if segmentation just has an extra axis with a size of 1 and remove it
-                            if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:
-                                roiImage = flattenImage(roiImage)
+                         # Check if segmentation just has an extra axis with a size of 1 and remove it
+                        if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:
+                            roiImage = flattenImage(roiImage)
 
-                            # Check that image and segmentation mask have the same dimensions
-                            if ctImage.GetSize() != roiImage.GetSize():
-                                # Checking if number of segmentation slices is less than CT
-                                if ctImage.GetSize()[2] > roiImage.GetSize()[2]:
-                                    logger.warning(
-                                        f"Slice number mismatch between CT and segmentation for {patID}."
-                                        f"ctImage.GetSize(): {ctImage.GetSize()}"
-                                        f"roiImage.GetSize(): {roiImage.GetSize()}"
-                                        "Padding segmentation to match."
-                                    )
-                                    from warnings import warn
-                                    from readii.image_processing import padSegToMatchCT
-
-                                    try:
-                                        roiImage = padSegToMatchCT(
-                                            ctDirPath, segFilePath, ctImage, roiImage
-                                        )
-                                        warn(
-                                            "padSegToMatchCT is deprecated and will be removed in a future version. "
-                                            "Please raise an issue on GitHub to discuss migration options.",
-                                            DeprecationWarning,
-                                            stacklevel=2
-                                        )
-                                    except Exception as e:
-                                        logger.error(
-                                            f"Error padding segmentation to match CT for {patID}: {e}"
-                                        )
-                                        raise
-                                    logger.warning(
-                                        f"Padded segmentation to match CT for {patID}."
-                                        "roiImage.GetSize() after padding: {roiImage.GetSize()}"
-                                    )
-                                else:
-                                    raise RuntimeError(
-                                        "CT and ROI dimensions do not match."
-                                    )
-
-                        # Catching CT and segmentation size mismatch error
-                        except RuntimeError as e:
-                            logger.error(str(e))
+                        # Check that image and segmentation mask have the same dimensions
+                        if ctImage.GetSize() != roiImage.GetSize():
+                            plogger.error(
+                                "Segmentation mask is smaller than the CT.",
+                                ct_size=ctImage.GetSize(),
+                                roi_size=roiImage.GetSize(),
+                                ctSeriesID=ctSeriesID,
+                                segSeriesID=segSeriesID,
+                            )
+                            raise RuntimeError(
+                                "CT and ROI dimensions do not match. "
+                                "This is likely due to a segmentation mask that is smaller than the CT. "
+                                "The padding workaround has been disabled. Please raise an issue on GitHub"
+                                " to discuss migration options."
+                            )
 
                         # Extract radiomic features from this CT/segmentation pair
                         idFeatureVector = singleRadiomicFeatureExtraction(
@@ -308,7 +275,7 @@ def radiomicFeatureExtraction(
                             roiImage=roiImage,
                             pyradiomicsParamFilePath=pyradiomicsParamFilePath,
                             negativeControl=negativeControl,
-                            randomSeed=randomSeed
+                            randomSeed=randomSeed,
                         )
 
                         # Create dictionary of image metadata to append to front of output table
@@ -339,12 +306,10 @@ def radiomicFeatureExtraction(
             return ctAllData
             ###### END featureExtraction #######
         except Exception as e:
+            plogger.error("Error processing patient")  
             if keep_running:
-                logger.error(f"Error processing patient {patID}, series {ctSeriesID}: {e}")
-                # Log the error and continue without raising the exception
-            else:
-                # Raise the exception if keep_running is False
-                raise e
+                return
+            raise e
 
     # Extract radiomic features for each CT, get a list of dictionaries
     # Each dictioary contains features for each ROI in a single CT
