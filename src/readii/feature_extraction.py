@@ -33,12 +33,10 @@ from readii.negative_controls import (
     applyNegativeControl,
 )
 
-from readii.utils import get_logger
+from readii.utils import logger
 
 from typing import Optional, Any
 from collections import OrderedDict
-
-logger = get_logger()
 
 def singleRadiomicFeatureExtraction(
     ctImage: sitk.Image,

@@ -1,13 +1,11 @@
 from argparse import ArgumentParser
 from ast import arg
 import os
-from venv import logger
 
 from readii.metadata import *
 from readii.feature_extraction import *
-from readii.utils import get_logger
 
-logger = get_logger()
+from readii.utils import logger
 
 def parser():
     """Function to take command-line arguments and set them up for the pipeline run
@@ -56,10 +54,8 @@ def main():
     logger.debug(
         f"Arguments:\n\t{pretty_args}"
     )
-    
-    args_dict = vars(args)
 
-    logger.info("Starting readii pipeline...")
+    logger.info("Starting readii pipeline...", args=vars(args))
 
     # Set up output directory
     outputDir = os.path.join(args.output_directory, "readii_outputs")

@@ -16,11 +16,7 @@ import SimpleITK as sitk
 from imgtools import io
 from imgtools.ops import StructureSetToSegmentation
 
-from readii.utils import get_logger
-
-# Create a global logger instance
-logger = get_logger()
-
+from readii.utils import logger 
 
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
     """Read a DICOM series as a SimpleITK Image.
