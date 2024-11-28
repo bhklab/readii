@@ -172,7 +172,7 @@ def displayImageSlice(
         The complete image you'd like to display a slice of. If an array, must have slices as first dimension
     sliceIdx : int
         Slice index from image to display
-    sliceDim : int
+    sliceDim : str
         Dimension of the image to apply the sliceIdx to. Must be "first" or "last".
     cmap : matplotlib.colormap
         Color map to use for plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options
