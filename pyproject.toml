@@ -184,3 +184,8 @@ publish-test = { cmd = [
 ], depends-on = [
   "build",
 ], description = "Publish to test PyPI" }
+
+[tool.pixi.dependencies]
+jupyterlab = ">=4.3.1,<5"
+pixi-kernel = ">=0.5.1,<0.6"
+ipykernel = ">=6.29.5,<7"
