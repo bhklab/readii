@@ -156,11 +156,12 @@ def padSegToMatchCT(
 
 
 def displayImageSlice(
-    image, 
-    sliceIdx, 
+    image:sitk.Image, 
+    sliceIdx:int,
+    sliceDim:Optional[str]="first", 
     cmap=plt.cm.Greys_r, 
-    dispMin=None, 
-    dispMax=None
+    dispMin:Optional[int]=None, 
+    dispMax:Optional[int]=None
 ) -> None:
     """Function to display a 2D slice from a 3D image
         By default, displays slice in greyscale with min and max range set to min and max value in the slice.
@@ -171,6 +172,8 @@ def displayImageSlice(
         The complete image you'd like to display a slice of. If an array, must have slices as first dimension
     sliceIdx : int
         Slice index from image to display
+    sliceDim : int
+        Dimension of the image to apply the sliceIdx to. Must be "first" or "last".
     cmap : matplotlib.colormap
         Color map to use for plot, see https://matplotlib.org/stable/tutorials/colors/colormaps.html for options
     dispMin : int
@@ -181,6 +184,8 @@ def displayImageSlice(
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.Image:
         image = sitk.GetArrayFromImage(image)
+        # Once converted to an array, sliceDim is always first
+        sliceDim = "first"
 
     # Get min and max value from image to define range in display
     if dispMin == None:
@@ -188,8 +193,14 @@ def displayImageSlice(
     if dispMax == None:
         dispMax = image.max()
 
+    # Get the slice of the image to display, depending on sliceDim
+    if sliceDim == "first": dispSlice = image[sliceIdx, :, :]
+    elif sliceDim == "last": dispSlice = image[:, :, sliceIdx]
+    else:
+        raise ValueError("sliceDim must be either 'first' or 'last'")
+
     # Display the slice of the image
-    plt.imshow(image[sliceIdx, :, :], cmap=cmap, vmin=dispMin, vmax=dispMax)
+    plt.imshow(dispSlice, cmap=cmap, vmin=dispMin, vmax=dispMax)
     plt.axis("off")
 
 
