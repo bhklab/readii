@@ -1,6 +1,22 @@
 # CHANGELOG
 
 
+## v1.18.0 (2024-11-28)
+
+### Features
+
+- Add slicedim to displayimageslice ([#67](https://github.com/bhklab/readii/pull/67),
+  [`c018de5`](https://github.com/bhklab/readii/commit/c018de5cc028fb936b2f20e61afa59f6e966e1d2))
+
+* feat: add slice dimension variable for displayImageSlice
+
+Allows user to indicate whether the slice index is first or last
+
+* build: add libraries to run jupyter notebooks
+
+* docs: fix variable type for sliceDim in displayImageSlice docstring
+
+
 ## v1.17.0 (2024-11-22)
 
 ### Features
