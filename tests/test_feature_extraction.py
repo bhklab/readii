@@ -114,4 +114,5 @@ def test_radiomicFeatureExtraction_output(nsclcMetadataPath):
                                        imageDirPath = "tests/",
                                        roiNames = None,
                                        outputDirPath = "tests/output/")
-    assert os.path.exists("tests/output/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv")
+    expected_path = "tests/output/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv"
+    assert os.path.exists(expected_path)
