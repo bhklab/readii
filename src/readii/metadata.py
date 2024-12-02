@@ -1,9 +1,7 @@
 import os
 import pandas as pd
 from typing import Optional, Literal
-from readii.utils import get_logger
-
-logger = get_logger()
+from readii.utils import logger 
 
 def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imageFileListPath, update = False):
     imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
