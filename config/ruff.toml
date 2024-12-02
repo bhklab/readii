@@ -1,5 +1,6 @@
 include = [
-  "src/readii/loaders.py"
+  "src/readii/loaders.py",
+  "src/readii/feature_extraction.py"
 ]
 
 
@@ -8,7 +9,12 @@ extend-exclude = [
   "docs/*",
   "tests/*",
   ".pixi/",
-  ]
+  "src/readii/image_processing.py",
+  "src/readii/loaders.py",
+  "src/readii/metadata.py",
+  "src/readii/negative_controls.py",
+  "src/readii/pipeline.py",
+]
 
 # Same as Black.
 line-length = 100
@@ -76,9 +82,7 @@ select = [
   # errors like undefined names and unused imports without enforcing style rules.
   # https://docs.astral.sh/ruff/rules/#pyflakes-f
   "F",
-  #
-  # https://docs.astral.sh/ruff/rules/#pep8-naming-n
-  "N",
+
   # Pydocstyle
   # https://docs.astral.sh/ruff/rules/#pydocstyle-d
   # "D",
@@ -94,7 +98,7 @@ ignore = [
   "D100",
   # Ignored because https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules 
   "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/#missing-trailing-comma-com812
-  "D206"
+  "D206",
 ]
 
 [lint.isort]
@@ -144,3 +148,7 @@ docstring-code-line-length = 20
 #   "TCH", # flake8-type-checking
 # ]
 # ignore = ["ANN101"]
+
+# Readii uses a lot of camelcase so ignoring pep-8 conventions. 
+# https://docs.astral.sh/ruff/rules/#pep8-naming-n
+# "N",
