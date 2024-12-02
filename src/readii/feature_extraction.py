@@ -35,7 +35,7 @@ def generateNegativeControl(
 	"""Function to generate a negative control for a CT image based on the type of negative control specified.
 
 	negativeControlType : str
-	    This string is of the format {negativeControlType}_{negativeControlRegion}
+		This string is of the format {negativeControlType}_{negativeControlRegion}
 	"""
 	if "non_roi" in negativeControl:
 		negativeControlType = negativeControl.rsplit("_", 2)[0]
@@ -62,17 +62,13 @@ def cropImageAndMask(
 	negativeControl: Optional[str],
 	randomSeed: Optional[int],
 ) -> tuple[sitk.Image, sitk.Image]:
-	try:
-		if negativeControl is not None:
-			logger.info(f"Generating {negativeControl} negative control for CT.")
-			ctImage = generateNegativeControl(ctImage, negativeControl, alignedROIImage, randomSeed)
+	if negativeControl:
+		logger.info(f"Generating {negativeControl} negative control for CT.")
+		ctImage = generateNegativeControl(ctImage, negativeControl, alignedROIImage, randomSeed)
 
-		croppedCT, croppedROI = imageoperations.cropToTumorMask(
-			ctImage, alignedROIImage, segBoundingBox
-		)
-	except Exception as e:
-		logger.error(f"Error cropping image and mask: {e}")
-		raise
+	croppedCT, croppedROI = imageoperations.cropToTumorMask(
+		ctImage, alignedROIImage, segBoundingBox
+	)
 
 	return croppedCT, croppedROI
 
@@ -90,20 +86,20 @@ def singleRadiomicFeatureExtraction(
 	Parameters
 	----------
 	ctImage : sitk.Image
-	    CT image to perform feature extraction on. Will be cropped and potentially generate a negative control (see negativeControl arg)
+		CT image to perform feature extraction on. Will be cropped and potentially generate a negative control (see negativeControl arg)
 	roiImage : sitk.Image
-	    Region of interest (ROI) to extract radiomic features from within the CT.
+		Region of interest (ROI) to extract radiomic features from within the CT.
 	pyradiomicsParamFilePath : str
-	    Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
+		Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
 	negativeControl : str
-	    Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
+		Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
 	randomSeed : int
-	    Value to set random seed with for negative control creation to be reproducible.
+		Value to set random seed with for negative control creation to be reproducible.
 
 	Returns
 	-------
 	OrderedDict[Any, Any]
-	    Dictionary containing image metadata, versions for key packages used for extraction, and radiomic features
+		Dictionary containing image metadata, versions for key packages used for extraction, and radiomic features
 	"""
 	# If no pyradiomics paramater file passed, use default
 	if pyradiomicsParamFilePath == None:
@@ -126,9 +122,13 @@ def singleRadiomicFeatureExtraction(
 	if correctedROIImage is not None:
 		alignedROIImage = correctedROIImage
 
-	croppedCT, croppedROI = cropImageAndMask(
-		ctImage, alignedROIImage, segBoundingBox, negativeControl, randomSeed
-	)
+	try:
+		croppedCT, croppedROI = cropImageAndMask(
+			ctImage, alignedROIImage, segBoundingBox, negativeControl, randomSeed
+		)
+	except Exception as e:
+		logger.exception(f"Error cropping CT and ROI for feature extraction: {e}")
+		raise e
 
 	# Load PyRadiomics feature extraction parameters to use
 	# Initialize feature extractor with parameters
@@ -169,28 +169,28 @@ def radiomicFeatureExtraction(
 	Parameters
 	----------
 	imageMetadataPath : str
-	    Path to csv file created by matchCTtoSegmentation function that contains a CT and matching segmentation in each row.
+		Path to csv file created by matchCTtoSegmentation function that contains a CT and matching segmentation in each row.
 	imageDirPath : str
-	    Path to the directory containing the directory of CT and segmentation images. This directory should contain the .imgtools directory from the med-imagetools run
-	    and be the same as the input path used in med-imagetools
+		Path to the directory containing the directory of CT and segmentation images. This directory should contain the .imgtools directory from the med-imagetools run
+		and be the same as the input path used in med-imagetools
 	roiNames : str
-	    Name pattern for the ROIs to load for the RTSTRUCTs. Can be None for DICOM SEG segmentations.
+		Name pattern for the ROIs to load for the RTSTRUCTs. Can be None for DICOM SEG segmentations.
 	pyradiomicsParamFilePath : str
-	    Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
+		Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
 	outputDirPath : str
-	    Path to directory save the dataframe of extracted features to as a csv
+		Path to directory save the dataframe of extracted features to as a csv
 	negativeControl : str
-	    Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
+		Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
 	randomSeed : int
-	    Value to set random seed with for negative control creation to be reproducible.
+		Value to set random seed with for negative control creation to be reproducible.
 	parallel : bool
-	    Flag to decide whether to run extraction in parallel.
+		Flag to decide whether to run extraction in parallel.
 	keep_running : bool
-	    Flag to keep pipeline running even when feature extraction for a patient fails.
+		Flag to keep pipeline running even when feature extraction for a patient fails.
 	Returns
 	-------
 	pd.DataFrame
-	    Dataframe containing the image metadata and extracted radiomic features.
+		Dataframe containing the image metadata and extracted radiomic features.
 	"""
 
 	dataset_directory = Path(imageDirPath)
