@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from typing import Optional, Literal
 from readii.utils import logger 
+from pathlib import Path
 
 def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imageFileListPath, update = False):
     imageMetadataPath = os.path.join(outputDir, "ct_to_seg_match_list_" + datasetName + ".csv")
@@ -29,7 +30,7 @@ def createImageMetadataFile(outputDir, parentDirPath, datasetName, segType, imag
 
 def saveDataframeCSV(
     dataframe: pd.DataFrame, 
-    outputFilePath: str
+    outputFilePath: str | Path
 ) -> None:
     """Function to save a pandas Dataframe as a csv file with the index removed.
             Checks if the path in the outputFilePath exists and will create any missing directories.
@@ -38,7 +39,7 @@ def saveDataframeCSV(
     ----------
     dataframe : pd.DataFrame
         Pandas dataframe to save out as a csv
-    outputFilePath : str
+    outputFilePath : str | Path
         Full file path to save the dataframe out to.
             
     Raises
@@ -47,8 +48,9 @@ def saveDataframeCSV(
         If the outputFilePath does not end in .csv, if the dataframe is not a pandas DataFrame, 
         or if an error occurs while saving the dataframe.
     """
-    
-    if not outputFilePath.endswith(".csv"):
+    outputFilePath = Path(outputFilePath)
+
+    if not outputFilePath.suffix == ".csv":
         raise ValueError(
             "This function saves .csv files, so outputFilePath must end in .csv"
         )
@@ -57,7 +59,7 @@ def saveDataframeCSV(
         raise ValueError("Function expects a pandas DataFrame to save out.")
 
     # Make directory if it doesn't exist, but don't fail if it already exists
-    os.makedirs(os.path.dirname(outputFilePath), exist_ok=True)
+    outputFilePath.parent.mkdir(parents=True, exist_ok=True)
 
     try:
         # Save out DataFrame
