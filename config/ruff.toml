@@ -1,6 +1,6 @@
 include = [
-  # "src/readii/loaders.py",
-  # "src/readii/feature_extraction.py"
+  "src/readii/loaders.py",
+  "src/readii/feature_extraction.py"
 ]
 
 
@@ -19,6 +19,10 @@ line-length = 100
 
 
 [lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+
 # Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
 # Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
 # McCabe complexity (`C901`) by default.
@@ -88,8 +92,6 @@ select = [
 
 
 ignore = [
-  # allow self to not need type annotations
-  "ANN101",
   # Allow too many arguments for functions
   "PLR0913",
   # Public Module Docstrings
