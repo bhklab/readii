@@ -1,9 +1,7 @@
-
-
-target-version = "py39"
-output-format = "full"
-line-length = 99
-fix = true
+include = [
+  # "src/readii/loaders.py",
+  # "src/readii/feature_extraction.py"
+]
 
 
 # extend-exclude is used to exclude directories from the flake8 checks
@@ -11,43 +9,95 @@ extend-exclude = [
   "docs/*",
   "tests/*",
   ".pixi/",
-  ]
+  "src/readii/image_processing.py",
+  "src/readii/metadata.py",
+  "src/readii/negative_controls.py",
+  "src/readii/pipeline.py",]
 
+# Same as Black.
+line-length = 100
 
-extend-include = []
-
-include = [
-  "src/readii/loaders.py"
-]
 
 [lint]
+# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
+# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
+# McCabe complexity (`C901`) by default.
+
 select = [
-  "E",
+  ###########################################################################
+  # TYPE ANNOTATIONS
+  # Ensure all functions have type annotations
+  # https://docs.astral.sh/ruff/rules/#flake8-annotations-ann
+  "ANN",
+  # Use type hinting consistently
+  # https://docs.astral.sh/ruff/rules/#flake8-type-checking-tch
+  "TCH",
+
+  ###########################################################################
+  # IMPORTS
+  # Sort imports naturally
+  # https://docs.astral.sh/ruff/rules/#isort-i
+  "I",
+  # Follow import conventions
+  # https://docs.astral.sh/ruff/rules/#flake8-import-conventions-icn
+  "ICN",
+  # Clean up and organize imports
+  # https://docs.astral.sh/ruff/rules/#flake8-tidy-imports-tid
+  "TID",
+
+  ###########################################################################
+  # CODE QUALITY
+  # Detect possible bugs, like unused variables or exception handling issues
+  # https://docs.astral.sh/ruff/rules/#flake8-bugbear-b
+  "B",
+  # Avoid using Python builtins incorrectly
+  # https://docs.astral.sh/ruff/rules/#flake8-builtins-a
+  "A",
+  # Enforce correct usage of commas in lists, tuples, etc.
+  # https://docs.astral.sh/ruff/rules/#flake8-commas-com
+  "COM",
+  # Prevent use of debugging code, like breakpoints
+  # https://docs.astral.sh/ruff/rules/#flake8-debugger-t10
+  "T10",
+  # Disallow print statements
+  # https://docs.astral.sh/ruff/rules/#flake8-print-t20
+  "T20",
+  # Provide clear and explanatory error messages
+  # https://docs.astral.sh/ruff/rules/#flake8-errmsg-em
+  "EM",
+
+  ###########################################################################
+  # STANDARDS & STYLE
+  # Prefer pathlib for path manipulation
+  # https://docs.astral.sh/ruff/rules/#flake8-use-pathlib-pth
+  "PTH",
+  # Adhere to Pylint conventions
+  # https://docs.astral.sh/ruff/rules/#pylint-pl
+  "PL",
+  # Simplify code to reduce complexity
+  # https://docs.astral.sh/ruff/rules/#flake8-simplify-sim
+  "SIM",
+  # errors like undefined names and unused imports without enforcing style rules.
+  # https://docs.astral.sh/ruff/rules/#pyflakes-f
   "F",
-  "W",   # flake8
-  "C",   # mccabe
-  "I",   # isort
-  "D",  # pydocstyle
-  # "N",   # pep8-naming
-  "ANN", # flake8-annotations
-  "BLE", # flake8-blind-except
-  "B",   # flake8-bugbear
-  "A",   # flake8-builtins
-  # "G",   # flake8-logging-format
-  "ERA", # eradicate
-  "RUF", # Ruff-specific rules
-  "TCH", # flake8-type-checking
+
+  # Pydocstyle
+  # https://docs.astral.sh/ruff/rules/#pydocstyle-d
+  # "D",
 ]
-ignore = ["ANN101"]
 
 
-[lint.per-file-ignores]
-"tests/*" = ["S101"]
-
-
-[lint.mccabe]
-max-complexity = 10
-
+ignore = [
+  # allow self to not need type annotations
+  "ANN101",
+  # Allow too many arguments for functions
+  "PLR0913",
+  # Public Module Docstrings
+  "D100",
+  # Ignored because https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules 
+  "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/#missing-trailing-comma-com812
+  "D206",
+]
 
 [lint.isort]
 known-first-party = ["readii"]
@@ -56,12 +106,47 @@ combine-as-imports = true
 lines-after-imports = 1
 relative-imports-order = "closest-to-furthest"
 
+[lint.mccabe]
+max-complexity = 10
+
+
+[lint.per-file-ignores]
+"tests/*" = ["S101"]
+
 
 [lint.pydocstyle]
 convention = "numpy"
 
 
+
 [format]
+
 quote-style = "double"
+indent-style = "tab"
 docstring-code-format = true
 docstring-code-line-length = 20
+
+
+# [lint] # commented for now, will iterate on this later
+# select = [
+#   "E",
+#   "F",
+#   "W",   # flake8
+#   "C",   # mccabe
+#   "I",   # isort
+#   "D",  # pydocstyle
+#   # "N",   # pep8-naming
+#   "ANN", # flake8-annotations
+#   "BLE", # flake8-blind-except
+#   "B",   # flake8-bugbear
+#   "A",   # flake8-builtins
+#   # "G",   # flake8-logging-format
+#   "ERA", # eradicate
+#   "RUF", # Ruff-specific rules
+#   "TCH", # flake8-type-checking
+# ]
+# ignore = ["ANN101"]
+
+# Readii uses a lot of camelcase so ignoring pep-8 conventions. 
+# https://docs.astral.sh/ruff/rules/#pep8-naming-n
+# "N",
