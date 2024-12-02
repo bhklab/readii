@@ -32,6 +32,8 @@ readii = "readii.pipeline:main"
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64"]
 
+[tool.pixi.dependencies]
+
 [tool.pixi.pypi-dependencies]
 readii = { path = ".", editable = true }
 
@@ -52,8 +54,27 @@ python = "3.11.*"
 python = "3.12.*"
 
 
+
+
 [tool.pixi.feature.dev.dependencies]
+# jupyterlab = "*"
+pixi-kernel = ">=0.5.1,<0.6"
+ipykernel = "*"
 pip = "*"
+# pixi-kernel = ">=0.5.2,<0.6"
+# notebook = ">7"
+ipywidgets = "*"
+
+[tool.pixi.feature.dev.pypi-dependencies]
+itkwidgets = { version = "==1.0a53", extras = ["notebook"] }
+jupyterlab = { version = ">=4.3.1"}
+notebook = { version = ">=7.0.0" }
+
+# [dependency-groups]
+# dev = ["jupyterlab>=3.6.8,<4"]
+
+# [dependency-groups]
+# dev = ["imjoy-elfinder>=0.1.62,<0.2"]
 
 
 ############################################## TEST ################################################
@@ -136,6 +157,7 @@ hatch = "*"
 build-backend = "hatchling.build"
 requires = ["hatchling"]
 
+
 [tool.hatch.build]
 directory = "dist"
 
@@ -184,8 +206,3 @@ publish-test = { cmd = [
 ], depends-on = [
   "build",
 ], description = "Publish to test PyPI" }
-
-[tool.pixi.dependencies]
-jupyterlab = ">=4.3.1,<5"
-pixi-kernel = ">=0.5.1,<0.6"
-ipykernel = ">=6.29.5,<7"
