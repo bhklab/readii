@@ -403,7 +403,7 @@ def radiomicFeatureExtraction(
 	# Setup output file name with the dataset name as a suffix
 	outFileName = f"radiomicfeatures_{negativeControl or 'original'}_{datasetName}"
 
-	outputFilePath = outputDir / f"{outFileName}.csv"
+	outputFilePath = outputDir / outFileName
 
 	logger.info("Saving output to file.", output_file=outputFilePath)
 
