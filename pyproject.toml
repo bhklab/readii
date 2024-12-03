@@ -189,3 +189,5 @@ publish-test = { cmd = [
 jupyterlab = ">=4.3.1,<5"
 pixi-kernel = ">=0.5.1,<0.6"
 ipykernel = ">=6.29.5,<7"
+numpy = "1.26.4.*"
+seaborn = ">=0.13.2,<0.14"
