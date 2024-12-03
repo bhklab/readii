@@ -18,6 +18,7 @@ from imgtools.ops import StructureSetToSegmentation
 
 from readii.utils import logger
 
+
 def loadDicomSITK(imgDirPath: str | Path) -> sitk.Image:
 	"""Read a DICOM series as a SimpleITK Image.
 
