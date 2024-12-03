@@ -16,9 +16,9 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
     Parameters
     ----------
     vertical_features : pd.DataFrame
-        Dataframe containing features to calculate correlations with.
+        Dataframe containing features to calculate correlations with. Index must be the same as the index of the horizontal_features dataframe.
     horizontal_features : pd.DataFrame
-        Dataframe containing features to calculate correlations with.
+        Dataframe containing features to calculate correlations with. Index must be the same as the index of the vertical_features dataframe.
     method : str
         Method to use for calculating correlations. Default is "pearson".
     vertical_feature_name : str
@@ -31,15 +31,24 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
     correlation_matrix : pd.DataFrame
         Dataframe containing correlation values.
     """
+    if method not in ["pearon", "spearman", "kendall"]:
+        raise ValueError("Correlation method must be one of 'pearson', 'spearman', or 'kendall'.")
+
+    if not vertical_features.index.equals(horizontal_features.index):
+        raise ValueError("Vertical and horizontal features must have the same index to calculate correlation. Set the index to the intersection of patient IDs.")
+
     # Join the features into one dataframe
     # Use inner join to keep only the rows that have a value in both vertical and horizontal features
     features_to_correlate = vertical_features.join(horizontal_features, 
-                                                how='inner', 
-                                                lsuffix=f"_{vertical_feature_name}", 
-                                                rsuffix=f"_{horizontal_feature_name}") 
+                                                   how='inner', 
+                                                   lsuffix=f"_{vertical_feature_name}", 
+                                                   rsuffix=f"_{horizontal_feature_name}") 
 
-    # Calculate correlation between vertical features and horizontal features
-    correlation_matrix = features_to_correlate.corr(method=method)
+    try:
+        # Calculate correlation between vertical features and horizontal features
+        correlation_matrix = features_to_correlate.corr(method=method)
+    except Exception as e:
+        raise ValueError(f"Error calculating correlation matrix: {e}")
 
     return correlation_matrix
 
