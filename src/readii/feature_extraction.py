@@ -32,7 +32,7 @@ def generateNegativeControl(
 	alignedROIImage: sitk.Image,
 	randomSeed: Optional[int],
 ) -> sitk.Image:
-	"""Function to generate a negative control for a CT image based on the type of negative control specified.
+	"""Generate a negative control for a CT image based on the type of negative control specified.
 
 	negativeControlType : str
 		This string is of the format {negativeControlType}_{negativeControlRegion}
@@ -62,6 +62,7 @@ def cropImageAndMask(
 	negativeControl: Optional[str],
 	randomSeed: Optional[int],
 ) -> tuple[sitk.Image, sitk.Image]:
+	"""Crop the CT and ROI images to the bounding box of the segmentation."""
 	if negativeControl:
 		logger.info(f"Generating {negativeControl} negative control for CT.")
 		ctImage = generateNegativeControl(ctImage, negativeControl, alignedROIImage, randomSeed)
@@ -76,11 +77,12 @@ def cropImageAndMask(
 def singleRadiomicFeatureExtraction(
 	ctImage: sitk.Image,
 	roiImage: sitk.Image,
-	pyradiomicsParamFilePath: Optional[str] = "./src/readii/data/default_pyradiomics.yaml",
+	pyradiomicsParamFilePath: Optional[str | Path] = "./src/readii/data/default_pyradiomics.yaml",
 	negativeControl: Optional[str] = None,
 	randomSeed: Optional[int] = None,
 ) -> OrderedDict[Any, Any]:
-	"""Function to perform radiomic feature extraction for a single CT image and its corresponding segmentation.
+	"""Perform radiomic feature extraction for a single CT image and its corresponding segmentation.
+
 	CT and segmentation will be aligned and cropped prior to extraction.
 
 	Parameters
@@ -102,8 +104,11 @@ def singleRadiomicFeatureExtraction(
 		Dictionary containing image metadata, versions for key packages used for extraction, and radiomic features
 	"""
 	# If no pyradiomics paramater file passed, use default
-	if pyradiomicsParamFilePath == None:
+	if pyradiomicsParamFilePath is None:
 		pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
+	elif not Path(pyradiomicsParamFilePath).exists():
+		msg = f"PyRadiomics parameter file not found at {pyradiomicsParamFilePath}"
+		raise FileNotFoundError(msg)
 
 	# In case segmentation contains extra axis, flatten to 3D by removing it
 	roiImage = flattenImage(roiImage)
@@ -348,12 +353,12 @@ def radiomicFeatureExtraction(
 		Flag to decide whether to run extraction in parallel.
 	keep_running : bool
 		Flag to keep pipeline running even when feature extraction for a patient fails.
+
 	Returns
 	-------
 	pd.DataFrame
 		Dataframe containing the image metadata and extracted radiomic features.
 	"""
-
 	# Setting pyradiomics verbosity lower
 	radiomics_logger: logging.Logger = logging.getLogger("radiomics")
 	radiomics_logger.setLevel(logging.ERROR)
