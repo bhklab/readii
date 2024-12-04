@@ -1,6 +1,7 @@
 include = [
   # "src/readii/loaders.py",
   # "src/readii/feature_extraction.py"
+  "src/readii/negative_controls.py"
 ]
 
 
@@ -11,8 +12,8 @@ extend-exclude = [
   ".pixi/",
   "src/readii/image_processing.py",
   "src/readii/metadata.py",
-  "src/readii/negative_controls.py",
-  "src/readii/pipeline.py",]
+  "src/readii/pipeline.py",
+]
 
 # Same as Black.
 line-length = 100
