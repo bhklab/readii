@@ -35,7 +35,7 @@ class BaseWriter(ABC):
 		self._initialize_parser()
 
 	@abstractmethod
-	def save(self, *args: Any, **kwargs: Any) -> None:  # noqa
+	def save(self, *args: Any, **kwargs: Any) -> Path:  # noqa
 		"""Abstract method for writing data. Must be implemented by subclasses.
 
 		Use the `resolve_path` method to generate a file path based on the filename format and additional parameters.
@@ -124,11 +124,12 @@ class BaseWriter(ABC):
 class NIFTIWriter(BaseWriter):
 	"""Class for managing file writing with customizable paths and filenames for NIFTI files."""
 
-	def save(self, SubjectID: str, image: sitk.Image, **kwargs: str | int) -> None:
+	def save(self, SubjectID: str, image: sitk.Image, **kwargs: str | int) -> Path:
 		"""Write the given data to the file resolved by the given kwargs."""
 		out_path = self.resolve_path(SubjectID, **kwargs)
 		logger.debug("Writing image to file", out_path=out_path)
 		sitk.WriteImage(image, str(out_path), useCompression=True, compressionLevel=5)
+		return out_path
 
 
 if __name__ == "__main__":  # noqa
