@@ -89,7 +89,7 @@ jobs:
           locked: false
 
       - name: Run Ruff
-        run: pixi run lint
+        run: pixi run qc
 
   ################################################################################################
   # Semantic-Release: Run semantic-release to automate versioning and publishing
