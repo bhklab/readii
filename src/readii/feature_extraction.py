@@ -231,7 +231,7 @@ def featureExtraction(
 				# Check that if there are multiple rows that it's not due to a CT with subseries (this is fine, the whole series is loaded)
 				and not segSeriesInfo.duplicated(subset=["series_CT"], keep=False).all()
 			):
-				errmsg = "Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in radiogenomic_output."
+				errmsg = "Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in readii_output."
 				plogger.error(errmsg, segSeriesInfo=segSeriesInfo)
 				raise RuntimeError(errmsg)
 
