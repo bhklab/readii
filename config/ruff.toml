@@ -1,9 +1,11 @@
-include = [
-  # "src/readii/loaders.py",
-  # "src/readii/feature_extraction.py"
-  "src/readii/negative_controls.py"
-]
+cache-dir = "~/.cache/ruff"
 
+# iteratively adding files to the include list
+include = [
+  "src/readii/loaders.py",
+  "src/readii/feature_extraction.py",
+  "src/readii/negative_controls_refactor/**/*.py"
+]
 
 # extend-exclude is used to exclude directories from the flake8 checks
 extend-exclude = [
@@ -18,11 +20,26 @@ extend-exclude = [
 # Same as Black.
 line-length = 100
 
-
 [lint]
-# Enable Pyflakes (`F`) and a subset of the pycodestyle (`E`)  codes by default.
-# Unlike Flake8, Ruff doesn't enable pycodestyle warnings (`W`) or
-# McCabe complexity (`C901`) by default.
+
+# [lint] # commented for now, will iterate on this later
+# select = [
+#   "E",
+#   "F",
+#   "W",   # flake8
+#   "C",   # mccabe
+#   # "N",   # pep8-naming
+#   "ANN", # flake8-annotations
+#   "BLE", # flake8-blind-except
+#   "B",   # flake8-bugbear
+#   "A",   # flake8-builtins
+#   # "G",   # flake8-logging-format
+#   "ERA", # eradicate
+#   "RUF", # Ruff-specific rules
+#   "TCH", # flake8-type-checking
+# ]
+# ignore = ["ANN101"]
+
 
 select = [
   ###########################################################################
@@ -66,6 +83,9 @@ select = [
   # Provide clear and explanatory error messages
   # https://docs.astral.sh/ruff/rules/#flake8-errmsg-em
   "EM",
+  # Check for McCabe complexity
+  # https://docs.astral.sh/ruff/rules/complex-structure/
+  "C",
 
   ###########################################################################
   # STANDARDS & STYLE
@@ -84,13 +104,14 @@ select = [
 
   # Pydocstyle
   # https://docs.astral.sh/ruff/rules/#pydocstyle-d
-  # "D",
+  "D",
 ]
 
+# Readii uses a lot of camelcase so ignoring pep-8 conventions. 
+# https://docs.astral.sh/ruff/rules/#pep8-naming-n
+# "N",
 
 ignore = [
-  # allow self to not need type annotations
-  "ANN101",
   # Allow too many arguments for functions
   "PLR0913",
   # Public Module Docstrings
@@ -104,7 +125,6 @@ ignore = [
 known-first-party = ["readii"]
 force-wrap-aliases = true
 combine-as-imports = true
-lines-after-imports = 1
 relative-imports-order = "closest-to-furthest"
 
 [lint.mccabe]
@@ -121,33 +141,7 @@ convention = "numpy"
 
 
 [format]
-
 quote-style = "double"
 indent-style = "tab"
 docstring-code-format = true
 docstring-code-line-length = 20
-
-
-# [lint] # commented for now, will iterate on this later
-# select = [
-#   "E",
-#   "F",
-#   "W",   # flake8
-#   "C",   # mccabe
-#   "I",   # isort
-#   "D",  # pydocstyle
-#   # "N",   # pep8-naming
-#   "ANN", # flake8-annotations
-#   "BLE", # flake8-blind-except
-#   "B",   # flake8-bugbear
-#   "A",   # flake8-builtins
-#   # "G",   # flake8-logging-format
-#   "ERA", # eradicate
-#   "RUF", # Ruff-specific rules
-#   "TCH", # flake8-type-checking
-# ]
-# ignore = ["ANN101"]
-
-# Readii uses a lot of camelcase so ignoring pep-8 conventions. 
-# https://docs.astral.sh/ruff/rules/#pep8-naming-n
-# "N",
