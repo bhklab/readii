@@ -11,7 +11,9 @@ dependencies = [
   "matplotlib>=3.9.2,<4",
   "med-imagetools>=1.9.2",
   "pydicom>=2.3.1",
-  "pyradiomics-bhklab>=3.1.4,<4", 
+  "pyradiomics-bhklab>=3.1.4,<4",
+  "numpy==1.26.4",
+  "seaborn>=0.13.2,<0.14" 
 ]
 requires-python = ">=3.10, <3.13"
 
@@ -32,8 +34,6 @@ channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64"]
 
 [tool.pixi.dependencies]
-numpy = "1.26.4.*"
-seaborn = ">=0.13.2,<0.14"
 
 
 [tool.pixi.pypi-dependencies]
