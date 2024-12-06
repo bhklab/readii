@@ -116,7 +116,7 @@ def run(config: dict) -> None:
 		[getLogger("readii"), getLogger("imgtools")]
 	):  # weird way to get the logs to not mess up tqdm
 		for row in tqdm(dataset_df.itertuples(), total=len(dataset_df), desc="Processing subjects"):
-			logger.info(f"Processing row: {row.Index}")
+			logger.info(f"Processing row: {row.patient_ID}")
 			ct_path = Path(row.folder_CT)
 			mask_path = Path(row.folder_RTSTRUCT_CT)
 
@@ -135,7 +135,7 @@ def run(config: dict) -> None:
 
 			for roi, mask_image in masks.items():
 				neg_nifti_writer.save(
-					SubjectID=row.Index,
+					SubjectID=row.patient_ID,
 					image=mask_image,
 					Modality="RTSTRUCT",
 					Filename=roi,
@@ -154,7 +154,7 @@ def run(config: dict) -> None:
 
 					# could return this as a dict and then save it to the writer
 					_ = neg_nifti_writer.save(
-						SubjectID=row.Index,
+						SubjectID=row.patient_ID,
 						image=nc_image,
 						Modality="CT",
 						Filename=f"{roi}/{nc_name}-{region_name}",
