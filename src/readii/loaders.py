@@ -72,7 +72,7 @@ def loadRTSTRUCTSITK(
 
 	# Set up segmentation loader
 	logger.debug(f"Making mask using ROI names: {roiNames}")
-	makeMask = StructureSetToSegmentation(roi_names=roiNames)
+	makeMask = StructureSetToSegmentation(roi_names=roiNames, continuous=False)
 
 	try:
 		# Get the individual ROI masks

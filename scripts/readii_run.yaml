@@ -1,0 +1,32 @@
+
+# Input data looks like:
+# TRASH/data/dicom
+# ├── HN-CHUS-052
+# │   └── StudyUID-94629
+# │       ├── CT_SeriesUID-06362
+# │       ├── PT_SeriesUID-44600
+# │       ├── RTDOSE_SeriesUID-11376
+# │       ├── RTPLAN_SeriesUID-04314
+# │       ├── RTSTRUCT_SeriesUID-41418
+# │       └── RTSTRUCT_SeriesUID-87625
+# └── HN-CHUS-082
+#     └── StudyUID-06980
+#         ├── CT_SeriesUID-05195
+#         ├── PT_SeriesUID-72508
+#         ├── RTDOSE_SeriesUID-89632
+#         ├── RTPLAN_SeriesUID-37374
+#         ├── RTSTRUCT_SeriesUID-67882
+#         └── RTSTRUCT_SeriesUID-91674
+# Would need to call this from the root of the repo
+INPUT_DATA: TRASH/data/dicom
+OUTPUT_DATA: TRASH/data/negative-controls-niftis
+
+MODALITIES: CT,RTSTRUCT
+
+NEGATIVE_CONTROLS: [sampled, shuffled, randomized]
+NEGATIVE_CONTROL_REGIONS: [roi, non_roi, full]
+RANDOM_SEED: 10
+
+ROI_OF_INTEREST:
+  GTV: "^(GTV1)$"
+
