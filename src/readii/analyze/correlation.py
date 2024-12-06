@@ -8,7 +8,7 @@ from scipy.linalg import issymmetric
 
 def getFeatureCorrelations(vertical_features:pd.DataFrame,
                            horizontal_features:pd.DataFrame,
-                           method:Optional[str] = "pearson",
+                           method:str = "pearson",
                            vertical_feature_name:Optional[str] = "",
                            horizontal_feature_name:Optional[str] = ""):
     """ Function to calculate correlation between two sets of features.
@@ -31,18 +31,26 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
     correlation_matrix : pd.DataFrame
         Dataframe containing correlation values.
     """
-    if method not in ["pearon", "spearman", "kendall"]:
+    # Check that features are dataframes
+    assert isinstance(vertical_features, pd.DataFrame), "vertical_features must be a pandas DataFrame"
+    assert isinstance(horizontal_features, pd.DataFrame), "horizontal_features must be a pandas DataFrame"
+
+    if method not in ["pearson", "spearman", "kendall"]:
         raise ValueError("Correlation method must be one of 'pearson', 'spearman', or 'kendall'.")
 
     if not vertical_features.index.equals(horizontal_features.index):
         raise ValueError("Vertical and horizontal features must have the same index to calculate correlation. Set the index to the intersection of patient IDs.")
 
+    # Add _ to beginnging of feature names if they are not blank so they can be used as suffixes
+    if vertical_feature_name: vertical_feature_name = f"_{vertical_feature_name}"
+    if horizontal_feature_name: horizontal_feature_name = f"_{horizontal_feature_name}"
+
     # Join the features into one dataframe
     # Use inner join to keep only the rows that have a value in both vertical and horizontal features
     features_to_correlate = vertical_features.join(horizontal_features, 
                                                    how='inner', 
-                                                   lsuffix=f"_{vertical_feature_name}", 
-                                                   rsuffix=f"_{horizontal_feature_name}") 
+                                                   lsuffix=vertical_feature_name, 
+                                                   rsuffix=horizontal_feature_name) 
 
     try:
         # Calculate correlation between vertical features and horizontal features
