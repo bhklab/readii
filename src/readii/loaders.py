@@ -72,7 +72,7 @@ def loadRTSTRUCTSITK(
 
 	# Set up segmentation loader
 	logger.debug(f"Making mask using ROI names: {roiNames}")
-
+	
 	# Initialize med-imagetools loader to convert RTSTRUCT point cloud to a segmentation
 	# Set continous to False to ensure indices are integers and not floats
 	makeMask = StructureSetToSegmentation(roi_names=roiNames,
