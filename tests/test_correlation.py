@@ -3,25 +3,23 @@ from readii.analyze.correlation import (
     plotCorrelationHeatmap,
 )
 
+from readii.data.process import dropUpToFeature
+
 import pytest
-import collections
 import pandas as pd
-import os 
+import numpy as np
 
 @pytest.fixture
-def nsclc_radiomic_features():
-    return pd.read_csv("tests/output/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv")
-
-@pytest.fixture
-def lung4D_radiomic_features():
-    return pd.read_csv("tests/output/features/radiomicfeatures_original_4D-Lung.csv")
-
+def random_feature_matrix():
+    # Create a 10x10 matrix with random float values between 0 and 1
+    random_matrix = np.random.default_rng(seed=10).random((10,10))
+    # Convert to dataframe and name the columns feature1, feature2, etc.
+    return pd.DataFrame(random_matrix, columns=[f"feature_{i+1}" for i in range(10)])
 
 @pytest.mark.parametrize(
         "features",
         [
-            ("nsclc_radiomic_features"),
-            ("lung4D_radiomic_features")
+            ("random_feature_matrix")
         ],
         "correlation_method",
         [
@@ -34,6 +32,10 @@ def test_getFeatureCorrelations(features, correlation_method, request):
     """Test getting correlation matrix for a set of features"""
     features = request.getfixturevalue(features)
     correlation_method = request.getfixturevalue(correlation_method)
+
+    features_to_corr = features.join(features, how='inner')
+    expected = features_to_corr.corr(method=correlation_method)
+
     actual = getFeatureCorrelations(vertical_features = features,
                                     horizontal_features = features,
                                     method = correlation_method
@@ -42,3 +44,5 @@ def test_getFeatureCorrelations(features, correlation_method, request):
         "Wrong return type, expect a pandas DataFrame"
     assert actual.shape[0] == 2*features.shape[1], \
         "Wrong return size, should be the same as the number of features"
+    assert actual.equals(expected), \
+        "Correlation values is incorrect for the given features"
