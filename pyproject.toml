@@ -10,7 +10,6 @@ dependencies = [
   "simpleitk>=2.3.1",
   "matplotlib>=3.9.2,<4",
   "med-imagetools>=1.9.2",
-  # "dicom-parser>=1.2.3,<2", # jjjermiah: removing for updated med-imagetools
   "pydicom>=2.3.1",
   "pyradiomics-bhklab>=3.1.4,<4", 
 ]
@@ -31,6 +30,9 @@ readii = "readii.pipeline:main"
 [tool.pixi.project]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64"]
+
+[tool.pixi.dependencies]
+
 
 [tool.pixi.pypi-dependencies]
 readii = { path = ".", editable = true }
@@ -53,8 +55,10 @@ python = "3.12.*"
 
 
 [tool.pixi.feature.dev.dependencies]
+jupyterlab = ">=4.3.1,<5"
+pixi-kernel = ">=0.5.1,<0.6"
+ipykernel = ">=6.29.5,<7"
 pip = "*"
-
 
 ############################################## TEST ################################################
 
@@ -97,16 +101,19 @@ sphinx-rtd-theme = "*"
 ruff = ">=0.4.4"
 pre-commit = ">=3.7.1,<3.8"
 
-[tool.pixi.feature.style.tasks]
-[tool.pixi.feature.style.tasks.lint]
+[tool.pixi.feature.style.tasks._lint]
 cmd = "ruff check  --config=config/ruff.toml"
 inputs = ["src", "config/ruff.toml"]
 description = "Run ruff linter"
 
-[tool.pixi.feature.style.tasks.format]
+[tool.pixi.feature.style.tasks._format]
 cmd = "ruff format --config=config/ruff.toml"
 inputs = ["src", "config/ruff.toml"]
 description = "Run ruff formatter, use `--diff` to see changes only"
+
+[tool.pixi.feature.style.tasks.qc]
+depends_on = ["_lint", "_format"]
+description = "Run all quality control tasks"
 
 #################################### RELEASE & BUILD ###############################################
 
