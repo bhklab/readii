@@ -49,13 +49,32 @@ class NegativeControlManager:
 			region_strategies=region_strategies,
 		)
 
+	@property
+	def strategy_products(self) -> Iterator[tuple[NegativeControlStrategy, RegionStrategy]]:
+		"""Get all combinations of negative control and region strategies."""
+		return product(self.negative_control_strategies, self.region_strategies)
+
 	def apply(self, base_image: T, mask: T) -> Iterator[tuple[T, str, str]]:
 		"""Apply the negative control strategies to the region strategies."""
-		for control_strategy, region_strategy in product(
-			self.negative_control_strategies, self.region_strategies
-		):
+		for control_strategy, region_strategy in self.strategy_products:
 			yield (
 				control_strategy(base_image, mask, region_strategy),
 				control_strategy.name(),
 				region_strategy.name(),
 			)
+
+	def apply_single(self, base_image: T, mask: T, control_strategy: NegativeControlStrategy, region_strategy: RegionStrategy) -> tuple[T, str, str]:
+		"""Apply a single negative control strategy to a single region strategy."""
+		return (
+			control_strategy(base_image, mask, region_strategy),
+			control_strategy.name(),
+			region_strategy.name(),
+		)
+
+	def __len__(self) -> int:
+		"""Return the total number of strategy combinations."""
+		return len(list(self.strategy_products))
+
+	def __repr__(self) -> str:
+		"""Return a string representation of the manager."""
+		return f"NegativeControlManager(negative_controls={len(self.negative_control_strategies)}, regions={len(self.region_strategies)})"
