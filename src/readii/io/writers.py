@@ -128,7 +128,7 @@ class NIFTIWriter(BaseWriter):
 		"""Write the given data to the file resolved by the given kwargs."""
 		out_path = self.resolve_path(SubjectID, **kwargs)
 		logger.debug("Writing image to file", out_path=out_path)
-		sitk.WriteImage(image, str(out_path), useCompression=True, compressionLevel=5)
+		sitk.WriteImage(image, str(out_path), useCompression=True, compressionLevel=9)
 		return out_path
 
 

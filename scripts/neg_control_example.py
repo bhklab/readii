@@ -8,6 +8,7 @@ import yaml
 from imgtools.autopipeline import (
 	ImageAutoInput,
 )
+from imgtools.cli import set_log_verbosity
 from tqdm import tqdm
 from tqdm.contrib.logging import logging_redirect_tqdm
 
@@ -60,6 +61,7 @@ class Config:
 		"""
 		config_dict["INPUT_DATA"] = Path(config_dict["INPUT_DATA"])
 		config_dict["OUTPUT_DATA"] = Path(config_dict["OUTPUT_DATA"])
+		
 		return cls(**config_dict)
 
 
@@ -115,16 +117,22 @@ def run(config: dict) -> None:
 	with logging_redirect_tqdm(
 		[getLogger("readii"), getLogger("imgtools")]
 	):  # weird way to get the logs to not mess up tqdm
-		for row in tqdm(dataset_df.itertuples(), total=len(dataset_df), desc="Processing subjects"):
-			logger.info(f"Processing row: {row.patient_ID}")
+		pbar_subjects = tqdm(dataset_df.itertuples(), total=len(dataset_df), leave=False)
+		for row in pbar_subjects:
+			logger.info(f"Processing Patient: {row.patient_ID}")
+			pbar_subjects.set_description(f"Processing Patient: {row.patient_ID:>20}")
 			ct_path = Path(row.folder_CT)
 			mask_path = Path(row.folder_RTSTRUCT_CT)
 
+			logger.info("Loading CT", ct_path=ct_path)
 			base_image = ct_loader(ct_path)
+
+			logger.info("Loading RTSTRUCT", mask_path=mask_path)
 			masks = rt_loader(
 				rtstructPath=mask_path, baseImageDirPath=ct_path, roiNames=config.ROI_OF_INTEREST
 			)
 
+			logger.info("Writing original CT image")
 			# write the original images again
 			neg_nifti_writer.save(
 				SubjectID=row.patient_ID,
@@ -133,7 +141,16 @@ def run(config: dict) -> None:
 				Filename="original",
 			)
 
-			for roi, mask_image in masks.items():
+			# for roi, mask_image in masks.items():
+			pbar_ROIs = tqdm(
+				masks.items(),
+				total=len(masks),
+				leave=False,
+			)
+			for roi, mask_image in pbar_ROIs:
+				logger.info(f"Processing ROI: {roi}")
+				pbar_ROIs.set_description(f"Processing ROIname: {roi:>20}")
+				logger.info("Writing original RTSTRUCT image")
 				neg_nifti_writer.save(
 					SubjectID=row.patient_ID,
 					image=mask_image,
@@ -141,18 +158,22 @@ def run(config: dict) -> None:
 					Filename=roi,
 				)
 
-				for nc, st in tqdm(
+
+				pbar_negctrls = tqdm(
 					ncm.strategy_products,
 					total=len(ncm),
-					desc="Processing negctrls",
 					leave=False,
-				):
-					logger.info(f"Processing negative control: {nc.name()} & {st.name()}")
+				)
+				for nc, st in pbar_negctrls:
+					# logger.info(f"Processing negative control: {nc.name()} & {st.name()}")
+					desc = f"{nc.name()} + {st.name()}"
+					pbar_negctrls.set_description(f"Processing Negctrl: {desc:>20}")
 					nc_image, nc_name, region_name = ncm.apply_single(
 						base_image, mask_image, nc, st
 					)
 
 					# could return this as a dict and then save it to the writer
+					logger.info("Writing negative control image", nc_name=nc_name, region_name=region_name)
 					_ = neg_nifti_writer.save(
 						SubjectID=row.patient_ID,
 						image=nc_image,
@@ -160,7 +181,7 @@ def run(config: dict) -> None:
 						Filename=f"{roi}/{nc_name}-{region_name}",
 					)
 
-
+# @set_log_verbosity(logger_name="readii")
 @click.command()
 @click.option(
 	"--config",
@@ -169,11 +190,11 @@ def run(config: dict) -> None:
 	default="readii_run.yaml",
 	help="Path to the configuration file.",
 )
-def main(config: Path) -> None:
+def main(config: Path, verbose: int = 0, quiet: bool = False) -> None:
 	"""Run the pipeline."""
 	config_dict = yaml.safe_load(config.open("r"))
 	config = Config.from_dict(config_dict)
-	logger.info("Running with config:", config=asdict(config))
+	logger.debug("Running with config:", config=asdict(config))
 	run(config)
 
 

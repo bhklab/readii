@@ -28,5 +28,11 @@ NEGATIVE_CONTROL_REGIONS: [roi, non_roi, full]
 RANDOM_SEED: 10
 
 ROI_OF_INTEREST:
+  # Gross Tumor Volume
   GTV: "^(GTV1)$"
+  # Clinical Target Volume
+  CTV: "^(CTV.*)"
+  # Planning Target Volume
+  PTV: "^(PTV.*)"
+
 

@@ -6464,7 +6464,7 @@ packages:
 - pypi: .
   name: readii
   version: 1.18.0
-  sha256: b6903ddf540f21f22787241849529d00b84e50f0622161e91cf515573c05aa0b
+  sha256: f54e10a4f9c7419e7ab056a77b1f7b29bbcbf434050c23edaf664c118e709da7
   requires_dist:
   - simpleitk>=2.3.1
   - matplotlib>=3.9.2,<4
