@@ -14,7 +14,8 @@ def main(input_path: Path) -> None:
 	rtstruct = dcmread(input_path, stop_before_pixels=True, specific_tags=['StructureSetROISequence', 'Modality'])
 	assert rtstruct.Modality == "RTSTRUCT", "Input file is not an RTSTRUCT file."
 	roi_names = [roi.ROIName for roi in rtstruct.StructureSetROISequence]
-	for roi in roi_names:
+	sorted_roi_names = sorted(roi_names)
+	for roi in sorted_roi_names:
 		click.echo(roi)
 
 if __name__ == "__main__":
