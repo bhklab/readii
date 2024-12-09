@@ -3,6 +3,8 @@ from typing import Optional
 
 import pandas as pd
 
+from .label import setPatientIdAsIndex
+
 def dropUpToFeature(dataframe:DataFrame,
                     feature_name:str,
                     keep_feature_name_column:Optional[bool] = False
@@ -127,3 +129,47 @@ def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame):
             raise ValueError("PyRadiomics file doesn't contain any diagnostics or original feature columns, so can't find beginning of features. Use dropUpToFeature and specify the last non-feature or first PyRadiomic feature column name to get only PyRadiomics features.")
 
     return pyradiomic_features_only
+
+
+
+def getPatientIntersectionDataframes(dataframe_A:DataFrame, 
+                                     dataframe_B:DataFrame,
+                                     need_pat_index_A:bool = True,
+                                     need_pat_index_B:bool = True): 
+    """ Function to get the subset of two dataframes based on the intersection of their indices. Intersection will be based on the index of dataframe A.
+
+    Parameters
+    ----------
+    dataframe_A : DataFrame
+        Dataframe A to get the intersection of based on the index.
+    dataframe_B : DataFrame
+        Dataframe B to get the intersection of based on the index.
+    need_pat_index_A : bool, optional
+        Whether to run setPatientIdAsIndex on dataframe A. If False, assumes the patient ID column is already set as the index. The default is True.
+    need_pat_index_B : bool, optional
+        Whether to run setPatientIdAsIndex on dataframe B. If False, assumes the patient ID column is already set as the index. The default is True.
+
+    Returns
+    -------
+    intersection_index_dataframeA : DataFrame
+        Dataframe containing the rows of dataframe A that are in the intersection of the indices of dataframe A and dataframe B.
+    intersection_index_dataframeB : DataFrame
+        Dataframe containing the rows of dataframe B that are in the intersection of the indices of dataframe A and dataframe B.
+    """
+    
+    # Set the patient ID column as the index for dataframe A if needed
+    if need_pat_index_A:
+        dataframe_A = setPatientIdAsIndex(dataframe_A)
+
+    # Set the patient ID column as the index for dataframe B if needed
+    if need_pat_index_B:
+        dataframe_B = setPatientIdAsIndex(dataframe_B)
+
+    # Get patients in common between dataframe A and dataframe B
+    intersection_index = dataframe_A.index.intersection(dataframe_B.index)
+
+    # Select common patient rows from each dataframe
+    intersection_index_dataframeA = dataframe_A.loc[intersection_index]
+    intersection_index_dataframeB = dataframe_B.loc[intersection_index]
+
+    return intersection_index_dataframeA, intersection_index_dataframeB
