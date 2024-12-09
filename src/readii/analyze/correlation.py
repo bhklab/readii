@@ -3,7 +3,6 @@ from typing import Optional
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-from scipy.linalg import issymmetric
 
 
 def getFeatureCorrelations(vertical_features:pd.DataFrame,
