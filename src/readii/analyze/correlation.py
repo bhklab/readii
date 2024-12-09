@@ -141,3 +141,88 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
     plt.suptitle(title, fontsize=14)
     
     return corr_fig
+
+
+
+def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
+                                num_vertical_features:int):
+    """ Function to get the vertical (y-axis) self correlations from a correlation matrix. Gets the top left quadrant of the correlation matrix.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to get the vertical self correlations from.
+    num_vertical_features : int
+        Number of vertical features in the correlation matrix.
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing the vertical self correlations from the correlation matrix.    
+    """
+    if num_vertical_features > correlation_matrix.shape[0]:
+        raise ValueError(f"Number of vertical features ({num_vertical_features}) is greater than the number of rows in the correlation matrix ({correlation_matrix.shape[0]}).")
+    
+    if num_vertical_features > correlation_matrix.shape[1]:
+        raise ValueError(f"Number of vertical features ({num_vertical_features}) is greater than the number of columns in the correlation matrix ({correlation_matrix.shape[1]}).")
+
+    # Get the correlation matrix for vertical vs vertical - this is the top left corner of the matrix
+    return correlation_matrix.iloc[0:num_vertical_features, 0:num_vertical_features]
+
+
+
+def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
+                                  num_horizontal_features:int):
+    """ Function to get the horizontal (x-axis) self correlations from a correlation matrix. Gets the bottom right quadrant of the correlation matrix.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to get the horizontal self correlations from.
+    num_horizontal_features : int
+        Number of horizontal features in the correlation matrix.
+
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing the horizontal self correlations from the correlation matrix.
+    """
+    
+    if num_horizontal_features > correlation_matrix.shape[0]:
+        raise ValueError(f"Number of horizontal features ({num_horizontal_features}) is greater than the number of rows in the correlation matrix ({correlation_matrix.shape[0]}).")
+    
+    if num_horizontal_features > correlation_matrix.shape[1]:
+        raise ValueError(f"Number of horizontal features ({num_horizontal_features}) is greater than the number of columns in the correlation matrix ({correlation_matrix.shape[1]}).")
+
+    # Get the index of the start of the horizontal correlations
+    start_of_horizontal_correlations = len(correlation_matrix.columns) - num_horizontal_features
+
+    # Get the correlation matrix for horizontal vs horizontal - this is the bottom right corner of the matrix
+    return correlation_matrix.iloc[start_of_horizontal_correlations:, start_of_horizontal_correlations:]
+
+
+
+def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
+                              num_vertical_features:int):
+    """ Function to get the cross correlation matrix subsection for a correlation matrix. Gets the top right quadrant of the correlation matrix so vertical and horizontal features are correctly labeled.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to get the cross correlation matrix subsection from.
+    num_vertical_features : int
+        Number of vertical features in the correlation matrix.
+    
+    Returns
+    -------
+    pd.DataFrame
+        Dataframe containing the cross correlations from the correlation matrix.
+    """
+
+    if num_vertical_features > correlation_matrix.shape[0]:
+        raise ValueError(f"Number of vertical features ({num_vertical_features}) is greater than the number of rows in the correlation matrix ({correlation_matrix.shape[0]}).")
+    
+    if num_vertical_features > correlation_matrix.shape[1]:
+        raise ValueError(f"Number of vertical features ({num_vertical_features}) is greater than the number of columns in the correlation matrix ({correlation_matrix.shape[1]}).")
+    
+    return correlation_matrix.iloc[0:num_vertical_features, num_vertical_features:]
