@@ -1,6 +1,7 @@
 import re
-from pandas import DataFrame
+from pandas import DataFrame, Series
 import numpy as np
+import pandas as pd
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
     """Function to find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). 
@@ -108,4 +109,128 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
             # Make a copy of the outcome column with the standardized name
             dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_standardized_outcome[outcome_column_label]
     
+    return dataframe_with_standardized_outcome
+
+
+
+def survivalStatusToNumericMapping(event_outcome_column:Series):
+    """Convert a survival status column to a numeric column by iterating over unique values and assigning a numeric value to each.
+    Alive values will be assigned a value of 1, and dead values will be assigned a value of 2.
+    If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2
+
+    Parameters
+    ----------
+    event_outcome_column : Series
+        Series containing the survival status values.
+
+    Returns
+    -------
+    event_column_value_mapping : dict
+        Dictionary mapping the survival status values to numeric values.
+    """
+
+    # Create a dictionary to map event values to numeric values
+    event_column_value_mapping = {}
+    # Get a list of all unique event values, set them to lower case
+    existing_event_values = event_outcome_column.str.lower().unique()
+
+    # Set the conversion value for the first event value to 0
+    other_event_num_value = 0
+
+    # See if alive is present, and set the conversion value for alive to 0
+    if "alive" in existing_event_values:
+        event_column_value_mapping['alive'] = 0
+        # Remove alive from the list of existing event values
+        existing_event_values.remove("alive")
+        # Update starting value for other event values
+        other_event_num_value = 1
+
+    # See if dead is present, and set the conversion value for dead to 1
+    if "dead" in existing_event_values:
+        event_column_value_mapping['dead'] = 1
+        # Remove dead from the list of existing event values
+        existing_event_values.remove("dead")
+        # Update starting value for other event values
+        other_event_num_value = 2
+
+    # Set the conversion value for the other event values to the next available value
+    for other_event_value in existing_event_values:
+        event_column_value_mapping[other_event_value] = other_event_num_value
+        other_event_num_value += 1
+
+
+    return event_column_value_mapping
+
+
+
+def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
+                            outcome_column_label:str,
+                            standard_column_label:str,
+                            event_column_value_mapping:dict = {}):
+    """ Function to set up an event outcome column in a dataframe.
+
+    Parameters
+    ----------
+    dataframe_with_outcome : DataFrame
+        Dataframe containing the outcome column to convert.
+    outcome_column_label : str
+        Label for the outcome column to convert in the dataframe.
+    standard_column_label : str
+        Name of the column to save the standardized outcome column as.
+    event_column_value_mapping : dict, optional
+        Dictionary of event values to convert to numeric values. Keys are the event values, values are the numeric values. If provided, all event values in the outcome column must be handled by the dictionary.
+        If not provided, will attempt to convert based on the values in the outcome column. By default alive and dead will be converted to 0 and 1, respectively, if present in the outcome column.
+        The default is an empty dictionary.
+    
+    Returns
+    -------
+    dataframe_with_standardized_outcome : DataFrame
+        Dataframe with a copy of the specified outcome column converted to numeric values.
+    """
+
+    # Get the type of the existing event column
+    event_variable_type = type(dataframe_with_outcome[outcome_column_label][0])
+
+    # Make a copy of the dataframe to work on 
+    dataframe_with_standardized_outcome = dataframe_with_outcome.copy()
+
+    # Handle numeric event column
+    if np.issubdtype(event_variable_type, np.number):
+        dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_outcome[outcome_column_label]
+
+    # Handle boolean event column
+    elif np.issubdtype(event_variable_type, np.bool_):
+        dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_outcome[outcome_column_label].astype(int)
+
+    # Handle string event column
+    elif np.issubdtype(event_variable_type, np.str_):
+        # Make values of outcome column lowercase
+        dataframe_with_standardized_outcome[outcome_column_label] = dataframe_with_outcome[outcome_column_label].str.lower()
+        
+        # Get the existing event values in the provided dataframe and and sort them
+        existing_event_values = sorted(dataframe_with_standardized_outcome[outcome_column_label].unique())
+
+        if not event_column_value_mapping:
+            # Create a dictionary to map event values to numeric values
+            event_column_value_mapping = survivalStatusToNumericMapping(event_outcome_column=dataframe_with_standardized_outcome[outcome_column_label])
+
+        else:
+            # Convert all dictionary keys in provided mapping to lowercase
+            event_column_value_mapping = dict((status.lower(), value) for status, value in event_column_value_mapping.items())
+
+            # Check if user provided a dictionary handles all event values in the outcome column
+            if not all(value == map for value, map in zip(existing_event_values, sorted(event_column_value_mapping.keys()))):
+                raise ValueError(f"Not all event values in {outcome_column_label} are handled by the provided event_column_value_mapping dictionary.")
+        
+                # TODO: add handling for values not in the dictionary
+        
+        with pd.option_context('future.no_silent_downcasting', True):
+            # get the existing event values, make them lowercase, replace the dictionary values with the dictionary keys, convert to numeric, and save to the standardized column copy
+            dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_standardized_outcome[outcome_column_label].replace(event_column_value_mapping).astype(int)
+    
+    # end string handling
+    else:
+        raise TypeError("Event column {outcome_column_label} is not a valid type. Must be a string, boolean, or numeric.")
+
+
     return dataframe_with_standardized_outcome
