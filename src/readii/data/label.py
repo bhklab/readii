@@ -37,6 +37,25 @@ def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
 
 
 
+def setPatientIdAsIndex(dataframe_to_index:DataFrame,
+                        patient_id_col:str = None):
+    """ Function to set the patient ID column as the index of a dataframe.
+
+    Parameters
+    ----------
+    dataframe : DataFrame
+        Dataframe to set the patient ID column as the index.
+    patient_id_col : str, optional
+        Name of the patient ID column to use as the index. If not provided, will find the patient ID column with getPatientIdentifierLabel.
+    """
+    if not patient_id_col:
+        patient_id_col = getPatientIdentifierLabel(dataframe_to_index)
+        
+    pat_indexed_dataframe = dataframe_to_index.set_index(patient_id_col)
+    return pat_indexed_dataframe
+
+
+
 def convertDaysToYears(dataframe_with_outcome:DataFrame,
                        time_column_label:str,
                        divide_by:int = 365):
