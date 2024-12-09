@@ -2,8 +2,6 @@ import os
 import pandas as pd 
 import yaml
 
-from typing import Optional, Dict, Union
-
 
 def loadImageDatasetConfig(dataset_name:str,
                            config_dir_path:str) -> dict:
