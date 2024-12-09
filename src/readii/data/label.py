@@ -32,3 +32,33 @@ def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
         raise ValueError("Dataframe doesn't have a recognizeable patient ID column. Must contain patient or case ID.")
 
     return patient_identifier[0]
+
+
+
+def convertDaysToYears(dataframe_with_outcome:DataFrame,
+                       time_column_label:str,
+                       divide_by:int = 365):
+    """ Function to create a copy of a time outcome column mesaured in days and convert it to years.
+
+    Parameters
+    ----------
+    dataframe_with_outcome : DataFrame
+        Dataframe containing the outcome column to convert.
+    time_column_label : str
+        Label for the time column to convert in the dataframe.
+    divide_by : int, optional
+        Value to divide the time column by. The default is 365.
+
+    Returns
+    -------
+    dataframe_with_outcome : DataFrame
+        Dataframe with a copy of the specified time column converted to years.
+    """
+
+    print(f"Converting time column {time_column_label} from days to years, using divide_by={divide_by}.")
+
+    years_column_label = time_column_label + "_years"
+    # Make a copy of the time column with the values converted from days to years and add suffic _years to the column name
+    dataframe_with_outcome[years_column_label] = dataframe_with_outcome[time_column_label] / divide_by
+
+    return dataframe_with_outcome
