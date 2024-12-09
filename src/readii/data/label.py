@@ -253,3 +253,26 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 
     return dataframe_with_standardized_outcome
+
+
+
+def addOutcomeLabels(feature_data_to_label:DataFrame,
+                     clinical_data:DataFrame,
+                     outcome_labels:list = ["survival_time_in_years", "survival_event_binary"]):
+    """ Function to add survival labels to a feature dataframe based on a clinical dataframe.
+
+    Parameters
+    ----------
+    feature_data_to_label : DataFrame
+        Dataframe containing the feature data to add survival labels to.
+    clinical_data : DataFrame
+        Dataframe containing the clinical data to use for survival labels.
+    outcome_labels : list, optional
+        List of outcome labels to extract from the clinical dataframe. The default is ["survival_time_in_years", "survival_event_binary"].
+    """
+    # Get the survival time and event columns as a dataframe
+    outcome_label_columns = clinical_data[outcome_labels]
+
+    # Join the outcome label dataframe to the feature data dataframe
+    outcome_labelled_feature_data = outcome_label_columns.join(feature_data_to_label)
+    return outcome_labelled_feature_data
