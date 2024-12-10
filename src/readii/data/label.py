@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 from typing import Optional
 
+from readii.data.split import replaceColumnValues
+
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
     """Function to find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). 
        If multiple found, will return the first match.
@@ -248,9 +250,17 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
         
                 # TODO: add handling for values not in the dictionary
         
-        with pd.option_context('future.no_silent_downcasting', True):
-            # get the existing event values, make them lowercase, replace the dictionary values with the dictionary keys, convert to numeric, and save to the standardized column copy
-            dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_standardized_outcome[outcome_column_label].replace(event_column_value_mapping).astype(int)
+        # Set up the new column name for the converted event column
+        dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_standardized_outcome[outcome_column_label]
+
+        # Swap the keys and values in the mapping dictionary to use the replaceColumnValues function
+        # So the numeric values will be the keys and the string event values will be the values
+        replacement_value_data = dict([num_event, str_event] for str_event, num_event in event_column_value_mapping.items())
+
+        # Replace the string event values in the standardized column with the numeric event values
+        dataframe_with_standardized_outcome = replaceColumnValues(dataframe_with_standardized_outcome,
+                                                                  column_to_change=standard_column_label,
+                                                                  replacement_value_data=replacement_value_data)
     
     # end string handling
     else:
