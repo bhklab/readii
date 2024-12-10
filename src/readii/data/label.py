@@ -242,8 +242,8 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
             # Convert all dictionary keys in provided mapping to lowercase
             event_column_value_mapping = dict((status.lower(), value) for status, value in event_column_value_mapping.items())
 
-            # Check if user provided a dictionary handles all event values in the outcome column
-            if not all(value == map for value, map in zip(existing_event_values, sorted(event_column_value_mapping.keys()))):
+            # Check if user provided dictionary handles all event values in the outcome column
+            if set(existing_event_values) != set(event_column_value_mapping.keys()):
                 raise ValueError(f"Not all event values in {outcome_column_label} are handled by the provided event_column_value_mapping dictionary.")
         
                 # TODO: add handling for values not in the dictionary
