@@ -67,7 +67,7 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
             if drop_labels:
                 # Data is now only extracted features
                 raw_feature_data.drop(labels_to_drop, axis=1, inplace=True)
-        except Exception as e:
+        except KeyError as e:
             print(f"{feature_file_path} does not have the labels {labels_to_drop} to drop.")
             # Skip to the next image type
             continue
