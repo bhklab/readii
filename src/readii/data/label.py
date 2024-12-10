@@ -151,8 +151,8 @@ def survivalStatusToNumericMapping(event_outcome_column:Series):
 
     # Create a dictionary to map event values to numeric values
     event_column_value_mapping = {}
-    # Get a list of all unique event values, set them to lower case
-    existing_event_values = event_outcome_column.str.lower().unique()
+    # Get a list of all unique event values, set NaN values to unknown, set remaining values to lower case
+    existing_event_values = event_outcome_column.fillna("unknown").str.lower().unique()
 
     # Set the conversion value for the first event value to 0
     other_event_num_value = 0
