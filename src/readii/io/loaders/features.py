@@ -74,5 +74,8 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
 
         # Save the dataframe to the feature_sets dictionary
         feature_sets[image_type] = raw_feature_data
+
+        if not feature_sets:
+            raise ValueError(f"No valid feature sets were loaded from {extracted_feature_dir}")
     
     return feature_sets
