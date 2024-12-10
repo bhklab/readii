@@ -27,10 +27,11 @@ def replaceColumnValues(dataframe:DataFrame,
         raise ValueError(f"Column {column_to_change} not found in dataframe.")
     
     for new_value in replacement_value_data.keys():
-        # Check if the new value is a valid value in the column
-        if new_value not in dataframe[column_to_change].unique():
-            raise ValueError(f"New value {new_value} not found in column {column_to_change}.")
-        
+        # Check if the replacement value is a valid value in the column
+        old_values = replacement_value_data[new_value]
+        values_not_found_in_column = set(old_values).difference(set(dataframe[column_to_change].unique()))
+        if values_not_found_in_column == set(old_values):
+            raise ValueError(f"All values in {values_not_found_in_column} are not found to be replaced in column {column_to_change}.")
         # Replace the old values with the new value
         dataframe = dataframe.replace(to_replace=replacement_value_data[new_value], 
                                       value=new_value)
