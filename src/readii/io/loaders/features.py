@@ -36,6 +36,10 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     # Initialize dictionary to store the feature sets
     feature_sets = {}
 
+    # Check if the passed in extracted feature directory exists
+    if not os.path.isdir(extracted_feature_dir):
+        raise FileNotFoundError(f"Extracted feature directory {extracted_feature_dir} does not exist.")
+    
     feature_file_list = os.listdir(extracted_feature_dir)
 
     # Loop through all the files in the directory
