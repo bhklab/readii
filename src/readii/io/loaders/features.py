@@ -9,7 +9,7 @@ from readii.io.loaders.general import loadFileToDataFrame
 def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
                                    image_types:list, 
                                    drop_labels:Optional[bool]=True, 
-                                   labels_to_drop:Optional[list]=["patient_ID","survival_time_in_years","survival_event_binary"])->Dict[str,pd.DataFrame]:
+                                   labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]:
     """Function to load in all the extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
 
     Parameters
@@ -29,6 +29,10 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     feature_sets : dict
         Dictionary of dataframes containing the extracted radiomics features.
     """
+    # Set default labels to drop if not specified
+    if labels_to_drop is None:
+        labels_to_drop = ["patient_ID","survival_time_in_years","survival_event_binary"]
+
     # Initialize dictionary to store the feature sets
     feature_sets = {}
 
