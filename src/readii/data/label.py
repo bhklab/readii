@@ -250,7 +250,7 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
     
     # end string handling
     else:
-        raise TypeError("Event column {outcome_column_label} is not a valid type. Must be a string, boolean, or numeric.")
+        raise TypeError(f"Event column {outcome_column_label} is not a valid type. Must be a string, boolean, or numeric.")
 
 
     return dataframe_with_standardized_outcome
