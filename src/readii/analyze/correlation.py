@@ -31,8 +31,11 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
         Dataframe containing correlation values.
     """
     # Check that features are dataframes
-    assert isinstance(vertical_features, pd.DataFrame), "vertical_features must be a pandas DataFrame"
-    assert isinstance(horizontal_features, pd.DataFrame), "horizontal_features must be a pandas DataFrame"
+    if not isinstance(vertical_features, pd.DataFrame):
+        raise TypeError("vertical_features must be a pandas DataFrame")
+    if not isinstance(horizontal_features, pd.DataFrame):
+        raise TypeError("horizontal_features must be a pandas DataFrame")
+    
 
     if method not in ["pearson", "spearman", "kendall"]:
         raise ValueError("Correlation method must be one of 'pearson', 'spearman', or 'kendall'.")
