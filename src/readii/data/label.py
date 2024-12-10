@@ -210,7 +210,7 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
     """
 
     # Get the type of the existing event column
-    event_variable_type = type(dataframe_with_outcome[outcome_column_label][0])
+    event_variable_type = dataframe_with_outcome[outcome_column_label].dtype
 
     # Make a copy of the dataframe to work on 
     dataframe_with_standardized_outcome = dataframe_with_outcome.copy()
@@ -224,9 +224,12 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
         dataframe_with_standardized_outcome[standard_column_label] = dataframe_with_outcome[outcome_column_label].astype(int)
 
     # Handle string event column
-    elif np.issubdtype(event_variable_type, np.str_):
-        # Make values of outcome column lowercase
-        dataframe_with_standardized_outcome[outcome_column_label] = dataframe_with_outcome[outcome_column_label].str.lower()
+    elif np.issubdtype(event_variable_type, np.object_):
+        try:
+            # Make values of outcome column lowercase
+            dataframe_with_standardized_outcome[outcome_column_label] = dataframe_with_outcome[outcome_column_label].str.lower()
+        except Exception as e:
+            raise ValueError(f"Error converting string event column {outcome_column_label} to lowercase. Please check the column is a string type and try again.") from e
         
         # Get the existing event values in the provided dataframe and and sort them
         existing_event_values = sorted(dataframe_with_standardized_outcome[outcome_column_label].unique())
