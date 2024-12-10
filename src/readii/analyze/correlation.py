@@ -40,9 +40,9 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
     if not vertical_features.index.equals(horizontal_features.index):
         raise ValueError("Vertical and horizontal features must have the same index to calculate correlation. Set the index to the intersection of patient IDs.")
 
-    # Add _ to beginnging of feature names if they are not blank so they can be used as suffixes
-    if vertical_feature_name: vertical_feature_name = f"_{vertical_feature_name}"
-    if horizontal_feature_name: horizontal_feature_name = f"_{horizontal_feature_name}"
+    # Add _ to beginnging of feature names if they don't start with _ so they can be used as suffixes
+    if not vertical_feature_name.startswith("_"): vertical_feature_name = f"_{vertical_feature_name}"
+    if not horizontal_feature_name.startswith("_"): horizontal_feature_name = f"_{horizontal_feature_name}"
 
     # Join the features into one dataframe
     # Use inner join to keep only the rows that have a value in both vertical and horizontal features
