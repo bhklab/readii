@@ -7,7 +7,7 @@ from readii.io.loaders.general import loadFileToDataFrame
 
 
 def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
-                                   image_types:Optional[list]=['original'], 
+                                   image_types:list, 
                                    drop_labels:Optional[bool]=True, 
                                    labels_to_drop:Optional[list]=["patient_ID","survival_time_in_years","survival_event_binary"])->Dict[str,pd.DataFrame]:
     """Function to load in all the extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
