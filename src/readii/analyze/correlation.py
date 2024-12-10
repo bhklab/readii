@@ -8,8 +8,8 @@ import numpy as np
 def getFeatureCorrelations(vertical_features:pd.DataFrame,
                            horizontal_features:pd.DataFrame,
                            method:str = "pearson",
-                           vertical_feature_name:Optional[str] = "",
-                           horizontal_feature_name:Optional[str] = ""):
+                           vertical_feature_name:str = '_vertical',
+                           horizontal_feature_name:str = '_horizontal'):
     """ Function to calculate correlation between two sets of features.
 
     Parameters
