@@ -37,9 +37,6 @@ def loadImageDatasetConfig(dataset_name:str,
 
     except yaml.YAMLError as e:
         raise ValueError(f"Invalid YAML in config file: {e}")  
-
-
-
 def loadFileToDataFrame(file_path:str) -> pd.DataFrame:
     """Load data from a csv or xlsx file into a pandas dataframe.
 
@@ -51,7 +48,13 @@ def loadFileToDataFrame(file_path:str) -> pd.DataFrame:
     -------
     pd.DataFrame: Dataframe containing the data from the file.
     """
-     # Get the file extension
+    if not file_path:
+        raise ValueError("file_path cannot be empty")
+
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File {file_path} does not exist")
+
+    # Get the file extension
     _, file_extension = os.path.splitext(file_path)
     
     try:
@@ -64,8 +67,12 @@ def loadFileToDataFrame(file_path:str) -> pd.DataFrame:
         else:
             raise ValueError("Unsupported file format. Please provide a .csv or .xlsx file.")
         
+        if df.empty:
+            raise ValueError("Loaded DataFrame is empty")
+        
         return df
     
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+    except pd.errors.EmptyDataError:
+        raise ValueError("File is empty")
+    except (pd.errors.ParserError, ValueError) as e:
+        raise ValueError(f"Error parsing file: {e}")
