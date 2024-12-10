@@ -27,13 +27,16 @@ def loadImageDatasetConfig(dataset_name:str,
     config_file_path = os.path.join(config_dir_path, f"{dataset_name}.yaml")
 
     # Check if config file exists
-    if os.path.exists(config_file_path):
+    if not os.path.exists(config_file_path):
+        raise FileNotFoundError(f"Config file {config_file_path} does not exist.")
+    
+    try:
         # Load the config file
-        config = yaml.safe_load(open(config_file_path, "r"))
-        return config
-    else:
-        print(f"Config file {config_file_path} does not exist.")
-        return None
+        with open(config_file_path, "r") as f:
+            return yaml.safe_load(f)
+
+    except yaml.YAMLError as e:
+        raise ValueError(f"Invalid YAML in config file: {e}")  
 
 
 
