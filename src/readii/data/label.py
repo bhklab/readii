@@ -2,6 +2,7 @@ import re
 from pandas import DataFrame, Series
 import numpy as np
 import pandas as pd
+from typing import Optional
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
     """Function to find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). 
@@ -134,7 +135,7 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 def survivalStatusToNumericMapping(event_outcome_column:Series):
     """Convert a survival status column to a numeric column by iterating over unique values and assigning a numeric value to each.
-    Alive values will be assigned a value of 1, and dead values will be assigned a value of 2.
+    Alive values will be assigned a value of 0, and dead values will be assigned a value of 1.
     If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2
 
     Parameters
@@ -185,7 +186,7 @@ def survivalStatusToNumericMapping(event_outcome_column:Series):
 def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
                             outcome_column_label:str,
                             standard_column_label:str,
-                            event_column_value_mapping:dict = {}):
+                            event_column_value_mapping:Optional[dict]=None):
     """ Function to set up an event outcome column in a dataframe.
 
     Parameters
