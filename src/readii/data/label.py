@@ -136,7 +136,8 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 def survivalStatusToNumericMapping(event_outcome_column:Series):
     """Convert a survival status column to a numeric column by iterating over unique values and assigning a numeric value to each.
     Alive values will be assigned a value of 0, and dead values will be assigned a value of 1.
-    If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2
+    If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2.
+    Any NaN values will be assigned the value "unknown", then converted to a numeric value.
 
     Parameters
     ----------
