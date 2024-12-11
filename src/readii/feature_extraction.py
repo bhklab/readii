@@ -2,6 +2,7 @@ from collections import OrderedDict
 from itertools import chain
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import numpy as np
 
 import pandas as pd
 import SimpleITK as sitk  # noqa
@@ -74,7 +75,7 @@ def generateNegativeControl(
 def cropImageAndMask(
 	ctImage: sitk.Image,
 	alignedROIImage: sitk.Image,
-	segBoundingBox: tuple,
+	segBoundingBox: np.ndarray,
 	negativeControl: Optional[str],
 	randomSeed: Optional[int],
 ) -> tuple[sitk.Image, sitk.Image]:
@@ -86,8 +87,8 @@ def cropImageAndMask(
 		The CT image to crop.
 	alignedROIImage: sitk.Image
 		The region of interest (ROI) image to crop. Function assumes the image has bee processed with alignImages already.
-	segBoundingBox : tuple
-		Bounding box around the alignedROIImage generated using the radiomics.imageoperations.checkMask function with ctImage and alignedROIImage.
+	segBoundingBox : np.ndarray
+		Bounding box coordinates around the alignedROIImage generated using the radiomics.imageoperations.checkMask function with ctImage and alignedROIImage.
 	negativeControl : tuple, optional
 		The type of negative control to generate before cropping the image. Assumes string is of the format {negativeControlType}_{negativeControlRegion}
 	randomSeed : int, optional	
