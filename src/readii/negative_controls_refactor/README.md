@@ -12,7 +12,7 @@ You provide:
   numpy `ndarray`.
 - **mask**: An optional mask (numpy array or SimpleITK image) defining 
   regions of interest (ROI) within the image.
-- **region strategy**: Defines how the ROI is extracted (e.g., full image,
+- **region strategy**: Defines where the negative control is applied (e.g., full image,
   ROI only, outside ROI).
 - **negative control strategy**: Specifies how pixel values in the image 
   are transformed (e.g., shuffled, randomized).
