@@ -19,7 +19,7 @@ readii_registry.register(
   )
 )
 
-@click.command(name='readii-datasets', cls=DatasetMultiCommand, registry=readii_registry,  invoke_without_command=True)
+@click.command(name='readii-datasets', cls=DatasetMultiCommand, registry=readii_registry, invoke_without_command=True)
 @click.help_option("-h", "--help", help="Show this message and exit.")
 @click.pass_context
 def cli(ctx):
