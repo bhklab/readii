@@ -33,7 +33,7 @@ class ShuffledControl(NegativeControlStrategy):
 
 @dataclass
 class SampledControl(NegativeControlStrategy):
-	"""Randomly sample pixel values from the distribution of existing pixel values within the image."""
+	"""Randomly sample pixel values with replacement from the distribution of existing pixel values within the image."""
 
 	negative_control_name = "sampled"
 
@@ -59,7 +59,7 @@ class SampledControl(NegativeControlStrategy):
 
 @dataclass
 class RandomizedControl(NegativeControlStrategy):
-	"""Randomly generate pixel values within the image."""
+	"""Randomly generate pixel values within the range of the original image pixel values."""
 
 	negative_control_name = "randomized"
 
