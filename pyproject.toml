@@ -94,8 +94,6 @@ description = "Run pytest and generate coverage report"
 myst-nb = "*"
 sphinx-autoapi = "*"
 sphinx-rtd-theme = "*"
-vhs = ">=0.7.2,<0.8"
-ttyd = ">=1.7.7,<2"
 
 # TODO::add tasks to build documentation
 
