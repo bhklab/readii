@@ -7,103 +7,104 @@ from .abstract_classes import RegionStrategy
 
 
 class FullRegion(RegionStrategy):
-  """Region strategy to apply control to the entire image.
-  
-  A strategy that creates a mask covering the entire image array with ones,
-  effectively selecting all pixels for processing.
-  """
+	"""Region strategy to apply control to the entire image.
 
-  region_name: Final[str] = "full"
+	A strategy that creates a mask covering the entire image array with ones,
+	effectively selecting all pixels for processing.
+	"""
 
-  def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
-    """Apply the region mask to the image array.
-    
-    Parameters
-    ----------
-    image_array : np.ndarray
-      The input image array (unused in this strategy)
-    mask_array : np.ndarray
-      The input mask array (unused in this strategy)
-        
-    Returns
-    -------
-    np.ndarray
-      A binary mask of ones with the same shape as the input arrays
-    """
-    region_mask = np.ones_like(mask_array)
-    return region_mask
+	region_name: Final[str] = "full"
+
+	def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
+		"""Apply the region mask to the image array.
+
+		Parameters
+		----------
+		image_array : np.ndarray
+		  The input image array (unused in this strategy)
+		mask_array : np.ndarray
+		  The input mask array (unused in this strategy)
+
+		Returns
+		-------
+		np.ndarray
+		  A binary mask of ones with the same shape as the input arrays
+		"""
+		region_mask = np.ones_like(mask_array)
+		return region_mask
 
 
 class ROIRegion(RegionStrategy):
-  """Region strategy to apply control within the ROI.
-  
-  A strategy that creates a mask matching the input ROI mask,
-  selecting only pixels within the region of interest.
-  """
+	"""Region strategy to apply control within the ROI.
 
-  region_name: Final[str] = "roi"
+	A strategy that creates a mask matching the input ROI mask,
+	selecting only pixels within the region of interest.
+	"""
 
-  def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
-    """Apply the region mask to the image array.
-    
-    Parameters
-    ----------
-    image_array : np.ndarray
-      The input image array (unused in this strategy)
-    mask_array : np.ndarray
-      The binary mask defining the ROI
-        
-    Returns
-    -------
-    np.ndarray
-      A binary mask matching the ROI
-        
-    Raises
-    ------
-    ValueError
-      If the resulting mask contains no positive pixels
-    """
-    region_mask = np.where(mask_array > 0, 1, 0)
-    if not region_mask.any():
-      msg = "ROI mask is all 0s. No pixels in ROI to apply negative control."
-      raise ValueError(msg)
-    return region_mask
+	region_name: Final[str] = "roi"
+
+	def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
+		"""Apply the region mask to the image array.
+
+		Parameters
+		----------
+		image_array : np.ndarray
+		  The input image array (unused in this strategy)
+		mask_array : np.ndarray
+		  The binary mask defining the ROI
+
+		Returns
+		-------
+		np.ndarray
+		  A binary mask matching the ROI
+
+		Raises
+		------
+		ValueError
+		  If the resulting mask contains no positive pixels
+		"""
+		region_mask = np.where(mask_array > 0, 1, 0)
+		if not region_mask.any():
+			msg = "ROI mask is all 0s. No pixels in ROI to apply negative control."
+			raise ValueError(msg)
+		return region_mask
 
 
 class NonROIRegion(RegionStrategy):
-  """Region strategy to apply control outside the ROI.
-  
-  A strategy that creates a mask selecting all pixels outside
-  the region of interest.
-  """
+	"""Region strategy to apply control outside the ROI.
 
-  region_name: Final[str] = "non_roi"
+	A strategy that creates a mask selecting all pixels outside
+	the region of interest.
+	"""
 
-  def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
-    """Apply the region mask to the image array.
-    
-    Parameters
-    ----------
-    image_array : np.ndarray
-      The input image array (unused in this strategy)
-    mask_array : np.ndarray
-      The binary mask defining the ROI
-        
-    Returns
-    -------
-    np.ndarray
-      A binary mask with 1s outside the ROI
-        
-    Raises
-    ------
-    ValueError
-      If the resulting mask contains no positive pixels
-    """
-    region_mask = np.where(mask_array > 0, 0, 1)
-    if not region_mask.any():
-      msg = "Non-ROI mask is all 0s. No pixels outside ROI to apply negative control."
-      raise ValueError(msg)
-    return region_mask
+	region_name: Final[str] = "non_roi"
+
+	def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
+		"""Apply the region mask to the image array.
+
+		Parameters
+		----------
+		image_array : np.ndarray
+		  The input image array (unused in this strategy)
+		mask_array : np.ndarray
+		  The binary mask defining the ROI
+
+		Returns
+		-------
+		np.ndarray
+		  A binary mask with 1s outside the ROI
+
+		Raises
+		------
+		ValueError
+		  If the resulting mask contains no positive pixels
+		"""
+		region_mask = np.where(mask_array > 0, 0, 1)
+		if not region_mask.any():
+			msg = "Non-ROI mask is all 0s. No pixels outside ROI to apply negative control."
+			raise ValueError(msg)
+		return region_mask
+
 
 class NonROIWithBorderRegion(RegionStrategy):
 	"""Region strategy to apply control outside the ROI, including a configurable border.
@@ -113,7 +114,7 @@ class NonROIWithBorderRegion(RegionStrategy):
 	dilation_iterations : int, optional
 		Number of iterations for binary dilation, by default 1.
 		See https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.binary_dilation.html#binary-dilation
-	""" 
+	"""
 
 	region_name: Final[str] = "non_roi_with_border"
 
