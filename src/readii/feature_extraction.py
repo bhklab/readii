@@ -38,16 +38,12 @@ def generateNegativeControl(
 	----------
 	ctImage : sitk.Image
 		The CT image to generate a negative control for.
-	
 	negativeControl : str
 		The type of negative control to generate. Assumes string is of the format {negativeControlType}_{negativeControlRegion}
-
 	alignedROIImage : sitk.Image
 		The region of interest (ROI) image to generate a negative control for. Function assumes the image has bee processed with alignImages already.
-	
 	randomSeed : Optional[int]	
 	    Random seed to use in negative control generation. Set for reproducible results.
-	
 	
 	Returns
 	-------
@@ -82,11 +78,32 @@ def cropImageAndMask(
 	negativeControl: Optional[str],
 	randomSeed: Optional[int],
 ) -> tuple[sitk.Image, sitk.Image]:
-	"""Crop the CT and ROI images to the bounding box of the segmentation."""
+	"""Crop the CT and ROI images to the bounding box of the segmentation. Optionally generates negative control version of the image before cropping.
+	
+	Parameters
+	----------
+	ctImage : sitk.Image
+		The CT image to crop.
+	alignedROIImage: sitk.Image
+		The region of interest (ROI) image to crop. Function assumes the image has bee processed with alignImages already.
+	segBoundingBox : tuple
+		Bounding box around the alignedROIImage generated using the radiomics.imageoperations.checkMask function with ctImage and alignedROIImage.
+	negativeControl : tuple, optional
+		The type of negative control to generate before cropping the image. Assumes string is of the format {negativeControlType}_{negativeControlRegion}
+	randomSeed : int, optional	
+	    Random seed to use in negative control generation. Set for reproducible results.
+
+	Returns
+	-------
+	tuple[sitk.Image, sitk.Image]
+		The cropped CT and ROI images.
+	"""
+	# Generate negative control if specified
 	if negativeControl:
 		logger.info(f"Generating {negativeControl} negative control for CT.")
 		ctImage = generateNegativeControl(ctImage, negativeControl, alignedROIImage, randomSeed)
 
+	# Crop the CT and ROI images to the bounding box of the segmentation
 	croppedCT, croppedROI = imageoperations.cropToTumorMask(
 		ctImage, alignedROIImage, segBoundingBox
 	)
