@@ -43,7 +43,7 @@ class RegionStrategy(ABC):
 	@classmethod
 	def name(cls) -> str:
 		"""Get the name of the region strategy.
-		
+
 		Returns
 		-------
 			str: The name of the region strategy.

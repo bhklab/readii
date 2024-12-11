@@ -16,9 +16,8 @@ RANDOM_SEED = 10
 
 def main() -> None:
 	"""Test the negative_controls_refactor module."""
-
 	################################################################################################
-	# Load Data 
+	# Load Data
 	dataset_path = Path.cwd() / "tests" / "4D-Lung"
 
 	ct_dir = (
@@ -55,16 +54,20 @@ def main() -> None:
 	rprint(f"Negative control image 2: {neg_image2.GetSize()}")
 
 	# EXAMPLE 3: Using the manager class and the `apply_single` method
-	manager = NegativeControlManager() # by default, uses 0 strategies and 0 regions, but can passed in as args
-	
+	manager = (
+		NegativeControlManager()
+	)  # by default, uses 0 strategies and 0 regions, but can passed in as args
+
 	neg_image3, control_strategy_name, region_strategy_name = manager.apply_single(
-		base_image=ct, 
-		mask=rt, 
-		control_strategy="randomized", 
+		base_image=ct,
+		mask=rt,
+		control_strategy="randomized",
 		region_strategy="roi",
-		random_seed=RANDOM_SEED
+		random_seed=RANDOM_SEED,
 	)
-	rprint(f"Negative control image 3: {neg_image3.GetSize()} using {control_strategy_name} and {region_strategy_name}")
+	rprint(
+		f"Negative control image 3: {neg_image3.GetSize()} using {control_strategy_name} and {region_strategy_name}"
+	)
 
 	# EXAMPLE 4: Using manager, and combined string representations of the strategies
 	manager_2 = NegativeControlManager.from_strings(
@@ -77,7 +80,10 @@ def main() -> None:
 
 	# Apply all combinations of negative control and region strategies
 	for neg_image, control_strategy_name, region_strategy_name in manager_2.apply(ct, rt):
-		rprint(f"Negative control image generated: {neg_image.GetSize()} using {control_strategy_name} and {region_strategy_name}")
+		rprint(
+			f"Negative control image generated: {neg_image.GetSize()} using {control_strategy_name} and {region_strategy_name}"
+		)
+
 
 if __name__ == "__main__":
 	main()
