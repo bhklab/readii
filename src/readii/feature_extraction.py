@@ -2,8 +2,8 @@ from collections import OrderedDict
 from itertools import chain
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-import numpy as np
 
+import numpy as np
 import pandas as pd
 import SimpleITK as sitk  # noqa
 from imgtools.io import read_dicom_series
@@ -25,7 +25,6 @@ from readii.negative_controls import (
 	applyNegativeControl,
 )
 from readii.utils import logger
-
 
 
 def generateNegativeControl(
@@ -145,9 +144,6 @@ def singleRadiomicFeatureExtraction(
 	# If no pyradiomics paramater file passed, use default
 	if pyradiomicsParamFilePath is None:
 		pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
-	elif not Path(pyradiomicsParamFilePath).exists():
-		msg = f"PyRadiomics parameter file not found at {pyradiomicsParamFilePath}"
-		raise FileNotFoundError(msg)
 	elif not Path(pyradiomicsParamFilePath).exists():
 		msg = f"PyRadiomics parameter file not found at {pyradiomicsParamFilePath}"
 		raise FileNotFoundError(msg)
