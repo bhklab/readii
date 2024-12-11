@@ -5,8 +5,8 @@ from typing import Optional, TypeVar
 import numpy as np
 import SimpleITK as sitk
 
-# Define a TypeVar for the input types
-T = TypeVar("T", sitk.Image, np.ndarray)
+# Define a TypeVar for image-like inputs
+ImageInput = TypeVar("ImageInput", sitk.Image, np.ndarray)
 
 
 @dataclass
@@ -88,10 +88,10 @@ class NegativeControlStrategy(ABC):
 
 	def __call__(
 		self,
-		image: T,
-		mask: Optional[T] = None,
+		image: ImageInput,
+		mask: Optional[ImageInput] = None,
 		region: Optional[RegionStrategy] = None,
-	) -> T:
+	) -> ImageInput:
 		"""Apply the negative control strategy to the input image.
 
 		Parameters
@@ -131,7 +131,7 @@ class NegativeControlStrategy(ABC):
 		return image_array
 
 	@staticmethod
-	def to_array(input_data: T) -> np.ndarray:
+	def to_array(input_data: ImageInput) -> np.ndarray:
 		"""Convert SimpleITK Image to numpy array if needed."""
 		match input_data:
 			case sitk.Image():

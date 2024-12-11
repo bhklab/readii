@@ -9,7 +9,8 @@ from .abstract_classes import NegativeControlStrategy, RegionStrategy
 from .negative_controls import RandomizedControl, SampledControl, ShuffledControl
 from .regions import FullRegion, NonROIRegion, ROIRegion
 
-T = TypeVar("T", np.ndarray, sitk.Image)
+# Define a TypeVar for image-like inputs
+ImageInput = TypeVar("ImageInput", sitk.Image, np.ndarray)
 
 
 REGION_REGISTRY = {cls.region_name: cls for cls in [FullRegion, ROIRegion, NonROIRegion]}
@@ -51,7 +52,9 @@ class NegativeControlManager:
 		"""Get all combinations of negative control and region strategies."""
 		return product(self.negative_control_strategies, self.region_strategies)
 
-	def apply(self, base_image: T, mask: T) -> Iterator[tuple[T, str, str]]:
+	def apply(
+		self, base_image: ImageInput, mask: ImageInput
+	) -> Iterator[tuple[ImageInput, str, str]]:
 		"""Apply the negative control strategies to the region strategies."""
 		for control_strategy, region_strategy in self.strategy_products:
 			yield (
@@ -62,12 +65,12 @@ class NegativeControlManager:
 
 	def apply_single(
 		self,
-		base_image: T,
-		mask: T,
+		base_image: ImageInput,
+		mask: ImageInput,
 		control_strategy: NegativeControlStrategy | str,
 		region_strategy: RegionStrategy | str,
 		random_seed: Optional[int] = None,
-	) -> tuple[T, str, str]:
+	) -> tuple[ImageInput, str, str]:
 		"""Apply a single negative control strategy to a single region strategy.
 
 		Parameters
@@ -87,7 +90,7 @@ class NegativeControlManager:
 
 		Returns
 		-------
-		tuple[T, str, str]
+		tuple[ImageInput, str, str]
 			A tuple containing:
 			- The transformed image
 			- The name of the control strategy used
