@@ -115,7 +115,7 @@ def cropImageAndMask(
 def singleRadiomicFeatureExtraction(
 	ctImage: sitk.Image,
 	roiImage: sitk.Image,
-	pyradiomicsParamFilePath: Optional[str | Path] = "./src/readii/data/default_pyradiomics.yaml",
+	pyradiomicsParamFilePath: Optional[str | Path] = None,
 	negativeControl: Optional[str] = None,
 	randomSeed: Optional[int] = None,
 ) -> OrderedDict[Any, Any]:
