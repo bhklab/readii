@@ -34,9 +34,27 @@ def generateNegativeControl(
 ) -> sitk.Image:
 	"""Generate a negative control for a CT image based on the type of negative control specified.
 
-	negativeControlType : str
-		This string is of the format {negativeControlType}_{negativeControlRegion}
+	Parameters
+	----------
+	ctImage : sitk.Image
+		The CT image to generate a negative control for.
+	
+	negativeControl : str
+		The type of negative control to generate. Assumes string is of the format {negativeControlType}_{negativeControlRegion}
+
+	alignedROIImage : sitk.Image
+		The region of interest (ROI) image to generate a negative control for. Function assumes the image has bee processed with alignImages already.
+	
+	randomSeed : Optional[int]	
+	    Random seed to use in negative control generation. Set for reproducible results.
+	
+	
+	Returns
+	-------
+	sitk.Image
+		Copy of the ctImage with the specified negative control applied.
 	"""
+	# Split the provided negative control into its type and region sections
 	if "non_roi" in negativeControl:
 		negativeControlType = negativeControl.rsplit("_", 2)[0]
 		negativeControlRegion = "non_roi"
@@ -46,6 +64,8 @@ def generateNegativeControl(
 		negativeControlRegion = negativeControlComponents[1]
 	logger.debug(f"Negative control region: {negativeControlRegion}")
 	logger.debug(f"Negative control type: {negativeControlType}")
+
+	# Create and return the specified negative control
 	return applyNegativeControl(
 		baseImage=ctImage,
 		negativeControlType=negativeControlType,
