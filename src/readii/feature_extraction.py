@@ -35,7 +35,6 @@ def generateNegativeControl(
 	randomSeed: Optional[int],
 ) -> sitk.Image:
 	"""Generate a negative control for a CT image based on the type of negative control specified.
-	"""Generate a negative control for a CT image based on the type of negative control specified.
 
 	Parameters
 	----------
@@ -123,8 +122,6 @@ def singleRadiomicFeatureExtraction(
 ) -> OrderedDict[Any, Any]:
 	"""Perform radiomic feature extraction for a single CT image and its corresponding segmentation.
 
-	"""Perform radiomic feature extraction for a single CT image and its corresponding segmentation.
-
 	CT and segmentation will be aligned and cropped prior to extraction.
 
 	Parameters
@@ -146,7 +143,6 @@ def singleRadiomicFeatureExtraction(
 		Dictionary containing image metadata, versions for key packages used for extraction, and radiomic features
 	"""
 	# If no pyradiomics paramater file passed, use default
-	if pyradiomicsParamFilePath is None:
 	if pyradiomicsParamFilePath is None:
 		pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
 	elif not Path(pyradiomicsParamFilePath).exists():
@@ -456,17 +452,6 @@ def radiomicFeatureExtraction(
 	else:
 		# Run feature extraction in parallel
 		features = Parallel(n_jobs=-1, require="sharedmem")(
-			delayed(featureExtraction)(
-				ctSeriesID=ctSeriesID,
-				pdImageInfo=pdImageInfo,
-				imageDirPath=Path(imageDirPath),
-				pyradiomicsParamFilePath=pyradiomicsParamFilePath,
-				roiNames=roiNames,
-				negativeControl=negativeControl,
-				randomSeed=randomSeed,
-				keep_running=keep_running,
-			)
-			for ctSeriesID in ctSeriesIDList
 			delayed(featureExtraction)(
 				ctSeriesID=ctSeriesID,
 				pdImageInfo=pdImageInfo,
