@@ -1,9 +1,6 @@
 cache-dir = "~/.cache/ruff"
 
 # iteratively adding files to the include list
-cache-dir = "~/.cache/ruff"
-
-# iteratively adding files to the include list
 include = [
   "src/readii/loaders.py",
   "src/readii/feature_extraction.py",
