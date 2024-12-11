@@ -270,7 +270,7 @@ def featureExtraction(
 				# Check that if there are multiple rows that it's not due to a CT with subseries (this is fine, the whole series is loaded)
 				and not segSeriesInfo.duplicated(subset=["series_CT"], keep=False).all()
 			):
-				errmsg = "Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in radiogenomic_output."
+				errmsg = "Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in readii_output."
 				plogger.error(errmsg, segSeriesInfo=segSeriesInfo)
 				raise RuntimeError(errmsg)
 
@@ -371,8 +371,6 @@ def radiomicFeatureExtraction(
 
 	Utilizes outputs from med-imagetools (https://github.com/bhklab/med-imagetools) run on the image dataset.
 
-	Utilizes outputs from med-imagetools (https://github.com/bhklab/med-imagetools) run on the image dataset.
-
 	Parameters
 	----------
 	imageMetadataPath : str
@@ -416,22 +414,9 @@ def radiomicFeatureExtraction(
 	ctSeriesIDList = pdImageInfo["series_CT"].unique()
 
 	# Extract radiomic features for each CT, get a list of dictionaries
-	# Each dictionnary contains features for each ROI in a single CT
+	# Each dictionary contains features for each ROI in a single CT
 	if not parallel:
 		# Run feature extraction over samples in sequence - will be slower
-		features = [
-			featureExtraction(
-				ctSeriesID=ctSeriesID,
-				pdImageInfo=pdImageInfo,
-				imageDirPath=Path(imageDirPath),
-				pyradiomicsParamFilePath=pyradiomicsParamFilePath,
-				roiNames=roiNames,
-				negativeControl=negativeControl,
-				randomSeed=randomSeed,
-				keep_running=keep_running,
-			)
-			for ctSeriesID in ctSeriesIDList
-		]
 		features = [
 			featureExtraction(
 				ctSeriesID=ctSeriesID,
