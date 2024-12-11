@@ -111,8 +111,9 @@ class NonROIWithBorderRegion(RegionStrategy):
 	Parameters
 	----------
 	dilation_iterations : int, optional
-		Number of pixels to add as border around the ROI. Defaults to 1.
-	"""
+		Number of iterations for binary dilation, by default 1.
+		See https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.binary_dilation.html#binary-dilation
+	""" 
 
 	region_name: Final[str] = "non_roi_with_border"
 
@@ -122,9 +123,9 @@ class NonROIWithBorderRegion(RegionStrategy):
 		Parameters
 		----------
 		dilation_iterations : int, optional
-			
+
 		"""
-		self.dilation_iterations = dilation_iterations 
+		self.dilation_iterations = dilation_iterations
 
 	def __call__(self, _: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
 		"""Apply the region mask to the image array, adding a border around the ROI.
