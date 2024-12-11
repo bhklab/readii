@@ -1,6 +1,9 @@
 cache-dir = "~/.cache/ruff"
 
 # iteratively adding files to the include list
+cache-dir = "~/.cache/ruff"
+
+# iteratively adding files to the include list
 include = [
   "src/readii/loaders.py",
   "src/readii/feature_extraction.py",
@@ -21,6 +24,25 @@ extend-exclude = [
 line-length = 100
 
 [lint]
+
+# [lint] # commented for now, will iterate on this later
+# select = [
+#   "E",
+#   "F",
+#   "W",   # flake8
+#   "C",   # mccabe
+#   # "N",   # pep8-naming
+#   "ANN", # flake8-annotations
+#   "BLE", # flake8-blind-except
+#   "B",   # flake8-bugbear
+#   "A",   # flake8-builtins
+#   # "G",   # flake8-logging-format
+#   "ERA", # eradicate
+#   "RUF", # Ruff-specific rules
+#   "TCH", # flake8-type-checking
+# ]
+# ignore = ["ANN101"]
+
 
 # [lint] # commented for now, will iterate on this later
 # select = [
@@ -86,6 +108,9 @@ select = [
   # Check for McCabe complexity
   # https://docs.astral.sh/ruff/rules/complex-structure/
   "C",
+  # Check for McCabe complexity
+  # https://docs.astral.sh/ruff/rules/complex-structure/
+  "C",
 
   ###########################################################################
   # STANDARDS & STYLE
@@ -105,8 +130,12 @@ select = [
   # Pydocstyle
   # https://docs.astral.sh/ruff/rules/#pydocstyle-d
   "D",
+  "D",
 ]
 
+# Readii uses a lot of camelcase so ignoring pep-8 conventions. 
+# https://docs.astral.sh/ruff/rules/#pep8-naming-n
+# "N",
 # Readii uses a lot of camelcase so ignoring pep-8 conventions. 
 # https://docs.astral.sh/ruff/rules/#pep8-naming-n
 # "N",

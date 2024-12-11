@@ -27,12 +27,14 @@ from readii.negative_controls import (
 from readii.utils import logger
 
 
+
 def generateNegativeControl(
 	ctImage: sitk.Image,
 	negativeControl: str,
 	alignedROIImage: sitk.Image,
 	randomSeed: Optional[int],
 ) -> sitk.Image:
+	"""Generate a negative control for a CT image based on the type of negative control specified.
 	"""Generate a negative control for a CT image based on the type of negative control specified.
 
 	Parameters
@@ -121,6 +123,8 @@ def singleRadiomicFeatureExtraction(
 ) -> OrderedDict[Any, Any]:
 	"""Perform radiomic feature extraction for a single CT image and its corresponding segmentation.
 
+	"""Perform radiomic feature extraction for a single CT image and its corresponding segmentation.
+
 	CT and segmentation will be aligned and cropped prior to extraction.
 
 	Parameters
@@ -143,13 +147,18 @@ def singleRadiomicFeatureExtraction(
 	"""
 	# If no pyradiomics paramater file passed, use default
 	if pyradiomicsParamFilePath is None:
+	if pyradiomicsParamFilePath is None:
 		pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
+	elif not Path(pyradiomicsParamFilePath).exists():
+		msg = f"PyRadiomics parameter file not found at {pyradiomicsParamFilePath}"
+		raise FileNotFoundError(msg)
 	elif not Path(pyradiomicsParamFilePath).exists():
 		msg = f"PyRadiomics parameter file not found at {pyradiomicsParamFilePath}"
 		raise FileNotFoundError(msg)
 
 	# In case segmentation contains extra axis, flatten to 3D by removing it
 	roiImage = flattenImage(roiImage)
+
 
 	# Segmentation has different origin, align it to the CT for proper feature extraction
 	alignedROIImage = alignImages(ctImage, roiImage)
@@ -370,6 +379,8 @@ def radiomicFeatureExtraction(
 
 	Utilizes outputs from med-imagetools (https://github.com/bhklab/med-imagetools) run on the image dataset.
 
+	Utilizes outputs from med-imagetools (https://github.com/bhklab/med-imagetools) run on the image dataset.
+
 	Parameters
 	----------
 	imageMetadataPath : str
@@ -392,6 +403,7 @@ def radiomicFeatureExtraction(
 	keep_running : bool
 		Flag to keep pipeline running even when feature extraction for a patient fails.
 
+
 	Returns
 	-------
 	pd.DataFrame
@@ -412,9 +424,22 @@ def radiomicFeatureExtraction(
 	ctSeriesIDList = pdImageInfo["series_CT"].unique()
 
 	# Extract radiomic features for each CT, get a list of dictionaries
-	# Each dictionary contains features for each ROI in a single CT
+	# Each dictionnary contains features for each ROI in a single CT
 	if not parallel:
 		# Run feature extraction over samples in sequence - will be slower
+		features = [
+			featureExtraction(
+				ctSeriesID=ctSeriesID,
+				pdImageInfo=pdImageInfo,
+				imageDirPath=Path(imageDirPath),
+				pyradiomicsParamFilePath=pyradiomicsParamFilePath,
+				roiNames=roiNames,
+				negativeControl=negativeControl,
+				randomSeed=randomSeed,
+				keep_running=keep_running,
+			)
+			for ctSeriesID in ctSeriesIDList
+		]
 		features = [
 			featureExtraction(
 				ctSeriesID=ctSeriesID,
@@ -431,6 +456,17 @@ def radiomicFeatureExtraction(
 	else:
 		# Run feature extraction in parallel
 		features = Parallel(n_jobs=-1, require="sharedmem")(
+			delayed(featureExtraction)(
+				ctSeriesID=ctSeriesID,
+				pdImageInfo=pdImageInfo,
+				imageDirPath=Path(imageDirPath),
+				pyradiomicsParamFilePath=pyradiomicsParamFilePath,
+				roiNames=roiNames,
+				negativeControl=negativeControl,
+				randomSeed=randomSeed,
+				keep_running=keep_running,
+			)
+			for ctSeriesID in ctSeriesIDList
 			delayed(featureExtraction)(
 				ctSeriesID=ctSeriesID,
 				pdImageInfo=pdImageInfo,
