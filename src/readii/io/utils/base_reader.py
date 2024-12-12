@@ -1,0 +1,129 @@
+from __future__ import annotations
+
+import re
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any, Dict, List
+
+from readii.io.utils.directory_scanner import DirectoryScanner
+from readii.io.utils.file_filter import FileFilter, FilteredFiles, FileDict
+from readii.io.utils.pattern_resolver import PatternResolver
+from readii.utils import logger
+
+
+@dataclass
+class BaseReader:
+  """Base class for reading files based on a pattern and extracting metadata."""
+
+  root_directory: str | Path  # Directory to scan for files
+  filename_pattern: str  # Pattern to match filenames
+  pattern_resolver: PatternResolver = field(init=False)  # Resolver for filename patterns
+  directory_scanner: DirectoryScanner = field(init=False)  # Scanner for directories
+  file_filter: FileFilter = field(default=FileFilter(), init=False)  # Filter for files
+
+  mapped_files: List[FileDict] = field(default_factory=list, init=False)
+  def __post_init__(self) -> None: # noqa
+    self.pattern_resolver = PatternResolver(self.filename_pattern)
+    self.directory_scanner = DirectoryScanner(Path(self.root_directory))
+    self.root_directory = Path(self.root_directory)
+    assert self.root_directory.exists(), f"Root directory {self.root_directory} does not exist."
+
+
+  def locate_files(self) -> List[Path]:
+    """Locate files in the directory that match the filename pattern.
+ 
+    Returns
+    -------
+    List[Path]
+        List of file paths that match the pattern.
+    """
+    return self.directory_scanner.scan()
+
+  def extract_metadata(self, file_path: Path) -> Dict[str, Any]:
+    """Extract metadata from the file path based on the pattern.
+
+    Parameters
+    ----------
+    file_path : Path
+        The file path to extract metadata from.
+
+    Returns
+    -------
+    Dict[str, Any]
+        Dictionary containing extracted metadata.
+
+    Raises
+    ------
+    ValueError
+        If the filename does not match the pattern.
+    """
+    regex_pattern = self.pattern_resolver.formatted_pattern.replace("%(", "(?P<").replace(")s", ">.*?)")
+    matcher = re.match(regex_pattern, str(file_path))
+
+    if matcher:
+      return matcher.groupdict()
+    msg = f"Filename '{file_path}' does not match the expected pattern: {self.pattern_resolver.formatted_pattern}"
+    raise ValueError(msg)
+
+  def map_files(self) -> FilteredFiles:
+    """Map files in the root directory to their extracted metadata.
+
+    Returns
+    -------
+    FilteredFiles
+        An instance of FilteredFiles containing the mapped files.
+    """
+    if self.mapped_files != []:
+      return FilteredFiles(files=self.mapped_files)
+
+    unmatched = []
+    for file_path in self.locate_files():
+      try:
+        metadata = self.extract_metadata(file_path.relative_to(self.root_directory))
+        metadata["file_path"] = file_path
+        self.mapped_files.append(metadata)
+      except ValueError as ve:
+        unmatched.append(file_path)
+        logger.warning(f"Skipping file {file_path}, as it does not match the pattern.", error=ve, valid_keys=self.pattern_resolver.keys)
+    if unmatched:
+      logger.debug(f"Unmatched files: {len(unmatched)}", unmatched=unmatched)
+    return FilteredFiles(files=self.mapped_files)
+
+
+if __name__ == "__main__":
+  import subprocess
+  import tempfile
+  from pathlib import Path
+
+  from rich import print  # noqa
+
+  # Create a temporary directory
+  # MAKE SOME FAKE DATA
+  temp_path = Path(tempfile.mkdtemp())
+  temp_path.mkdir(parents=True, exist_ok=True)
+
+  for i in range(1, 4):
+    for j in range(100,110):
+      fp = temp_path / "example_data" / f"PatientID-{i:03d}" / f"Data-{j:03d}.txt"
+      fp.parent.mkdir(parents=True, exist_ok=True)
+      fp.write_text(f"Example content {i}-{j}")
+
+  tree_output = subprocess.check_output(["tree", temp_path])
+  print(tree_output.decode("utf-8"))
+
+  # Define a filename pattern
+  filename_pattern = "example_data/PatientID-{PatientID}/Data-{Data}.txt"
+
+  # Initialize BaseReader
+  reader = BaseReader(root_directory=temp_path, filename_pattern=filename_pattern)
+
+  # Locate and filter files
+  located_files = reader.map_files()
+
+  print(located_files)
+
+
+  print(
+    reader.map_files().filter(filters=[{"PatientID": ["001", "002"]}, {"Data": "100"}])
+  )
+
