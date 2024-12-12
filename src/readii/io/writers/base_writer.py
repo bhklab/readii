@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from types import TracebackType
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, ClassVar, Dict, Optional, Tuple
 
 from imgtools.dicom.sort.exceptions import InvalidPatternError
 from imgtools.dicom.sort.parser import PatternParser
@@ -16,8 +16,9 @@ from readii.utils import logger
 class PatternResolver:
 	"""Handles parsing and validating filename patterns."""
 
-	DEFAULT_PATTERN: re.Pattern = field(default=re.compile(r"%(\w+)|\{(\w+)\}"), init=False)
 	filename_format: str = field(init=True)
+
+	DEFAULT_PATTERN: ClassVar[re.Pattern] = re.compile(r"%(\w+)|\{(\w+)\}")
 
 	def __init__(self, filename_format: str) -> None:
 		self.filename_format = filename_format
@@ -41,12 +42,12 @@ class PatternResolver:
 		Returns
 		-------
 		Tuple[str, List[str]]
-		  The formatted pattern string and a list of extracted keys.
+			The formatted pattern string and a list of extracted keys.
 
 		Raises
 		------
 		InvalidPatternError
-		  If the pattern contains no valid placeholders or is invalid.
+			If the pattern contains no valid placeholders or is invalid.
 		"""
 		return self.pattern_parser.parse()
 
@@ -56,17 +57,17 @@ class PatternResolver:
 		Parameters
 		----------
 		context : Dict[str, Any]
-		  Dictionary containing key-value pairs to substitute in the pattern.
+			Dictionary containing key-value pairs to substitute in the pattern.
 
 		Returns
 		-------
 		str
-		  The resolved pattern string with placeholders replaced by values.
+			The resolved pattern string with placeholders replaced by values.
 
 		Raises
 		------
 		ValueError
-		  If a required key is missing from the context dictionary.
+			If a required key is missing from the context dictionary.
 		"""
 		try:
 			return self.formatted_pattern % context
@@ -90,8 +91,8 @@ class BaseWriter(ABC):
 	# optionally, you can set create_dirs to False if you want to handle the directory creation yourself
 	create_dirs: bool = field(default=True)
 
-	# subclasses dont need to worry about the pattern_resolver
-	pattern_resolver: PatternResolver = field(init=False)
+	# class-level pattern resolver instance shared across all instances
+	pattern_resolver: ClassVar[PatternResolver] = field(init=False)
 
 	def __post_init__(self) -> None:
 		"""Initialize the writer with the given root directory and filename format."""
@@ -116,7 +117,7 @@ class BaseWriter(ABC):
 			"date_time": now.strftime("%Y-%m-%d_%H%M%S"),
 		}
 
-	def resolve_path(self, **kwargs: str) -> Path:
+	def resolve_path(self, **kwargs: Any) -> Path:  # noqa
 		"""Generate a file path based on the filename format, subject ID, and additional parameters."""
 		context = {**self._generate_datetime_strings(), **kwargs}
 		filename = self.pattern_resolver.resolve(context)
@@ -148,11 +149,11 @@ class BaseWriter(ABC):
 		Parameters
 		----------
 		exc_type : Optional[type]
-		    The exception type, if an exception was raised, otherwise None.
+				The exception type, if an exception was raised, otherwise None.
 		exc_value : Optional[BaseException]
-		    The exception instance, if an exception was raised, otherwise None.
+				The exception instance, if an exception was raised, otherwise None.
 		traceback : Optional[Any]
-		    The traceback object, if an exception was raised, otherwise None.
+				The traceback object, if an exception was raised, otherwise None.
 		"""
 		if exc_type:
 			logger.error(
