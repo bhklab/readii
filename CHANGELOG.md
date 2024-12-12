@@ -1,6 +1,37 @@
 # CHANGELOG
 
 
+## v1.20.0 (2024-12-12)
+
+### Features
+
+- Initialize documentation ([#85](https://github.com/bhklab/readii/pull/85),
+  [`3b2c294`](https://github.com/bhklab/readii/commit/3b2c29404c4266a438dbd8e56b1aef09ffa06b40))
+
+Start of documentation, mostly copied the core dependencies and plugins from med-imagetools
+
+- Set up initial documentation structure using MkDocs, including configuration and integration of
+  Markdown files for the README and CHANGELOG.
+
+this "core" would be the base of the main vs 2.0 branch
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** 	- Added badges for project health and status in the README. - Expanded
+  installation instructions with a new environment setup method. 	- Introduced a section for serving
+  documentation locally.
+
+- **Documentation** - Enhanced clarity and structure of the README, including command-line options
+  and contributing guidelines. 	- Updated inclusion method for CHANGELOG and README in
+  documentation. - Introduced a new configuration file for MkDocs documentation, improving
+  navigation and usability.
+
+- **Bug Fixes** - Corrected formatting for bash commands in the README to enhance readability.
+
+- **Chores** 	- Updated project version and dependencies in the configuration files. <!-- end of
+  auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.19.0 (2024-12-11)
 
 ### Features
