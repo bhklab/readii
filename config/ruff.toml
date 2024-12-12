@@ -5,7 +5,7 @@ include = [
   "src/readii/loaders.py",
   "src/readii/feature_extraction.py",
   "src/readii/negative_controls_refactor/**.py",
-  "src/readii/io/writers/**.py",
+  "src/readii/io/**/**.py",
 ]
 
 # extend-exclude is used to exclude directories from the flake8 checks
