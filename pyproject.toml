@@ -39,6 +39,7 @@ readii = { path = ".", editable = true }
 
 [tool.pixi.environments]
 dev = { features = ["test", "style", "docs", "dev"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
 publish = { features = ["build", "release"], solve-group = "default" }
 py310 = ["py310", "test"]
 py311 = ["py311", "test"]
@@ -89,8 +90,8 @@ description = "Run pytest and generate coverage report"
 
 ############################################## DOCS ################################################
 [tool.pixi.feature.docs.dependencies]
-mkdocs = "*"
-mike = "*"
+mkdocs = ">=1.6"
+mike = ">=2.1"
 mkdocs-material = ">=9.5.44,<10"
 mkdocstrings = ">=0.27.0,<0.28"
 mkdocstrings-python = ">=1.12.2,<2"
