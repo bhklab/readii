@@ -1,4 +1,4 @@
-from readii.io.loaders.general import *
+from readii.io.loaders.general import loadImageDatasetConfig
 import pytest
 
 @pytest.fixture
