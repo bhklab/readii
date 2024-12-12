@@ -1,13 +1,8 @@
-```{include} ../README.md
-```
+# READII (Radiomic Extraction and Analysis for DICOM Images)
 
-```{toctree}
-:maxdepth: 1
-:hidden:
-
-example.ipynb
-changelog.md
-contributing.md
-conduct.md
-autoapi/index
-```
+{%
+  include-markdown "../README.md"
+  start="<!--intro-start-->"
+  end="<!--intro-end-->"
+  rewrite-relative-urls=false
+%}

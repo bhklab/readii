@@ -1,4 +1,5 @@
 # READII
+<!--intro-start-->
 [![codecov](https://codecov.io/gh/bhklab/readii/graph/badge.svg?token=obsN5dhXPx)](https://codecov.io/gh/bhklab/readii)
 [![CI-CD](https://github.com/bhklab/readii/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/bhklab/readii/actions/workflows/ci-cd.yml)
 [![CodeFactor](https://www.codefactor.io/repository/github/bhklab/readii/badge)](https://www.codefactor.io/repository/github/bhklab/readii)
@@ -23,6 +24,7 @@ $ pip install readii
 ```
 
 ### (recommended) Create new `pixi` environment for a project
+
 ```bash
 mkdir my_project
 cd my_project
@@ -31,13 +33,15 @@ pixi add --pypi readii
 ```
 
 ### (recommended) Create new conda virtual environment
-```
+
+```bash
 conda create -n readii python=3.9
 conda activate readii
 pip install readii
 ```
 
 ## Usage
+
 `readii` is a tool to perform radiomic feature extraction on DICOM CT images with region of interest (ROI) segmentations as either DICOM SEG or RTSTRUCT.
 
 ```bash
@@ -51,21 +55,23 @@ $ readii [INPUT DIRECTORY] [OUTPUT DIRECTORY] \
 
 ### Negative control options
 
-Negative controls are applied to one of three masks: 
+Negative controls are applied to one of three masks:
+
 1. full = voxels in the entire image
 2. roi = just voxels within the specified region of interest (ROI) in the segmentation
 3. non_roi = all voxels except the ROI.
 
 The three transformations are:
+
 1. shuffle = shuffle all voxels in the specified mask
 2. randomized = randomly generate new values within the original range within the specified mask
 3. randomized_sampled = randomly sample original values with replacement to get new values within the specified mask
 
-
 ## Contributing
 
 Please use the following angular commit message format:
-```
+
+```text
 <type>(optional scope): short summary in present tense
 
 (optional body: explains motivation for the change)
@@ -73,6 +79,7 @@ Please use the following angular commit message format:
 (optional footer: note BREAKING CHANGES here, and issues to be closed)
 
 ```
+
 `<type>` refers to the kind of change made and is usually one of:
 
 - `feat`: A new feature.
@@ -88,10 +95,14 @@ Please use the following angular commit message format:
 
 Interested in contributing? Check out the contributing guidelines. Please note that this project is released with a Code of Conduct. By contributing to this project, you agree to abide by its terms.
 
+### Serve Documentation Locally
+
+```bash
+pixi run -e docs doc-serve
+```
+
 ## License
 
 `readii` was created by Katy Scott. It is licensed under the terms of the MIT license.
 
-## Credits
-
-`readii` was created with [`cookiecutter`](https://cookiecutter.readthedocs.io/en/latest/) and the `py-pkgs-cookiecutter` [template](https://github.com/py-pkgs/py-pkgs-cookiecutter).
+<!--intro-end-->
