@@ -92,7 +92,7 @@ class BaseWriter(ABC):
 	create_dirs: bool = field(default=True)
 
 	# class-level pattern resolver instance shared across all instances
-	pattern_resolver: ClassVar[PatternResolver] = field(init=False)
+	pattern_resolver: PatternResolver = field(init=False)
 
 	def __post_init__(self) -> None:
 		"""Initialize the writer with the given root directory and filename format."""
@@ -168,3 +168,4 @@ class BaseWriter(ABC):
 			and not (self.root_directory.iterdir())
 		):
 			logger.debug(f"Deleting empty directory {self.root_directory}")
+			self.root_directory.rmdir()  # remove the directory if it's empty
