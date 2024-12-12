@@ -6,28 +6,42 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from readii.io.utils.directory_scanner import DirectoryScanner
-from readii.io.utils.file_filter import FileFilter, FilteredFiles, FileDict
+from readii.io.utils.file_filter import FileDict, FileFilter, FilteredFiles
 from readii.io.utils.pattern_resolver import PatternResolver
 from readii.utils import logger
 
 
 @dataclass
 class BaseReader:
-  """Base class for reading files based on a pattern and extracting metadata."""
+  """Base class for reading files based on a pattern and extracting metadata.
+
+  Parameters
+  ----------
+  root_directory : str | Path
+      Directory to scan for files.
+  filename_pattern : str
+      Pattern to match filenames.
+  **scanner_kwargs : Any
+      Additional keyword arguments to pass to DirectoryScanner.
+  """
 
   root_directory: str | Path  # Directory to scan for files
   filename_pattern: str  # Pattern to match filenames
-  pattern_resolver: PatternResolver = field(init=False)  # Resolver for filename patterns
-  directory_scanner: DirectoryScanner = field(init=False)  # Scanner for directories
-  file_filter: FileFilter = field(default=FileFilter(), init=False)  # Filter for files
+  pattern_resolver: PatternResolver
+  directory_scanner: DirectoryScanner
+  file_filter: FileFilter
 
-  mapped_files: List[FileDict] = field(default_factory=list, init=False)
-  def __post_init__(self) -> None: # noqa
-    self.pattern_resolver = PatternResolver(self.filename_pattern)
-    self.directory_scanner = DirectoryScanner(Path(self.root_directory))
-    self.root_directory = Path(self.root_directory)
+  mapped_files: List[FileDict] = field(default_factory=list)
+
+  def __init__(self, root_directory: str | Path, filename_pattern: str, **scanner_kwargs: Any) -> None:  # noqa: ANN401
+    self.root_directory = Path(root_directory)
     assert self.root_directory.exists(), f"Root directory {self.root_directory} does not exist."
 
+    self.filename_pattern = filename_pattern
+    self.pattern_resolver = PatternResolver(self.filename_pattern)
+
+    self.directory_scanner = DirectoryScanner(self.root_directory, **scanner_kwargs)
+    self.mapped_files = []  # Initialize mapped_files
 
   def locate_files(self) -> List[Path]:
     """Locate files in the directory that match the filename pattern.
@@ -60,12 +74,13 @@ class BaseReader:
     regex_pattern = self.pattern_resolver.formatted_pattern.replace("%(", "(?P<").replace(")s", ">.*?)")
     matcher = re.match(regex_pattern, str(file_path))
 
-    if matcher:
+    if (matcher):
       return matcher.groupdict()
     msg = f"Filename '{file_path}' does not match the expected pattern: {self.pattern_resolver.formatted_pattern}"
     raise ValueError(msg)
 
-  def map_files(self) -> FilteredFiles:
+  @property
+  def files(self) -> FilteredFiles:
     """Map files in the root directory to their extracted metadata.
 
     Returns
@@ -73,7 +88,7 @@ class BaseReader:
     FilteredFiles
         An instance of FilteredFiles containing the mapped files.
     """
-    if self.mapped_files != []:
+    if self.mapped_files:
       return FilteredFiles(files=self.mapped_files)
 
     unmatched = []
@@ -95,35 +110,43 @@ if __name__ == "__main__":
   import tempfile
   from pathlib import Path
 
-  from rich import print  # noqa
 
-  # Create a temporary directory
+  ################################################################################################
   # MAKE SOME FAKE DATA
+  ################################################################################################
   temp_path = Path(tempfile.mkdtemp())
   temp_path.mkdir(parents=True, exist_ok=True)
 
   for i in range(1, 4):
-    for j in range(100,110):
-      fp = temp_path / "example_data" / f"PatientID-{i:03d}" / f"Data-{j:03d}.txt"
-      fp.parent.mkdir(parents=True, exist_ok=True)
-      fp.write_text(f"Example content {i}-{j}")
+    for k in range(1, 6):
+      for feature_type in ["some", "other", "features"]:
+        fp = temp_path / "example_data" / f"PatientID-{i:03d}" / f"Series-{k:02d}" / f"features-{feature_type}.txt"
+        fp.parent.mkdir(parents=True, exist_ok=True)
+        fp.write_text(f"Example content {i}-{k}-{feature_type}")
 
-  tree_output = subprocess.check_output(["tree", temp_path])
-  print(tree_output.decode("utf-8"))
+  tree_output = subprocess.check_output(["tree", "-F", temp_path])
+  print(tree_output.decode("utf-8")) # noqa
 
+  ################################################################################################
+  # Example usage
+  ################################################################################################
+
+  from rich import print  # noqa
   # Define a filename pattern
-  filename_pattern = "example_data/PatientID-{PatientID}/Data-{Data}.txt"
+  FILE_PATTERN = "example_data/PatientID-{PatientID}/Series-{Series}/features-{feature_type}.txt"
 
   # Initialize BaseReader
-  reader = BaseReader(root_directory=temp_path, filename_pattern=filename_pattern)
-
-  # Locate and filter files
-  located_files = reader.map_files()
-
-  print(located_files)
-
+  reader = BaseReader(root_directory=temp_path, filename_pattern=FILE_PATTERN)
 
   print(
-    reader.map_files().filter(filters=[{"PatientID": ["001", "002"]}, {"Data": "100"}])
+    reader
+    .files
+    .filter(filters=[{"PatientID": ["001", "002"]}, {"Series": ["01", "04"]}, {"feature_type": "some"}])
   )
 
+  print(
+    reader.files
+    .filter(PatientID="001")
+    .filter(Series=lambda x: x in ["01", "04"])
+    .filter(feature_type="some")
+  )

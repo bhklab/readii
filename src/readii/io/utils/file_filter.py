@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, Iterator, List, Union
 
 FileDict = Dict[str, Union[Path, str]]
 
@@ -42,6 +42,9 @@ class FileFilter:
 				if isinstance(value, list):
 					if file.get(key) not in value:
 						return False
+				elif callable(value):
+					if not value(file.get(key)):
+						return False
 				elif file.get(key) != value:
 					return False
 			return True
@@ -58,15 +61,21 @@ class FileFilter:
 
 @dataclass
 class FilteredFiles:
-		"""A container class for filtering collections of files based on specified criteria.
+	"""A container class for filtering collections of files based on specified criteria.
 
-		Attributes
-		----------
-			files: A list of dictionaries containing file information with Path or string values.
-		"""
+	Attributes
+	----------
+		files: A list of dictionaries containing file information with Path or string values.
+	"""
 
-		files: List[FileDict]
+	files: List[FileDict]
 
-		def filter(self, filters: List[Dict[str, Any]] | None = None, **kwargs: Any) -> FilteredFiles: # noqa
-				filtered_files = FileFilter.filter(self.files, filters=filters, **kwargs)
-				return FilteredFiles(files=filtered_files)
+	def filter(self, filters: List[Dict[str, Any]] | None = None, **kwargs: Any) -> FilteredFiles: # noqa
+		filtered_files = FileFilter.filter(self.files, filters=filters, **kwargs)
+		return FilteredFiles(files=filtered_files)
+
+	def __len__(self) -> int: # noqa
+		return len(self.files)
+
+	def __iter__(self) -> Iterator[FileDict]: # noqa
+		return iter(self.files)
