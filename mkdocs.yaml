@@ -25,6 +25,10 @@ dev_addr: 127.0.0.1:8001
 # The layout of the navigation links
 nav:
   - Home: index.md
+  - "API Reference":
+      - "IO Module":
+          - "BaseReader": api_reference/io/base_reader.md
+          - "BaseWriter": api_reference/io/base_writer.md
   - Changelog: changelog.md
 
 plugins:
@@ -32,6 +36,43 @@ plugins:
   - search                            # necessary for search functionality to work
   - git-authors                       # adds authors to pages using git history
   - include-markdown                  # allows for including Markdown files into another Markdown file
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
+          options:
+            # docstrings
+            docstring_style: numpy
+            docstring_options:
+              ignore_init_summary: true     # Ignore the first line in __init__ methods' docstrings.
+              warn_unknown_params: true     # Warn about parameters documented in docstrings that do not appear in the signature. Default: true.
+            show_docstring_examples: true
+            show_docstring_raises: false
+            docstring_section_style: table
+            filters: ["!^_"]
+            # heading_level: 1
+            merge_init_into_class: true  
+            inherited_members: true
+            parameter_headings: true
+            relative_crossrefs: true
+            scoped_crossrefs: true
+            show_bases: false
+            show_inheritance_diagram: true
+            show_root_heading: true
+            show_root_full_path: true
+            # Signatures
+            annotations_path: brief
+            modernize_annotations: true    # https://mkdocstrings.github.io/python/usage/configuration/signatures/#modernize_annotations
+            separate_signature: true        # https://mkdocstrings.github.io/python/usage/configuration/signatures/#separate_signature
+            show_signature_annotations: true
+            signature_crossrefs: true
+            unwrap_annotated: true
+            # show_source: false
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            summary: 
+              functions: true
+
   
 theme: 
   name: material

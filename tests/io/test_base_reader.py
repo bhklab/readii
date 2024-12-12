@@ -2,7 +2,7 @@ import os
 import pytest
 from pathlib import Path
 from typing import Any
-from readii.io.utils.base_reader import BaseReader # type: ignore
+from readii.io.readers.base_reader import BaseReader # type: ignore
 
 class CSVReader(BaseReader):
     def __init__(self, root_directory: str | Path, **scanner_kwargs: Any) -> None:
