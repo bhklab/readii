@@ -1,0 +1,20 @@
+# Config file for NSCLC_Radiogenomics for READII
+dataset_name: NSCLC_Radiogenomics 
+
+### CLINICAL VARIABLE INFORMATION ###
+# Event values should be in the order [Alive_value, Dead_value]
+outcome_variables:
+    time_label: ""
+    event_label: "Survival Status"
+    convert_to_years: False
+    event_value_mapping: {'Alive': 0, 'Dead': 1}
+
+exclusion_variables: 
+
+train_test_split:
+    split: False
+    split_variable: 
+    impute: 
+
+
+image_types: ["original", "shuffled_full","shuffled_roi","shuffled_non_roi","randomized_sampled_full","randomized_sampled_roi","randomized_sampled_non_roi"]
