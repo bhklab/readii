@@ -44,7 +44,7 @@ class NIFTIWriter(BaseWriter):
 	)
 
 	# Make extensions immutable
-	VALID_EXTENSIONS: ClassVar[list[str]]= [
+	VALID_EXTENSIONS: ClassVar[list[str]] = [
 		".nia",
 		".nii",
 		".nii.gz",
@@ -117,8 +117,10 @@ class NIFTIWriter(BaseWriter):
 			logger.info("Image saved successfully.", out_path=out_path)
 			return out_path
 
+
 if __name__ == "__main__":
 	from rich import print  # noqa
+
 	nifti_writer = NIFTIWriter(
 		root_directory=Path("TRASH", "nifti_writer_examples"),
 		filename_format="{NegativeControl}_{Region}/{SubjectID}_{Modality}.nii.gz",
