@@ -2,7 +2,7 @@
 import os
 import pytest
 from pathlib import Path
-from readii.io.writers.base_writer import BaseWriter
+from readii.io.writers.base_writer import BaseWriter # type: ignore
 
 class SimpleWriter(BaseWriter):
     def save(self, content: str) -> Path:
