@@ -1,7 +1,6 @@
 import re
 from pandas import DataFrame, Series
 import numpy as np
-import pandas as pd
 from typing import Optional
 
 from readii.utils import logger
@@ -256,7 +255,7 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
             if set(existing_event_values) != set(event_column_value_mapping.keys()):
                 msg = f"Not all event values in {outcome_column_label} are handled by the provided event_column_value_mapping dictionary."
                 logger.exception(msg)
-                raise e
+                raise ValueError()
         
                 # TODO: add handling for values not in the dictionary
         
