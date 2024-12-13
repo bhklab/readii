@@ -146,8 +146,8 @@ dmypy.json
 
 # Test outputs
 tests/output/*
-tests/NSCLC_Radiogenomics/results/*
-tests/4D-Lung/results/*
+tests/*/procdata/*
+tests/*/results/*
 
 # pixi environments
 .pixi
