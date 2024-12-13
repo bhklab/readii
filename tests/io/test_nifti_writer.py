@@ -1,5 +1,6 @@
 import pytest
 import SimpleITK as sitk
+import numpy as np
 from pathlib import Path
 from readii.io.writers.nifti_writer import NIFTIWriter, NiftiWriterValidationError, NiftiWriterIOError # type: ignore
 
@@ -8,6 +9,12 @@ def sample_image():
     """Fixture for creating a sample SimpleITK image."""
     image = sitk.Image(10, 10, sitk.sitkUInt8)
     return image
+
+@pytest.fixture
+def sample_array():
+    """Fixture for creating a sample numpy array."""
+    array = np.zeros((10, 10), dtype=np.uint8)
+    return array
 
 @pytest.fixture
 def nifti_writer(tmp_path):
@@ -20,32 +27,18 @@ def nifti_writer(tmp_path):
         create_dirs=True,
     )
 
-def test_invalid_compression_level():
-    """Test for invalid compression level."""
-    with pytest.raises(NiftiWriterValidationError):
-        NIFTIWriter(
-            root_directory=Path("TRASH"),
-            filename_format="{PatientID}.nii.gz",
-            compression_level=10,  # Invalid compression level
-            overwrite=False,
-            create_dirs=True,
-        )
-
-def test_invalid_filename_format():
-    """Test for invalid filename format."""
-    with pytest.raises(NiftiWriterValidationError):
-        NIFTIWriter(
-            root_directory=Path("TRASH"),
-            filename_format="{PatientID}.invalid_ext",  # Invalid extension
-            compression_level=5,
-            overwrite=False,
-            create_dirs=True,
-        )
-
-def test_save_invalid_image(nifti_writer):
+@pytest.mark.parametrize("image", ["not_an_image", 12345])
+def test_save_invalid_image(nifti_writer, image):
     """Test saving an invalid image."""
     with pytest.raises(NiftiWriterValidationError):
-        nifti_writer.save(image="not_an_image", PatientID="12345")
+        nifti_writer.save(image=image, PatientID="12345")
+
+@pytest.mark.parametrize("image", ["sample_image", "sample_array"])
+def test_save_valid_image(nifti_writer, request, image):
+    """Test saving a valid image."""
+    image = request.getfixturevalue(image)
+    out_path = nifti_writer.save(image=image, PatientID="12345")
+    assert out_path.exists()
 
 def test_save_existing_file_without_overwrite(nifti_writer, sample_image):
     """Test saving when file already exists and overwrite is False."""

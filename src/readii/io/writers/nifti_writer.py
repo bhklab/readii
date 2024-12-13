@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import ClassVar
 
+import numpy as np
 import SimpleITK as sitk
 
 from readii.io.writers.base_writer import BaseWriter
@@ -63,12 +64,12 @@ class NIFTIWriter(BaseWriter):
 			msg = f"Invalid filename format {self.filename_format}. Must end with one of {self.VALID_EXTENSIONS}."
 			raise NiftiWriterValidationError(msg)
 
-	def save(self, image: sitk.Image, PatientID: str, **kwargs: str | int) -> Path:
+	def save(self, image: sitk.Image | np.ndarray, PatientID: str, **kwargs: str | int) -> Path:
 		"""Write the SimpleITK image to a NIFTI file.
 
 		Parameters
 		----------
-		image : sitk.Image
+		image : sitk.Image | np.ndarray
 			The SimpleITK image to save
 		PatientID : str
 			Required patient identifier
@@ -87,9 +88,14 @@ class NIFTIWriter(BaseWriter):
 		NiftiWriterValidationError
 			If image is invalid
 		"""
-		if not isinstance(image, sitk.Image):
-			msg = "Input must be a SimpleITK Image"
-			raise NiftiWriterValidationError(msg)
+		match image:
+			case sitk.Image():
+				pass
+			case np.ndarray():
+				image = sitk.GetImageFromArray(image)
+			case _:
+				msg = "Input must be a SimpleITK Image or a numpy array"
+				raise NiftiWriterValidationError(msg)
 
 		logger.debug("Saving.", kwargs=kwargs)
 
@@ -114,7 +120,7 @@ class NIFTIWriter(BaseWriter):
 			return out_path
 
 
-if __name__ == "__main__":
+if __name__ == "__main__": # pragma: no cover
 	from rich import print  # noqa
 
 	nifti_writer = NIFTIWriter(
