@@ -100,7 +100,7 @@ class PatternResolver:
 
 		Raises
 		------
-		ValueError
+		PatternResolverError
 			If a required key is missing from the context dictionary.
 		"""
 		if None in context.values():
