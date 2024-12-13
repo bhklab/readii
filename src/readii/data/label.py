@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from typing import Optional
 
+from readii.utils import logger
 from readii.data.split import replaceColumnValues
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
@@ -31,10 +32,12 @@ def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
     patient_identifier = dataframe_to_search.filter(regex=id_search_term).columns.to_list()
 
     if len(patient_identifier) > 1:
-        print(f"Multiple patient identifier labels found. Using {patient_identifier[0]}.")
+        logger.debug(f"Multiple patient identifier labels found. Using {patient_identifier[0]}.")
     
     elif len(patient_identifier) == 0:
-        raise ValueError("Dataframe doesn't have a recognizeable patient ID column. Must contain patient or case ID.")
+        msg = "Dataframe doesn't have a recognizeable patient ID column. Must contain patient or case ID."
+        logger.exception(msg)
+        raise ValueError()
 
     return patient_identifier[0]
 
@@ -114,13 +117,16 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
     # Check if the outcome column is numeric
     if not np.issubdtype(dataframe_with_outcome[outcome_column_label].dtype, np.number):
-        raise ValueError(f"{outcome_column_label} is not numeric. Please confirm outcome_column_label is the correct column or convert the column in the dataframe to numeric.")
+        msg = f"{outcome_column_label} is not numeric. Please confirm outcome_column_label is the correct column or convert the column in the dataframe to numeric."
+        logger.exception(msg)
+        raise ValueError()
+        
     else:
         # Make a copy of the dataframe to work on
         dataframe_with_standardized_outcome = dataframe_with_outcome.copy()
 
-
         if convert_to_years:
+            logger.debug("Converting outcome column to years by dividing by 365.")
             # Create a copy of the outcome column and convert it to years
             dataframe_with_standardized_outcome = convertDaysToYears(dataframe_with_standardized_outcome, outcome_column_label)
 
@@ -231,7 +237,9 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
             # Make values of outcome column lowercase
             dataframe_with_standardized_outcome[outcome_column_label] = dataframe_with_outcome[outcome_column_label].str.lower()
         except Exception as e:
-            raise ValueError(f"Error converting string event column {outcome_column_label} to lowercase. Please check the column is a string type and try again.") from e
+            msg = f"Error converting string event column {outcome_column_label} to lowercase. Please check the column is a string type and try again."
+            logger.exception(msg)
+            raise e
         
         # Get the existing event values in the provided dataframe and and sort them
         existing_event_values = sorted(dataframe_with_standardized_outcome[outcome_column_label].unique())
@@ -246,7 +254,9 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
             # Check if user provided dictionary handles all event values in the outcome column
             if set(existing_event_values) != set(event_column_value_mapping.keys()):
-                raise ValueError(f"Not all event values in {outcome_column_label} are handled by the provided event_column_value_mapping dictionary.")
+                msg = f"Not all event values in {outcome_column_label} are handled by the provided event_column_value_mapping dictionary."
+                logger.exception(msg)
+                raise e
         
                 # TODO: add handling for values not in the dictionary
         
@@ -264,7 +274,9 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
     
     # end string handling
     else:
-        raise TypeError(f"Event column {outcome_column_label} is not a valid type. Must be a string, boolean, or numeric.")
+        msg = f"Event column {outcome_column_label} is not a valid type. Must be a string, boolean, or numeric."
+        logger.exception(msg)
+        raise TypeError()
 
 
     return dataframe_with_standardized_outcome
