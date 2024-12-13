@@ -29,19 +29,23 @@ class PatternResolver:
 	Given a filename format like `"{subject_id}_{date}/{disease}.txt"`, the pattern parser 
 	will extract the following keys:
 
-	>>> keys
+	>>> pattern_resolver.keys
 	{'subject_id', 'date', 'disease'}
 
 	And the following formatted pattern:
 
-	>>> formatted_pattern
+	>>> pattern_resolver.formatted_pattern
 	%(subject_id)s_%(date)s/%(disease)s.txt
 
 	So you could resolve the pattern like this:
 
 	>>> data_dict = {"subject_id": "JohnDoe", "date": "January-01-2025", "disease": "cancer"}
 
-	>>> formatted_pattern % data_dict
+	>>> pattern_resolver.formatted_pattern % data_dict 
+	'JohnDoe_01-01-2025/cancer.txt'
+
+	A more convenient way to resolve the pattern is to use the `resolve` method:	
+	>>> pattern_resolver.resolve(data_dict))
 	'JohnDoe_01-01-2025/cancer.txt'
 	"""
 
@@ -108,9 +112,9 @@ class PatternResolver:
 		try:
 			return self.formatted_pattern % context
 		except KeyError as e:
-			missing_key = e.args[0]
-			valid_keys = ", ".join(context.keys())
-			msg = f"Missing value for placeholder '{missing_key}'. Valid keys: {valid_keys}"
-			msg += "\nPlease provide a value for this key in the `kwargs` argument,"
-			msg += f" i.e `{self.__class__.__name__}.save(..., {missing_key}=value)`."
+			# missing_key = e.args[0]
+			missing_keys = set(context.keys()) - set(self.keys)
+			msg = f"Missing value for placeholder(s): {missing_keys}"
+			msg += "\nPlease provide a value for this key in the `context` argument."
+			msg += f" i.e `{self.__class__.__name__}.save(..., {e.args[0]}=value)`."
 			raise PatternResolverError(msg) from e
