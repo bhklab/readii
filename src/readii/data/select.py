@@ -126,7 +126,7 @@ def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame):
             # Get the first original feature column name - the features begin in this column
             first_pyradiomic_feature_column = original_feature_data.columns[0]
             # Drop all the columns before the features start
-            pyradiomic_features_only = dropUpToFeature(radiomic_data, first_pyradiomic_feature_column, keep_feature_name=True)
+            pyradiomic_features_only = dropUpToFeature(radiomic_data, first_pyradiomic_feature_column, keep_feature_name_column=True)
         else:
             msg = "PyRadiomics file doesn't contain any diagnostics or original feature columns, so can't find beginning of features. Use dropUpToFeature and specify the last non-feature or first PyRadiomic feature column name to get only PyRadiomics features."
             logger.exception(msg)
