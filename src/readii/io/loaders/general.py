@@ -1,17 +1,29 @@
-import os
-import pandas as pd 
+from pathlib import Path
+
+import pandas as pd
 import yaml
 
 
-def loadImageDatasetConfig(dataset_name:str,
-                           config_dir_path:str) -> dict:
-    """Load the configuration file for a given dataset. Expects the configuration file to be named <dataset_name>.yaml.
+class ConfigError(Exception):
+    """Base class for errors in the config module."""
+
+    pass
+
+class DataFrameLoadError(Exception):
+    """Custom exception for DataFrame loading errors."""
+
+    pass
+
+def loadImageDatasetConfig(dataset_name: str, config_dir_path: str | Path) -> dict:
+    """Load the configuration file for a given dataset.
+
+    Expects the configuration file to be named <dataset_name>.yaml.
 
     Parameters
     ----------
     dataset_name : str
         Name of the dataset to load the configuration file for.
-    config_dir_path : str
+    config_dir_path : str or pathlib.Path
         Path to the directory containing the configuration files.
 
     Returns
@@ -21,61 +33,67 @@ def loadImageDatasetConfig(dataset_name:str,
 
     Examples
     --------
-    >>> config = loadImageDatasetConfig("NSCLC_Radiogenomics", "config/")
+    >>> config = loadImageDatasetConfig("NSCLC_Radiogenomics", "config")
     """
-    # Make full path to config file
-    config_file_path = os.path.join(config_dir_path, f"{dataset_name}.yaml")
+    config_dir_path = Path(config_dir_path)
+    config_file_path = config_dir_path / f"{dataset_name}.yaml"
 
-    # Check if config file exists
-    if not os.path.exists(config_file_path):
-        raise FileNotFoundError(f"Config file {config_file_path} does not exist.")
+    if not config_file_path.exists():
+        msg = f"Config file {config_file_path} does not exist."
+        raise FileNotFoundError(msg)
     
     try:
-        # Load the config file
-        with open(config_file_path, "r") as f:
-            return yaml.safe_load(f)
+        with config_file_path.open("r") as f:
+            config = yaml.safe_load(f)
+    except yaml.YAMLError as ye:
+        raise ConfigError("Invalid YAML in config file") from ye
 
-    except yaml.YAMLError as e:
-        raise ValueError(f"Invalid YAML in config file: {e}")  
+    if not config:
+        raise ConfigError("Config file is empty or invalid")
+
+    return config
 
 
 
-def loadFileToDataFrame(file_path:str) -> pd.DataFrame:
+def loadFileToDataFrame(file_path: str | Path) -> pd.DataFrame:
     """Load data from a csv or xlsx file into a pandas dataframe.
 
     Parameters
     ----------
-    file_path (str): Path to the data file.
+    file_path : str or pathlib.Path
+        Path to the data file.
 
     Returns
     -------
-    pd.DataFrame: Dataframe containing the data from the file.
+    pd.DataFrame
+        Dataframe containing the data from the file.
     """
+    file_path = Path(file_path)
     if not file_path:
-        raise ValueError("file_path cannot be empty")
+        raise ValueError("File is empty")
 
-    if not os.path.exists(file_path):
-        raise FileNotFoundError(f"File {file_path} does not exist")
+    if not file_path.exists():
+        msg = f"File {file_path} does not exist"
+        raise FileNotFoundError(msg)
 
     # Get the file extension
-    _, file_extension = os.path.splitext(file_path)
-    
+    file_extension = file_path.suffix
+
     try:
-        # Check if the file is an Excel file
         if file_extension == '.xlsx':
             df = pd.read_excel(file_path)
-        # Check if the file is a CSV file
         elif file_extension == '.csv':
             df = pd.read_csv(file_path)
         else:
-            raise ValueError("Unsupported file format. Please provide a .csv or .xlsx file.")
-        
-        if df.empty:
-            raise ValueError("Loaded DataFrame is empty")
-        
-        return df
-    
-    except pd.errors.EmptyDataError:
-        raise ValueError("File is empty")
+            msg = f"Unsupported file format {file_extension}. Please provide a .csv or .xlsx file."
+            raise ValueError(msg)
+
+    except pd.errors.EmptyDataError as e:
+        raise DataFrameLoadError("File is empty") from e
+
     except (pd.errors.ParserError, ValueError) as e:
-        raise ValueError(f"Error parsing file: {e}")
+        raise DataFrameLoadError("Error parsing file") from e
+
+    if df.empty:
+        raise DataFrameLoadError("Dataframe is empty")
+    return df
