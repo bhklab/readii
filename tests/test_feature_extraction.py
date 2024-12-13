@@ -13,6 +13,8 @@ import pytest
 import collections
 import pandas as pd
 import os 
+import shutil
+from pathlib import Path
 
 @pytest.fixture
 def nsclcCTImage():
@@ -44,11 +46,21 @@ def pyradiomicsParamFilePath():
 
 @pytest.fixture
 def nsclcMetadataPath():
-    return "tests/NSCLC_Radiogenomics/procdata/ct_to_seg_match_list_NSCLC_Radiogenomics.csv"
+    oldpath = Path("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
+    newpath = Path("tests/NSCLC_Radiogenomics/procdata/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
+    newpath.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(oldpath, newpath)
+    yield newpath.as_posix()
+    newpath.unlink()
 
 @pytest.fixture
 def lung4DMetadataPath():
-    return "tests/4D-Lung/procdata/ct_to_seg_match_list_4D-Lung.csv"
+    oldpath = Path("tests/output/ct_to_seg_match_list_4D-Lung.csv")
+    newpath = Path("tests/4D-Lung/procdata/ct_to_seg_match_list_4D-Lung.csv")
+    newpath.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(oldpath, newpath)
+    yield newpath.as_posix()
+    newpath.unlink()
 
 
 def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
