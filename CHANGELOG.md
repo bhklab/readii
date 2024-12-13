@@ -1,6 +1,20 @@
 # CHANGELOG
 
 
+## v1.23.0 (2024-12-13)
+
+### Features
+
+- Add io/loaders module ([#83](https://github.com/bhklab/readii/pull/83),
+  [`81fbd78`](https://github.com/bhklab/readii/commit/81fbd78ea22a089f0c3848a75de3f87aa8a2e5d9))
+
+Includes features, general, and images specific loading functions
+
+- **New Features** - Introduced a new module for loading various data types in the READII pipeline.
+  - Added functions for loading imaging feature sets, dataset configurations, and data files into
+  DataFrames.
+
+
 ## v1.22.0 (2024-12-13)
 
 ### Features
