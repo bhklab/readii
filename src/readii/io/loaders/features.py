@@ -5,6 +5,8 @@ from typing import Optional, Dict
 
 from readii.io.loaders.general import loadFileToDataFrame
 
+from readii.utils import logger
+
 
 def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
                                    image_types:list, 
@@ -45,13 +47,14 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     # Loop through all the files in the directory
     for image_type in image_types:
         try:
-            # Extract the image type feature csv file from the feature directory
-            # This should return a list of length 1, so we can just take the first element
-            image_type_feature_file = [file for file in feature_file_list if (image_type in file) and (file.endswith(".csv"))][0]
-            # Remove the image type file from the list of feature files
-            feature_file_list.remove(image_type_feature_file)
-        except Exception as e:
-            print(f"{e}\n No {image_type} feature csv files found in {extracted_feature_dir}")
+            # Extract the image type feature csv file from the feature directory  
+            matching_files = [file for file in feature_file_list if (image_type in file) and (file.endswith(".csv"))]  
+            if matching_files:  
+                image_type_feature_file = matching_files[0]  
+                # Remove the image type file from the list of feature files  
+                feature_file_list.remove(image_type_feature_file)
+        except IndexError as e:
+            logger.warning(f"No {image_type} feature csv files found in {extracted_feature_dir}")
             # Skip to the next image type
             continue
 
@@ -68,14 +71,15 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
                 # Data is now only extracted features
                 raw_feature_data.drop(labels_to_drop, axis=1, inplace=True)
         except KeyError as e:
-            print(f"{feature_file_path} does not have the labels {labels_to_drop} to drop.")
+            logger.warning(f"{feature_file_path} does not have the labels {labels_to_drop} to drop.")
             # Skip to the next image type
             continue
 
         # Save the dataframe to the feature_sets dictionary
         feature_sets[image_type] = raw_feature_data
 
-        if not feature_sets:
-            raise ValueError(f"No valid feature sets were loaded from {extracted_feature_dir}")
+    # After processing all image types, check if any feature sets were loaded 
+    if not feature_sets:
+        raise ValueError(f"No valid feature sets were loaded from {extracted_feature_dir}")
     
     return feature_sets
