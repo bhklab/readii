@@ -44,11 +44,11 @@ def pyradiomicsParamFilePath():
 
 @pytest.fixture
 def nsclcMetadataPath():
-    return "tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv"
+    return "tests/NSCLC_Radiogenomics/procdata/ct_to_seg_match_list_NSCLC_Radiogenomics.csv"
 
 @pytest.fixture
 def lung4DMetadataPath():
-    return "tests/output/ct_to_seg_match_list_4D-Lung.csv"
+    return "tests/4D-Lung/procdata/ct_to_seg_match_list_4D-Lung.csv"
 
 
 def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
@@ -118,7 +118,7 @@ def test_NSCLC_radiomicFeatureExtraction_output(nsclcMetadataPath):
                                        imageDirPath = "tests/",
                                        roiNames = None,
                                        outputDirPath = "tests/NSCLC_Radiogenomics/results/")
-    expected_path = "tests/output/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv"
+    expected_path = "tests/NSCLC_Radiogenomics/results/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv"
     assert os.path.exists(expected_path)
 
 
@@ -128,3 +128,5 @@ def test_4DLung_radiomicFeatureExtraction_output(lung4DMetadataPath):
                                        imageDirPath = "tests/",
                                        roiNames = "Tumor_c40",
                                        outputDirPath = "tests/4D-Lung/results/")
+    expected_path = "tests/4D-Lung/results/features/radiomicfeatures_original_4D-Lung.csv"
+    assert os.path.exists(expected_path)
