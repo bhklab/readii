@@ -3,6 +3,8 @@ from typing import Optional
 
 import pandas as pd
 
+from readii.utils import logger
+
 from .label import setPatientIdAsIndex
 
 def dropUpToFeature(dataframe:DataFrame,
@@ -39,12 +41,12 @@ def dropUpToFeature(dataframe:DataFrame,
         return dataframe_dropped_columns
     
     except KeyError:
-        print(f"Feature {feature_name} was not found as a column in dataframe. No columns dropped.")
+        logger.warning(f"Feature {feature_name} was not found as a column in dataframe. No columns dropped.")
         return dataframe
     
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+        logger.exception(f"An error occurred in dropUpToFeature: {e}")
+        raise e
     
 
 
@@ -91,8 +93,8 @@ def selectByColumnValue(dataframe:DataFrame,
         return dataframe
 
     except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
+        logger.exception(f"An error occurred in selectByColumnValue: {e}")
+        raise e
     
 
 def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame):
@@ -126,7 +128,9 @@ def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame):
             # Drop all the columns before the features start
             pyradiomic_features_only = dropUpToFeature(radiomic_data, first_pyradiomic_feature_column, keep_feature_name=True)
         else:
-            raise ValueError("PyRadiomics file doesn't contain any diagnostics or original feature columns, so can't find beginning of features. Use dropUpToFeature and specify the last non-feature or first PyRadiomic feature column name to get only PyRadiomics features.")
+            msg = "PyRadiomics file doesn't contain any diagnostics or original feature columns, so can't find beginning of features. Use dropUpToFeature and specify the last non-feature or first PyRadiomic feature column name to get only PyRadiomics features."
+            logger.exception(msg)
+            raise ValueError(msg)
 
     return pyradiomic_features_only
 
