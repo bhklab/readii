@@ -71,7 +71,7 @@ def splitDataByColumnValue(dataframe:DataFrame,
         # Get split column values for this column
         split_col_values = split_col_data[split_column_name]
         
-        if impute_value:
+        if impute_value is not None:
             # Get all values in the column that are not one of the split_col_values
             column_value_set = set(dataframe[split_column_name].unique())
             split_value_set = set(split_col_values)
