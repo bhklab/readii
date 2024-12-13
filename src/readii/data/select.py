@@ -1,8 +1,6 @@
 from pandas import DataFrame
 from typing import Optional
 
-import pandas as pd
-
 from readii.utils import logger
 
 from .label import setPatientIdAsIndex
@@ -52,7 +50,7 @@ def dropUpToFeature(dataframe:DataFrame,
 
 def selectByColumnValue(dataframe:DataFrame, 
                         include_col_values:Optional[dict] = None,
-                        exclude_col_values:Optional[dict] = None) -> pd.DataFrame:
+                        exclude_col_values:Optional[dict] = None) -> DataFrame:
     """
     Get rows of pandas DataFrame based on row values in the columns labelled as keys of the include_col_values and not in the keys of the exclude_col_values.
     Include variables will be processed first, then exclude variables, in the order they are provided in the corresponding dictionaries.
