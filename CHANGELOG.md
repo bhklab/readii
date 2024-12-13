@@ -1,6 +1,52 @@
 # CHANGELOG
 
 
+## v1.21.0 (2024-12-13)
+
+### Features
+
+- Add readii-datasets CLI command and include orcestra-downloader dependency
+  ([#80](https://github.com/bhklab/readii/pull/80),
+  [`f760b68`](https://github.com/bhklab/readii/commit/f760b6895ff7a6393a2cb6573ecd4bbce9178f40))
+
+closes https://github.com/bhklab/analyze_readii_outputs/issues/6
+
+the CLI in `orcestra-downloader` uses click and allows us to reuse the same user CLI API for just a
+  subset of the data and so the `readii-datasets` entry point is just a renamed version of that one
+  to prevent rewriting code.
+
+
+## v1.20.0 (2024-12-12)
+
+### Features
+
+- Initialize documentation ([#85](https://github.com/bhklab/readii/pull/85),
+  [`3b2c294`](https://github.com/bhklab/readii/commit/3b2c29404c4266a438dbd8e56b1aef09ffa06b40))
+
+Start of documentation, mostly copied the core dependencies and plugins from med-imagetools
+
+- Set up initial documentation structure using MkDocs, including configuration and integration of
+  Markdown files for the README and CHANGELOG.
+
+this "core" would be the base of the main vs 2.0 branch
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** 	- Added badges for project health and status in the README. - Expanded
+  installation instructions with a new environment setup method. 	- Introduced a section for serving
+  documentation locally.
+
+- **Documentation** - Enhanced clarity and structure of the README, including command-line options
+  and contributing guidelines. 	- Updated inclusion method for CHANGELOG and README in
+  documentation. - Introduced a new configuration file for MkDocs documentation, improving
+  navigation and usability.
+
+- **Bug Fixes** - Corrected formatting for bash commands in the README to enhance readability.
+
+- **Chores** 	- Updated project version and dependencies in the configuration files. <!-- end of
+  auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.19.0 (2024-12-11)
 
 ### Features
