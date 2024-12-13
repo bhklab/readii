@@ -1,6 +1,21 @@
 # CHANGELOG
 
 
+## v1.21.0 (2024-12-13)
+
+### Features
+
+- Add readii-datasets CLI command and include orcestra-downloader dependency
+  ([#80](https://github.com/bhklab/readii/pull/80),
+  [`f760b68`](https://github.com/bhklab/readii/commit/f760b6895ff7a6393a2cb6573ecd4bbce9178f40))
+
+closes https://github.com/bhklab/analyze_readii_outputs/issues/6
+
+the CLI in `orcestra-downloader` uses click and allows us to reuse the same user CLI API for just a
+  subset of the data and so the `readii-datasets` entry point is just a renamed version of that one
+  to prevent rewriting code.
+
+
 ## v1.20.0 (2024-12-12)
 
 ### Features
