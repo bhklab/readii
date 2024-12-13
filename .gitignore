@@ -146,6 +146,8 @@ dmypy.json
 
 # Test outputs
 tests/output/*
+tests/*/procdata/*
+tests/*/results/*
 
 # pixi environments
 .pixi

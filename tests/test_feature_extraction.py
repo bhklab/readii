@@ -13,6 +13,8 @@ import pytest
 import collections
 import pandas as pd
 import os 
+import shutil
+from pathlib import Path
 
 @pytest.fixture
 def nsclcCTImage():
@@ -44,7 +46,21 @@ def pyradiomicsParamFilePath():
 
 @pytest.fixture
 def nsclcMetadataPath():
-    return "tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv"
+    oldpath = Path("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
+    newpath = Path("tests/NSCLC_Radiogenomics/procdata/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
+    newpath.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(oldpath, newpath)
+    yield newpath.as_posix()
+    newpath.unlink()
+
+@pytest.fixture
+def lung4DMetadataPath():
+    oldpath = Path("tests/output/ct_to_seg_match_list_4D-Lung.csv")
+    newpath = Path("tests/4D-Lung/procdata/ct_to_seg_match_list_4D-Lung.csv")
+    newpath.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(oldpath, newpath)
+    yield newpath.as_posix()
+    newpath.unlink()
 
 
 def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
@@ -108,11 +124,21 @@ def test_radiomicFeatureExtraction(nsclcMetadataPath):
         "Volume feature is incorrect"
 
 
-def test_radiomicFeatureExtraction_output(nsclcMetadataPath):
-    """Test output creation from radiomic feature extraction"""
+def test_NSCLC_radiomicFeatureExtraction_output(nsclcMetadataPath):
+    """Test output creation from radiomic feature extraction for SEG dataset"""
     actual = radiomicFeatureExtraction(nsclcMetadataPath,
                                        imageDirPath = "tests/",
                                        roiNames = None,
-                                       outputDirPath = "tests/output/")
-    expected_path = "tests/output/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv"
+                                       outputDirPath = "tests/NSCLC_Radiogenomics/results/")
+    expected_path = "tests/NSCLC_Radiogenomics/results/features/radiomicfeatures_original_NSCLC_Radiogenomics.csv"
+    assert os.path.exists(expected_path)
+
+
+def test_4DLung_radiomicFeatureExtraction_output(lung4DMetadataPath):
+    """Test output creation from radiomic feature extraction for RTSTRUCT dataset"""
+    actual = radiomicFeatureExtraction(lung4DMetadataPath,
+                                       imageDirPath = "tests/",
+                                       roiNames = "Tumor_c40",
+                                       outputDirPath = "tests/4D-Lung/results/")
+    expected_path = "tests/4D-Lung/results/features/radiomicfeatures_original_4D-Lung.csv"
     assert os.path.exists(expected_path)

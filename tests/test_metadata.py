@@ -1,5 +1,5 @@
 import pytest
-import os
+from pathlib import Path
 
 from readii.metadata import (
     matchCTtoSegmentation,
@@ -49,12 +49,21 @@ def test_matchCTtoRTSTRUCT(lung4DSummaryFilePath):
         "Incorrect segmentation type has been found"
 
 
-def test_matchCTtoSegmentation_output(nsclcSummaryFilePath):
+@pytest.mark.parametrize(
+    "summary_file_path, modality, output_file_path",
+    [
+        ("nsclcSummaryFilePath","SEG","tests/NSCLC_Radiogenomics/procdata/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
+    ]
+)
+def test_matchCTtoSegmentation_output(summary_file_path, modality, output_file_path, request):
     """Test saving output of summary file"""
-    actual = matchCTtoSegmentation(nsclcSummaryFilePath, 
-                                   segType = "SEG",
-                                   outputFilePath = "tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
-    assert os.path.exists("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv") == True, \
+    summary_file_path = request.getfixturevalue(summary_file_path)
+
+    matchCTtoSegmentation(summary_file_path, 
+                          segType = modality,
+                          outputFilePath = output_file_path)
+    
+    assert Path(output_file_path).exists(), \
         "Output does not exist, double check output file is named correctly."
 
 
@@ -71,13 +80,21 @@ def test_getCTWithRTTRUCT(lung4DEdgesSummaryFilePath):
     assert actual['modality_seg'][0] == 'RTSTRUCT', \
         "Incorrect segmentation type has been found"
 
-
-def test_getCTtoSegmentation_output(lung4DEdgesSummaryFilePath):
+@pytest.mark.parametrize(
+    "summary_file_path, modality, output_file_path",
+    [
+        ("lung4DEdgesSummaryFilePath","RTSTRUCT","tests/4D-Lung/procdata/ct_to_seg_match_list_4D-Lung.csv")
+    ]
+)
+def test_getCTtoSegmentation_output(summary_file_path, modality, output_file_path, request):
     """Test saving output of summary file"""
-    actual = getCTWithSegmentation(lung4DEdgesSummaryFilePath, 
-                                   segType = "RTSTRUCT",
-                                   outputFilePath = "tests/output/ct_to_seg_match_list_4D-Lung.csv")
-    assert os.path.exists("tests/output/ct_to_seg_match_list_4D-Lung.csv") == True, \
+    summary_file_path = request.getfixturevalue(summary_file_path)
+
+    getCTWithSegmentation(summary_file_path, 
+                          segType = modality,
+                          outputFilePath = output_file_path)
+    
+    assert Path(output_file_path).exists(), \
         "Output does not exist, double check output file is named correctly."
 
 
