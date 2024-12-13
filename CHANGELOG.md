@@ -1,6 +1,37 @@
 # CHANGELOG
 
 
+## v1.22.0 (2024-12-13)
+
+### Features
+
+- Add BaseWriter, and example NIFTIWriter with notebooks documenting them
+  ([#84](https://github.com/bhklab/readii/pull/84),
+  [`7228770`](https://github.com/bhklab/readii/commit/72287708058949f0bd11792878e246c2e1915122))
+
+Mostly inspired and reusing logic from Med-ImageTools `DICOMSorter` design
+
+- **New Features** - Enhanced Jupyter notebooks for saving medical imaging data in NIFTI format and
+  CSV metadata. - Added examples for using subclasses of `BaseWriter` for writing text and CSV
+  files. - Introduced the `NIFTIWriter` class for managing NIFTI file writing with validation and
+  error handling. - Added new `CSVWriter` class for saving data in CSV format.
+
+
+## v1.21.0 (2024-12-13)
+
+### Features
+
+- Add readii-datasets CLI command and include orcestra-downloader dependency
+  ([#80](https://github.com/bhklab/readii/pull/80),
+  [`f760b68`](https://github.com/bhklab/readii/commit/f760b6895ff7a6393a2cb6573ecd4bbce9178f40))
+
+closes https://github.com/bhklab/analyze_readii_outputs/issues/6
+
+the CLI in `orcestra-downloader` uses click and allows us to reuse the same user CLI API for just a
+  subset of the data and so the `readii-datasets` entry point is just a renamed version of that one
+  to prevent rewriting code.
+
+
 ## v1.20.0 (2024-12-12)
 
 ### Features
