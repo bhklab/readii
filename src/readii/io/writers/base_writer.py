@@ -1,83 +1,12 @@
-import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 from types import TracebackType
-from typing import Any, ClassVar, Dict, Optional, Tuple
+from typing import Any, Optional
 
-from imgtools.dicom.sort.exceptions import InvalidPatternError
-from imgtools.dicom.sort.parser import PatternParser
-
+from readii.io.utils import PatternResolver
 from readii.utils import logger
-
-
-@dataclass
-class PatternResolver:
-	"""Handles parsing and validating filename patterns."""
-
-	filename_format: str = field(init=True)
-
-	DEFAULT_PATTERN: ClassVar[re.Pattern] = re.compile(r"%(\w+)|\{(\w+)\}")
-
-	def __init__(self, filename_format: str) -> None:
-		self.filename_format = filename_format
-
-		try:
-			self.pattern_parser = PatternParser(
-				self.filename_format, pattern_parser=self.DEFAULT_PATTERN
-			)
-			self.formatted_pattern, self.keys = self.parse()  # Validate the pattern by parsing it
-		except InvalidPatternError as e:
-			msg = f"Invalid filename format: {e}"
-			raise ValueError(msg) from e
-		else:
-			logger.debug("All keys are valid.", keys=self.keys)
-			logger.debug("Formatted Pattern valid.", formatted_pattern=self.formatted_pattern)
-
-	def parse(self) -> Tuple[str, list[str]]:
-		"""
-		Parse and validate the pattern.
-
-		Returns
-		-------
-		Tuple[str, List[str]]
-			The formatted pattern string and a list of extracted keys.
-
-		Raises
-		------
-		InvalidPatternError
-			If the pattern contains no valid placeholders or is invalid.
-		"""
-		return self.pattern_parser.parse()
-
-	def resolve(self, context: Dict[str, Any]) -> str:
-		"""Resolve the pattern using the provided context dictionary.
-
-		Parameters
-		----------
-		context : Dict[str, Any]
-			Dictionary containing key-value pairs to substitute in the pattern.
-
-		Returns
-		-------
-		str
-			The resolved pattern string with placeholders replaced by values.
-
-		Raises
-		------
-		ValueError
-			If a required key is missing from the context dictionary.
-		"""
-		try:
-			return self.formatted_pattern % context
-		except KeyError as e:
-			missing_key = e.args[0]
-			valid_keys = ", ".join(context.keys())
-			msg = f"Missing value for placeholder '{missing_key}'. Valid keys: {valid_keys}"
-			msg += "\nPlease provide a value for this key in the `kwargs` argument,"
-			msg += f" i.e `{self.__class__.__name__}.save(..., {missing_key}=value)`."
-			raise ValueError(msg) from e
 
 
 @dataclass
@@ -156,8 +85,9 @@ class BaseWriter(ABC):
 				The traceback object, if an exception was raised, otherwise None.
 		"""
 		if exc_type:
-			logger.error(
-				f"Exception raised in {self.__class__.__name__} while in context manager: {exc_value}"
+			logger.exception(
+				f"Exception raised in {self.__class__.__name__} while in context manager.",
+				exc_info=exc_value,
 			)
 		logger.debug(f"Exiting context manager for {self.__class__.__name__}")
 
@@ -165,7 +95,7 @@ class BaseWriter(ABC):
 		if (
 			self.create_dirs
 			and self.root_directory.exists()
-			and not (self.root_directory.iterdir())
+			and not any(self.root_directory.iterdir())
 		):
 			logger.debug(f"Deleting empty directory {self.root_directory}")
 			self.root_directory.rmdir()  # remove the directory if it's empty

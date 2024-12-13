@@ -45,12 +45,8 @@ class NIFTIWriter(BaseWriter):
 
 	# Make extensions immutable
 	VALID_EXTENSIONS: ClassVar[list[str]] = [
-		".nia",
 		".nii",
 		".nii.gz",
-		".hdr",
-		".img",
-		".img.gz",
 	]
 	MAX_COMPRESSION_LEVEL: ClassVar[int] = 9
 	MIN_COMPRESSION_LEVEL: ClassVar[int] = 0
