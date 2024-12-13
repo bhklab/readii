@@ -1,6 +1,6 @@
 [project]
 name = "readii"
-version = "1.18.0"
+version = "1.20.0"
 description = "A package to extract radiomic features!"
 authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 
@@ -39,6 +39,7 @@ readii = { path = ".", editable = true }
 
 [tool.pixi.environments]
 dev = { features = ["test", "style", "docs", "dev"], solve-group = "default" }
+docs = { features = ["docs"], solve-group = "default" }
 publish = { features = ["build", "release"], solve-group = "default" }
 py310 = ["py310", "test"]
 py311 = ["py311", "test"]
@@ -89,17 +90,34 @@ description = "Run pytest and generate coverage report"
 
 ############################################## DOCS ################################################
 [tool.pixi.feature.docs.dependencies]
-myst-nb = "*"
-sphinx-autoapi = "*"
-sphinx-rtd-theme = "*"
+mkdocs = ">=1.6"
+mike = ">=2.1"
+mkdocs-material = ">=9.5.44,<10"
+mkdocstrings = ">=0.27.0,<0.28"
+mkdocstrings-python = ">=1.12.2,<2"
+mkdocs-include-markdown-plugin = ">=7.1.1,<8"
+mkdocs-git-authors-plugin = ">=0.9.0,<0.10"
+mkdocs-git-revision-date-localized-plugin = ">=1.2.9,<2"
 
-# TODO::add tasks to build documentation
+[tool.pixi.feature.docs.pypi-dependencies]
+mkdocs-awesome-pages-plugin = ">=2.9.3, <3"
+
+[tool.pixi.feature.docs.tasks.doc-build]
+cmd = "mkdocs build -f mkdocs.yaml"
+inputs = ["docs", "mkdocs.yaml"]
+outputs = ["site"]
+
+[tool.pixi.feature.docs.tasks.doc-serve]
+cmd = "mkdocs serve -f mkdocs.yaml"
+inputs = ["docs", "mkdocs.yaml"]
 
 ############################################## STYLE ###############################################
 # See config/ruff.toml for the configuration
 [tool.pixi.feature.style.dependencies]
 ruff = ">=0.4.4"
 pre-commit = ">=3.7.1,<3.8"
+mypy = ">=1.13.0,<2"
+scipy-stubs = ">=1.14.1.5,<2"
 
 [tool.pixi.feature.style.tasks._lint]
 cmd = "ruff check  --config=config/ruff.toml"
