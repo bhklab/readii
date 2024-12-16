@@ -28,7 +28,8 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
     diagonal : bool, optional
         Whether to only plot half of the matrix. The default is False.
     triangle : str, optional
-        Which triangle half of the matrixto plot. The default is "lower".
+        Which triangle half of the matrix to plot. Either "lower" or "upper". 
+        The default is "lower".
     xlabel : str, optional
         Label for the x-axis. The default is "".
     ylabel : str, optional
