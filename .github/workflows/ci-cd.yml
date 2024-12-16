@@ -16,7 +16,7 @@ jobs:
     timeout-minutes: 15 # Consider increasing timeout
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, macos-14] # , windows-latest removed for now
+        os: [ubuntu-latest, macos-latest, macos-14, windows-latest] # , windows-latest removed for now
         env: ["py310", "py311", "py312"]
 
     steps:
@@ -28,7 +28,6 @@ jobs:
           environments: ${{ matrix.env }}
           pixi-version: v0.39.0
           cache: true
-          locked: false # wont be the same because of the tag
 
       - name: Run pytest
         run: |
