@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 
-import matplotlib.pyplot as plt
+import matplotlib
 
 from readii.io.writers.base_writer import BaseWriter
 from readii.utils import logger
@@ -28,7 +28,7 @@ class PlotWriter(BaseWriter):
         },
     )
 
-    def save(self, plot:plt.figure, **kwargs: str) -> Path:
+    def save(self, plot:matplotlib.figure.Figure, **kwargs: str) -> Path:
         """Save the plot to a .png file."""
 
         logger.debug("Saving.", kwargs=kwargs)
@@ -40,17 +40,19 @@ class PlotWriter(BaseWriter):
         if out_path.exists():
             if not self.overwrite:
                 msg = f"File {out_path} already exists. \nSet {self.__class__.__name__}.overwrite to True to overwrite."
-                raise PlotWriterIOError(msg)
+                logger.exception(msg)
+                raise FileExistsError(msg)
             else:
                 logger.warning(f"File {out_path} already exists. Overwriting.")
                 
         logger.debug("Saving plot to file", out_path=out_path)
         try:
             # Save the plot to the output path, remove extra whitespace around the figure
-            plot.get_figure().savefig(out_path, bbox_inches='tight')
+            plot.savefig(out_path, bbox_inches='tight')
 
         except Exception as e:
             msg = f"Error saving plot to file {out_path}: {e}"
+            logger.exception(msg)
             raise PlotWriterIOError(msg) from e
         else:
             logger.info("Plot saved successfully.", out_path=out_path)
