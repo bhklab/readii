@@ -1,5 +1,6 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import ClassVar
 
 import matplotlib
 
@@ -17,6 +18,12 @@ class PlotWriterIOError(PlotWriterError):
 
     pass
 
+
+class PlotWriterValidationError(PlotWriterError):
+    """Raised when validation of writer configuration fails."""
+
+    pass
+
 @dataclass
 class PlotWriter(BaseWriter):
     """Class for managing file writing with customizable paths and filenames for plot figure files."""
@@ -27,6 +34,22 @@ class PlotWriter(BaseWriter):
             "help": "If True, allows overwriting existing files. If False, raises FileExistsError."
         },
     )
+    # Make extensions immutable
+    VALID_EXTENSIONS: ClassVar[list[str]] = [
+		".png",
+		".pdf",
+        ".ps",
+        ".eps",
+        ".svg"
+	]
+
+    def __post_init__(self) -> None:
+        """Validate writer configuration."""
+        super().__post_init__()
+
+        if not any(self.filename_format.endswith(ext) for ext in self.VALID_EXTENSIONS):
+            msg = f"Invalid filename format {self.filename_format}. Must end with one of {self.VALID_EXTENSIONS}."
+            raise PlotWriterValidationError(msg)
 
     def save(self, plot:matplotlib.figure.Figure, **kwargs: str) -> Path:
         """Save the plot to a .png file."""
@@ -40,8 +63,7 @@ class PlotWriter(BaseWriter):
         if out_path.exists():
             if not self.overwrite:
                 msg = f"File {out_path} already exists. \nSet {self.__class__.__name__}.overwrite to True to overwrite."
-                logger.exception(msg)
-                raise FileExistsError(msg)
+                raise PlotWriterIOError(msg)
             else:
                 logger.warning(f"File {out_path} already exists. Overwriting.")
                 
@@ -52,7 +74,6 @@ class PlotWriter(BaseWriter):
 
         except Exception as e:
             msg = f"Error saving plot to file {out_path}: {e}"
-            logger.exception(msg)
             raise PlotWriterIOError(msg) from e
         else:
             logger.info("Plot saved successfully.", out_path=out_path)
