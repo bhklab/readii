@@ -1,5 +1,6 @@
 import pandas as pd
 from readii.utils import logger
+from readii.data.select import validateDataframeSubsetSelection
 
 def getFeatureCorrelations(vertical_features:pd.DataFrame,
                            horizontal_features:pd.DataFrame,
@@ -87,15 +88,12 @@ def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
     pd.DataFrame
         Dataframe containing the vertical self correlations from the correlation matrix.    
     """
-    if num_vertical_features > correlation_matrix.shape[0]:
-        msg = f"Number of vertical features ({num_vertical_features}) is greater than the number of rows in the correlation matrix ({correlation_matrix.shape[0]})."
+    try: 
+        validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
+    except ValueError as e:
+        msg = f"Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
         logger.exception(msg)
-        raise ValueError()
-    
-    if num_vertical_features > correlation_matrix.shape[1]:
-        msg = f"Number of vertical features ({num_vertical_features}) is greater than the number of columns in the correlation matrix ({correlation_matrix.shape[1]})."
-        logger.exception(msg)
-        raise ValueError()
+        raise e
 
     # Get the correlation matrix for vertical vs vertical - this is the top left corner of the matrix
     return correlation_matrix.iloc[0:num_vertical_features, 0:num_vertical_features]
@@ -118,16 +116,12 @@ def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
     pd.DataFrame
         Dataframe containing the horizontal self correlations from the correlation matrix.
     """
-    
-    if num_horizontal_features > correlation_matrix.shape[0]:
-        msg = f"Number of horizontal features ({num_horizontal_features}) is greater than the number of rows in the correlation matrix ({correlation_matrix.shape[0]})."
+    try: 
+        validateDataframeSubsetSelection(correlation_matrix, num_horizontal_features, num_horizontal_features)
+    except ValueError as e: 
+        msg = f"Number of horizontalfeatures provided is greater than the number of rows or columns in the correlation matrix."
         logger.exception(msg)
-        raise ValueError()
-    
-    if num_horizontal_features > correlation_matrix.shape[1]:
-        msg = f"Number of horizontal features ({num_horizontal_features}) is greater than the number of columns in the correlation matrix ({correlation_matrix.shape[1]})."
-        logger.exception(msg)
-        raise ValueError()
+        raise e
 
     # Get the index of the start of the horizontal correlations
     start_of_horizontal_correlations = len(correlation_matrix.columns) - num_horizontal_features
@@ -154,14 +148,11 @@ def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
         Dataframe containing the cross correlations from the correlation matrix.
     """
 
-    if num_vertical_features > correlation_matrix.shape[0]:
-        msg = f"Number of vertical features ({num_vertical_features}) is greater than the number of rows in the correlation matrix ({correlation_matrix.shape[0]})."
+    try:
+        validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
+    except ValueError as e:
+        msg = f"Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
         logger.exception(msg)
-        raise ValueError()
-    
-    if num_vertical_features > correlation_matrix.shape[1]:
-        msg = f"Number of vertical features ({num_vertical_features}) is greater than the number of columns in the correlation matrix ({correlation_matrix.shape[1]})."
-        logger.exception(msg)
-        raise ValueError()
+        raise e
     
     return correlation_matrix.iloc[0:num_vertical_features, num_vertical_features:]
