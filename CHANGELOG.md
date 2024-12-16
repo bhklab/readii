@@ -1,6 +1,30 @@
 # CHANGELOG
 
 
+## v1.26.0 (2024-12-16)
+
+### Features
+
+- Expand platform support in pixi and CI/CD workflow
+  ([#91](https://github.com/bhklab/readii/pull/91),
+  [`546fe5c`](https://github.com/bhklab/readii/commit/546fe5c1e4a4dff72645f2c61730d1acf0d13572))
+
+This PR adds the windows platform and older mac platform to the pixi configuration so developers
+  with those machines can be assured that they can contribute to this project without running into
+  dependency issues
+
+- also add a testing branch to test with windows across all configured python versions
+
+## Summary by CodeRabbit
+
+- **New Features** 	- Expanded testing environment to include Windows support. 	- Updated project
+  version to "1.25.0". 	- Added support for additional platforms: "osx-64" and "win-64".
+
+- **Bug Fixes** - Clarified the checkout process for the publishing jobs in the CI-CD workflow.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.25.0 (2024-12-16)
 
 ### Features
