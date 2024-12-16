@@ -147,7 +147,7 @@ def test_4DLung_radiomicFeatureExtraction_output(lung4DMetadataPath):
 def test_segmentationLabel_passed(nsclcCTImage, nsclcSEGImage):
     """Test passing in segmentation label"""
     actual = singleRadiomicFeatureExtraction(nsclcCTImage, nsclcSEGImage, segmentationLabel=255)
-    assert type(actual) == collections.OrderedDict, \
+    assert isinstance(actual, collections.OrderedDict), \
         "Wrong return type, expect a collections.OrderedDict"
     assert len(actual) == 1353, \
         "Wrong return size, check pyradiomics parameter file is correct"
@@ -161,7 +161,8 @@ def test_segmentationLabel_passed(nsclcCTImage, nsclcSEGImage):
         "Cropped CT and segmentation mask dimensions do not match"
     assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(1273.7916666666667), \
         "Volume feature is incorrect"
-    
+
+
 @pytest.mark.parametrize(
         'segmentationLabel',
         [
