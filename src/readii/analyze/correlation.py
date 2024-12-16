@@ -5,7 +5,7 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
                            horizontal_features:pd.DataFrame,
                            method:str = "pearson",
                            vertical_feature_name:str = '_vertical',
-                           horizontal_feature_name:str = '_horizontal'):
+                           horizontal_feature_name:str = '_horizontal') -> pd.DataFrame:
     """ Function to calculate correlation between two sets of features.
 
     Parameters
@@ -72,7 +72,7 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
 
 
 def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
-                                num_vertical_features:int):
+                                num_vertical_features:int) -> pd.DataFrame:
     """ Function to get the vertical (y-axis) self correlations from a correlation matrix. Gets the top left quadrant of the correlation matrix.
 
     Parameters
@@ -103,7 +103,7 @@ def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
 
 
 def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
-                                  num_horizontal_features:int):
+                                  num_horizontal_features:int) -> pd.DataFrame:
     """ Function to get the horizontal (x-axis) self correlations from a correlation matrix. Gets the bottom right quadrant of the correlation matrix.
 
     Parameters
@@ -138,7 +138,7 @@ def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
 
 
 def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
-                              num_vertical_features:int):
+                              num_vertical_features:int) -> pd.DataFrame:
     """ Function to get the cross correlation matrix subsection for a correlation matrix. Gets the top right quadrant of the correlation matrix so vertical and horizontal features are correctly labeled.
 
     Parameters

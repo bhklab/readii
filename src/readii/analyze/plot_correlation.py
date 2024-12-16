@@ -5,6 +5,8 @@ import numpy as np
 import pandas as pd
 from scipy.linalg import issymmetric
 
+import matplotlib
+
 from readii.utils import logger
 
 def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
@@ -16,7 +18,7 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
                            title:Optional[str] = "",
                            subtitle:Optional[str] = "",
                            show_tick_labels:bool = False
-                           ):
+                           ) -> matplotlib.figure.Figure:
     """Function to plot a correlation heatmap.
 
     Parameters
@@ -102,7 +104,7 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
                              y_upper_bound:Optional[int] = None,
                              title:Optional[str] = "Distribution of Correlations for Features",
                              subtitle:Optional[str] = "",
-                             ):
+                             ) -> matplotlib.figure.Figure:
     """ Function to plot a distribution of correlation values for a correlation matrix.
 
     Parameters
