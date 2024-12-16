@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v1.24.0 (2024-12-16)
+
+### Features
+
+- Add data functions used for analysis code ([#89](https://github.com/bhklab/readii/pull/89),
+  [`2eb6e1e`](https://github.com/bhklab/readii/commit/2eb6e1ebe05597f18be3eac5ae75a8f81d370aea))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Introduced functions for manipulating and analyzing patient data, including
+  patient ID handling and time conversion. - Added capabilities for selecting and filtering radiomic
+  data within DataFrames. - Implemented methods for replacing values and splitting DataFrames based
+  on specified criteria.
+
+- **Bug Fixes** - Enhanced error handling across multiple functions to ensure robust performance and
+  logging of issues.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.23.0 (2024-12-13)
 
 ### Features
