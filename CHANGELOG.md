@@ -1,6 +1,34 @@
 # CHANGELOG
 
 
+## v1.25.0 (2024-12-16)
+
+### Features
+
+- Add optional segmentationLabel input for singleRadiomifFetaureExtraction
+  ([#90](https://github.com/bhklab/readii/pull/90),
+  [`bebb8f3`](https://github.com/bhklab/readii/commit/bebb8f312c5b1467cedd370c0137f762e5c9c897))
+
+Discovered an edge case when processing ISPY2 SEG files that have multiple regions in them that are
+  identified by numeric values in the mask.
+
+Need READII to be able to take a specific value so the correct mask is used when checking the mask,
+  cropping the image, and performing feature extraction.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Introduced an optional `segmentationLabel` parameter in the feature extraction
+  process for enhanced flexibility. - Improved error handling during segmentation mask validation
+  and image cropping.
+
+- **Bug Fixes** - Enhanced robustness by catching and logging exceptions related to feature
+  extraction.
+
+- **Tests** - Added new tests to verify behavior with the `segmentationLabel` parameter and to
+  validate error handling for invalid inputs. <!-- end of auto-generated comment: release notes by
+  coderabbit.ai -->
+
+
 ## v1.24.0 (2024-12-16)
 
 ### Features
