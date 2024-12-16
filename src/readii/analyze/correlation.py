@@ -17,9 +17,9 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
     method : str
         Method to use for calculating correlations. Default is "pearson".
     vertical_feature_name : str
-        Name of the vertical features to use as suffix in correlation dataframe. Default is blank "".
+        Name of the vertical features to use as suffix in correlation dataframe. Default is "_vertical".
     horizontal_feature_name : str
-        Name of the horizontal features to use as suffix in correlation dataframe. Default is blank "".
+        Name of the horizontal features to use as suffix in correlation dataframe. Default is "_horizontal".
     
     Returns
     -------
