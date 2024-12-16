@@ -141,7 +141,7 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
 
     # Check if matrix is symmetric
     if issymmetric(feature_correlation_arr):
-        print("Correlation matrix is symmetric.")
+        logger.debug("Correlation matrix is symmetric.")
         # Get only the bottom left triangle of the correlation matrix since the matrix is symmetric 
         lower_half_idx = np.mask_indices(feature_correlation_arr.shape[0], np.tril)
         # This is a 1D array for binning and plotting
