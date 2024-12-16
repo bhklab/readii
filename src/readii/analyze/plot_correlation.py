@@ -19,7 +19,7 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
                            subtitle:Optional[str] = "",
                            show_tick_labels:bool = False
                            ) -> matplotlib.figure.Figure:
-    """Function to plot a correlation heatmap.
+    """Plot a correlation dataframe as a heatmap.
 
     Parameters
     ----------
@@ -105,7 +105,7 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
                              title:Optional[str] = "Distribution of Correlations for Features",
                              subtitle:Optional[str] = "",
                              ) -> matplotlib.figure.Figure:
-    """ Function to plot a distribution of correlation values for a correlation matrix.
+    """Plot a histogram to show thedistribution of correlation values for a correlation matrix.
 
     Parameters
     ----------
