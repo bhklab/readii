@@ -1,10 +1,12 @@
 from dataclasses import dataclass, field
 from pathlib import Path
-from matplotlib.figure import Figure
 from typing import ClassVar
+
+from matplotlib.figure import Figure
 
 from readii.io.writers.base_writer import BaseWriter
 from readii.utils import logger
+
 
 class PlotWriterError(Exception):
     """Base exception for PlotWriter errors."""
