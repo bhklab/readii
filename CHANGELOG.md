@@ -1,6 +1,29 @@
 # CHANGELOG
 
 
+## v1.27.0 (2024-12-17)
+
+### Features
+
+- Add analysis functions ([#92](https://github.com/bhklab/readii/pull/92),
+  [`a57182c`](https://github.com/bhklab/readii/commit/a57182cb32f3bcd3600eaed53ad60ac145fe9d6f))
+
+Includes correlation calculations and plotting those correlations as a heatmap and histogram
+
+- **New Features** - Updated version number to 1.26.0 with new dependencies: `numpy`, `seaborn`, and
+  `pandas`. - Introduced a new module for analyzing READII outputs with several correlation
+  functions. - Added visualization functions for correlation data: heatmap and histogram. 	- New
+  validation function for DataFrame dimensions added. 	- Expanded platform support to include
+  `osx-64` and `win-64`.
+
+- **Bug Fixes** - Enhanced error handling in correlation calculations and plot saving processes. 	-
+  Simplified exception handling in feature loading functions.
+
+- **Documentation** - Improved docstrings for new functions and modules for better usability.
+
+- **Chores** 	- Expanded linting configuration for broader coverage of Python files.
+
+
 ## v1.26.0 (2024-12-16)
 
 ### Features
