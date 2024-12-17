@@ -1,15 +1,17 @@
-import pandas as pd 
-
 from pathlib import Path
+from typing import Dict, Optional, Union
+
+import pandas as pd
+
 from readii.io.loaders.general import loadFileToDataFrame
 from readii.utils import logger
-from typing import Optional, Union, Dict
+
 
 def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str],
                                    image_types:list, 
                                    drop_labels:Optional[bool]=True, 
                                    labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]:
-    """Function to load in all the extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
+    """Load in all the specified extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
 
     Parameters
     ----------
@@ -41,7 +43,9 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str],
 
     # Check if the passed in extracted feature directory exists
     if not extracted_feature_dir.exists() or not extracted_feature_dir.is_dir():
-        raise FileNotFoundError(f"Extracted feature directory {extracted_feature_dir} does not exist.")
+        msg = f"Extracted feature directory {extracted_feature_dir} does not exist."
+        logger.error(f"Extracted feature directory {extracted_feature_dir} does not exist.")
+        raise FileNotFoundError()
     
     feature_file_list = sorted(extracted_feature_dir.glob("*.csv"))
 
@@ -85,16 +89,18 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str],
             if drop_labels:
                 # Data is now only extracted features
                 raw_feature_data.drop(labels_to_drop, axis=1, inplace=True)
-        except KeyError as e:
+        except KeyError:
             logger.warning(f"{feature_file_path} does not have the labels {labels_to_drop} to drop.")
             # Skip to the next image type
             continue
 
         # Save the dataframe to the feature_sets dictionary
         feature_sets[image_type] = raw_feature_data
+    # end image type loop
 
     # After processing all image types, check if any feature sets were loaded 
     if not feature_sets:
-        raise ValueError(f"No valid feature sets were loaded from {extracted_feature_dir}")
+        logger.error(f"No valid feature sets were loaded from {extracted_feature_dir}")
+        raise ValueError()
     
     return feature_sets
