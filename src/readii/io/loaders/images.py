@@ -1,6 +1,9 @@
 from pathlib import Path
 from typing import Union
 
+from readii.utils import logger
+
+
 def getImageTypesFromDirectory(raw_data_dir:Union[Path|str],
                                feature_file_prefix:str = "",
                                feature_file_suffix:str = ".csv") -> list:
@@ -26,15 +29,21 @@ def getImageTypesFromDirectory(raw_data_dir:Union[Path|str],
 
     # Check if the directory exists
     if not raw_data_dir.exists():
-        raise FileNotFoundError(f"Directory {raw_data_dir} does not exist.")
+        msg = f"Directory {raw_data_dir} does not exist."
+        logger.error(msg)
+        raise FileNotFoundError()
     
     # Check if the directory is a directory
     if not raw_data_dir.is_dir():
-        raise NotADirectoryError(f"Path {raw_data_dir} is not a directory.")
+        msg = f"Path {raw_data_dir} is not a directory."
+        logger.error(msg)
+        raise NotADirectoryError()
     
     # Check that directory contains files with the specified prefix and suffix
     if not any(raw_data_dir.glob(f"{feature_file_prefix}*{feature_file_suffix}")):
-        raise FileNotFoundError(f"No files with prefix {feature_file_prefix} and suffix {feature_file_suffix} found in directory {raw_data_dir}.")
+        msg = f"No files with prefix {feature_file_prefix} and suffix {feature_file_suffix} found in directory {raw_data_dir}."
+        logger.error(msg)
+        raise FileNotFoundError()
 
     # Initialize an empty list to store the image types
     image_types = []
