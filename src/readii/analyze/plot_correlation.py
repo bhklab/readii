@@ -73,11 +73,16 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
     corr_fig, corr_ax = plt.subplots()
 
     # Plot the correlation matrix
-    corr_ax = sns.heatmap(correlation_matrix_df,
-                         mask = mask,
-                         cmap=cmap,
-                         vmin=-1.0,
-                         vmax=1.0)
+    try:
+        corr_ax = sns.heatmap(correlation_matrix_df,
+                             mask = mask,
+                             cmap=cmap,
+                             vmin=-1.0,
+                             vmax=1.0)
+    except Exception as e:
+        msg = f"Error generating heatmap: {e}"
+        logger.exception(msg)
+        raise e
     
     if not show_tick_labels:
         # Remove the individual feature names from the axes
@@ -154,7 +159,18 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
     dist_fig, dist_ax = plt.subplots()
 
     # Plot the histogram of correlation values
-    bin_values, bin_edges, _ = dist_ax.hist(correlation_vals, bins=num_bins)
+    # Validate num_bins
+    if num_bins <= 0:
+        msg = f"Number of bins must be positive, got {num_bins}"
+        logger.exception(msg)
+        raise ValueError()
+
+    try:
+        bin_values, bin_edges, _ = dist_ax.hist(correlation_vals, bins=num_bins)
+    except Exception as e:
+        msg = f"Error generating histogram: {e}"
+        logger.exception(msg)
+        raise e
 
     # Set up axis labels
     dist_ax.set_xlabel(xlabel)
