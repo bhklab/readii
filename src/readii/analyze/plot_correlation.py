@@ -1,10 +1,10 @@
 from typing import Optional
 
-import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from matplotlib.figure import Figure
 from scipy.linalg import issymmetric
 
 from readii.utils import logger
@@ -19,7 +19,7 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
                            title:Optional[str] = "",
                            subtitle:Optional[str] = "",
                            show_tick_labels:bool = False
-                           ) -> matplotlib.figure.Figure:
+                           ) -> Figure:
     """Plot a correlation dataframe as a heatmap.
 
     Parameters
@@ -105,7 +105,7 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
                              y_upper_bound:Optional[int] = None,
                              title:Optional[str] = "Distribution of Correlations for Features",
                              subtitle:Optional[str] = "",
-                             ) -> matplotlib.figure.Figure:
+                             ) -> Figure:
     """Plot a histogram to show thedistribution of correlation values for a correlation matrix.
 
     Parameters
