@@ -38,6 +38,12 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
         msg = "horizontal_features must be a pandas DataFrame"
         logger.exception(msg)
         raise TypeError()
+    
+    # Check for empty DataFrames  
+    if vertical_features.empty or horizontal_features.empty:  
+        msg = "Cannot calculate correlations with empty DataFrames"  
+        logger.exception(msg)  
+        raise ValueError(msg)
 
     if method not in ["pearson", "spearman", "kendall"]:
         msg = "Correlation method must be one of 'pearson', 'spearman', or 'kendall'."
