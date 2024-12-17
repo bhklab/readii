@@ -73,7 +73,6 @@ class PlotWriter(BaseWriter):
         PlotWriterValidationError
             If the filename format is invalid.      
         """
-
         logger.debug("Saving.", kwargs=kwargs)
 
         # Generate the output path
