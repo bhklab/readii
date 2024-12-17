@@ -4,7 +4,7 @@ from typing import Union
 def getImageTypesFromDirectory(raw_data_dir:Union[Path|str],
                                feature_file_prefix:str = "",
                                feature_file_suffix:str = ".csv"):
-    """ Function to get a list of image types from a directory containing image feature files.
+    """Get a list of image types from a directory containing image feature files.
 
     Parameters
     ----------
