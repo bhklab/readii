@@ -1,14 +1,11 @@
-import os
 import pandas as pd 
 
-from typing import Optional, Dict
-
+from pathlib import Path
 from readii.io.loaders.general import loadFileToDataFrame
-
 from readii.utils import logger
+from typing import Optional, Union, Dict
 
-
-def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
+def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str],
                                    image_types:list, 
                                    drop_labels:Optional[bool]=True, 
                                    labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]:
@@ -31,6 +28,10 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     feature_sets : dict
         Dictionary of dataframes containing the extracted radiomics features.
     """
+    # Convert directory to Path object if it is a string
+    if isinstance(extracted_feature_dir, str):
+        extracted_feature_dir = Path(extracted_feature_dir)
+
     # Set default labels to drop if not specified
     if labels_to_drop is None:
         labels_to_drop = ["patient_ID","survival_time_in_years","survival_event_binary"]
@@ -39,28 +40,42 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     feature_sets = {}
 
     # Check if the passed in extracted feature directory exists
-    if not os.path.isdir(extracted_feature_dir):
+    if not extracted_feature_dir.exists() or not extracted_feature_dir.is_dir():
         raise FileNotFoundError(f"Extracted feature directory {extracted_feature_dir} does not exist.")
     
-    feature_file_list = os.listdir(extracted_feature_dir)
+    feature_file_list = sorted(extracted_feature_dir.glob("*.csv"))
 
     # Loop through all the files in the directory
     for image_type in image_types:
         try:
             # Extract the image type feature csv file from the feature directory  
-            matching_files = [file for file in feature_file_list if (image_type in file) and (file.endswith(".csv"))]  
-            if matching_files:  
-                image_type_feature_file = matching_files[0]  
-                # Remove the image type file from the list of feature files  
-                feature_file_list.remove(image_type_feature_file)
-        except IndexError as e:
-            logger.warning(f"No {image_type} feature csv files found in {extracted_feature_dir}")
-            # Skip to the next image type
-            continue
+            matching_files = [file for file in feature_file_list if (image_type in file)]  
+
+            match len(matching_files):
+                case 1:
+                    # Only one file found, use it  
+                    pass
+                case 0:
+                    # No files found for this image type
+                    logger.warning(f"No {image_type} feature csv files found in {extracted_feature_dir}")
+                    # Skip to the next image type
+                    continue
+                case _:
+                    # Multiple files found
+                    msg = f"Multiple {image_type} feature csv files found in {extracted_feature_dir}. First one will be used."
+                    logger.warning(msg)
+
+            image_type_feature_file = matching_files[0]  
+            # Remove the image type file from the list of feature files  
+            feature_file_list.remove(image_type_feature_file)
+
+        except Exception as e:
+            logger.warning(f"Error loading {image_type} feature csv files from {extracted_feature_dir}: {e}")
+            raise e
 
 
         # Get the full path to the feature file
-        feature_file_path = os.path.join(extracted_feature_dir, image_type_feature_file)
+        feature_file_path = extracted_feature_dir / image_type_feature_file
             
         # Load the feature data into a pandas dataframe
         raw_feature_data = loadFileToDataFrame(feature_file_path)
