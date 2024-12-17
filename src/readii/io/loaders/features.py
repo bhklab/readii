@@ -53,7 +53,7 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
                 image_type_feature_file = matching_files[0]  
                 # Remove the image type file from the list of feature files  
                 feature_file_list.remove(image_type_feature_file)
-        except IndexError as e:
+        except IndexError:
             logger.warning(f"No {image_type} feature csv files found in {extracted_feature_dir}")
             # Skip to the next image type
             continue
@@ -70,7 +70,7 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
             if drop_labels:
                 # Data is now only extracted features
                 raw_feature_data.drop(labels_to_drop, axis=1, inplace=True)
-        except KeyError as e:
+        except KeyError:
             logger.warning(f"{feature_file_path} does not have the labels {labels_to_drop} to drop.")
             # Skip to the next image type
             continue

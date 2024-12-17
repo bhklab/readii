@@ -175,3 +175,48 @@ def getPatientIntersectionDataframes(dataframe_A:DataFrame,
     intersection_index_dataframeB = dataframe_B.loc[intersection_index]
 
     return intersection_index_dataframeA, intersection_index_dataframeB
+
+
+def validateDataframeSubsetSelection(dataframe:DataFrame,
+                                     num_rows:Optional[int] = None,
+                                     num_cols:Optional[int] = None):
+    
+    # Check if dataframe is a DataFrame
+    if not isinstance(dataframe, DataFrame):
+        msg = f"dataframe must be a pandas DataFrame, got {type(dataframe)}"
+        logger.error(msg)
+        raise TypeError(msg)
+    
+    if num_rows is not None:
+        # Check if num_rows is an integer
+        if not isinstance(num_rows, int):
+            msg = f"num_rows must be an integer, got {type(num_rows)}"
+            logger.error(msg)
+            raise TypeError(msg)
+        
+        if num_rows > dataframe.shape[0]:
+            msg = f"num_rows ({num_rows}) is greater than the number of rows in the dataframe ({dataframe.shape[0]})"
+            logger.error(msg)
+            raise ValueError()
+    else:
+        logger.debug("Number of rows is within the size of the dataframe.")    
+    
+        
+    if num_cols is not None:
+        # Check if num_cols is an integer
+        if not isinstance(num_cols, int):
+            msg = f"num_cols must be an integer, got {type(num_cols)}"
+            logger.error(msg)
+            raise TypeError(msg)
+        
+        if num_cols > dataframe.shape[1]:
+            msg = f"num_cols ({num_cols}) is greater than the number of columns in the dataframe ({dataframe.shape[1]})"
+            logger.error(msg)
+            raise ValueError()
+    else:
+        logger.debug("Number of columns is within the size of the dataframe.")
+
+    return None
+
+
+
