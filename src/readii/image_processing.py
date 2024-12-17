@@ -8,7 +8,6 @@ from typing import Optional
 
 from readii.loaders import (
     loadDicomSITK,
-    loadRTSTRUCTSITK,
     loadSegmentation,
 )
 
