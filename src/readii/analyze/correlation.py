@@ -1,13 +1,15 @@
 import pandas as pd
-from readii.utils import logger
+
 from readii.data.select import validateDataframeSubsetSelection
+from readii.utils import logger
+
 
 def getFeatureCorrelations(vertical_features:pd.DataFrame,
                            horizontal_features:pd.DataFrame,
                            method:str = "pearson",
                            vertical_feature_name:str = '_vertical',
                            horizontal_feature_name:str = '_horizontal') -> pd.DataFrame:
-    """ Calculate correlation between two sets of features.
+    """Calculate correlation between two sets of features.
 
     Parameters
     ----------
@@ -74,7 +76,7 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
 
 def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
                                 num_vertical_features:int) -> pd.DataFrame:
-    """ Get the vertical (y-axis) self correlations from a correlation matrix. Gets the top left quadrant of the correlation matrix.
+    """Get the vertical (y-axis) self correlations from a correlation matrix. Gets the top left quadrant of the correlation matrix.
 
     Parameters
     ----------
@@ -102,7 +104,7 @@ def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
 
 def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
                                   num_horizontal_features:int) -> pd.DataFrame:
-    """ Get the horizontal (x-axis) self correlations from a correlation matrix. Gets the bottom right quadrant of the correlation matrix.
+    """Get the horizontal (x-axis) self correlations from a correlation matrix. Gets the bottom right quadrant of the correlation matrix.
 
     Parameters
     ----------
@@ -133,7 +135,7 @@ def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
 
 def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
                               num_vertical_features:int) -> pd.DataFrame:
-    """ Get the cross correlation matrix subsection for a correlation matrix. Gets the top right quadrant of the correlation matrix so vertical and horizontal features are correctly labeled.
+    """Get the cross correlation matrix subsection for a correlation matrix. Gets the top right quadrant of the correlation matrix so vertical and horizontal features are correctly labeled.
 
     Parameters
     ----------
