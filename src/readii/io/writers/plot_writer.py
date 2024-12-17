@@ -35,13 +35,13 @@ class PlotWriter(BaseWriter):
         },
     )
     # Make extensions immutable
-    VALID_EXTENSIONS: ClassVar[list[str]] = [
+    VALID_EXTENSIONS: ClassVar[list[str]] = (
 		".png",
 		".pdf",
         ".ps",
         ".eps",
         ".svg"
-	]
+    )
 
     def __post_init__(self) -> None:
         """Validate writer configuration."""
@@ -52,7 +52,27 @@ class PlotWriter(BaseWriter):
             raise PlotWriterValidationError(msg)
 
     def save(self, plot:matplotlib.figure.Figure, **kwargs: str) -> Path:
-        """Save the plot to a .png file."""
+        """Save the plot to a .png file with extra whitespace removed.
+        
+        Parameters
+        ----------
+        plot : matplotlib.figure.Figure
+            The plot to save.
+        kwargs : dict
+            Additional keyword arguments to pass to the save method.
+
+        Returns
+        -------
+        Path
+            The path to the saved file.
+
+        Raises
+        ------
+        PlotWriterIOError
+            If there is an error saving the plot.
+        PlotWriterValidationError
+            If the filename format is invalid.      
+        """
 
         logger.debug("Saving.", kwargs=kwargs)
 
