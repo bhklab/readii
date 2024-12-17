@@ -108,10 +108,12 @@ mkdocs-awesome-pages-plugin = ">=2.9.3, <3"
 cmd = "mkdocs build -f mkdocs.yaml"
 inputs = ["docs", "mkdocs.yaml"]
 outputs = ["site"]
+description = "Validate and build the documentation"
 
 [tool.pixi.feature.docs.tasks.doc-serve]
 cmd = "mkdocs serve -f mkdocs.yaml"
 inputs = ["docs", "mkdocs.yaml"]
+description = "Serve the documentation locally to port 8001"
 
 ############################################## STYLE ###############################################
 # See config/ruff.toml for the configuration
