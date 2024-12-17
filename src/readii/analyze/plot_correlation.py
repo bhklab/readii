@@ -1,13 +1,14 @@
 from typing import Optional
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
-import pandas as pd
-from scipy.linalg import issymmetric
 
 import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import seaborn as sns
+from scipy.linalg import issymmetric
 
 from readii.utils import logger
+
 
 def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
                            diagonal:bool = False,
