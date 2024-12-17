@@ -91,7 +91,7 @@ def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
     try: 
         validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
     except ValueError as e:
-        msg = f"Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
+        msg = "Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
         logger.exception(msg)
         raise e
 
@@ -119,7 +119,7 @@ def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
     try: 
         validateDataframeSubsetSelection(correlation_matrix, num_horizontal_features, num_horizontal_features)
     except ValueError as e: 
-        msg = f"Number of horizontalfeatures provided is greater than the number of rows or columns in the correlation matrix."
+        msg = "Number of horizontalfeatures provided is greater than the number of rows or columns in the correlation matrix."
         logger.exception(msg)
         raise e
 
@@ -151,7 +151,7 @@ def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
     try:
         validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
     except ValueError as e:
-        msg = f"Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
+        msg = "Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
         logger.exception(msg)
         raise e
     
