@@ -31,7 +31,7 @@ class PlotWriter(BaseWriter):
     overwrite: bool = field(
         default=False,
         metadata={
-            "help": "If True, allows overwriting existing files. If False, raises FileExistsError."
+            "help": "If True, allows overwriting existing files. If False, raises PlotWriterIOError."
         },
     )
     # Make extensions immutable
