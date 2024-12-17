@@ -1,8 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
+from matplotlib.figure import Figure
 from typing import ClassVar
-
-import matplotlib
 
 from readii.io.writers.base_writer import BaseWriter
 from readii.utils import logger
@@ -51,7 +50,7 @@ class PlotWriter(BaseWriter):
             msg = f"Invalid filename format {self.filename_format}. Must end with one of {self.VALID_EXTENSIONS}."
             raise PlotWriterValidationError(msg)
 
-    def save(self, plot:matplotlib.figure.Figure, **kwargs: str) -> Path:
+    def save(self, plot:Figure, **kwargs: str) -> Path:
         """Save the plot to a .png file with extra whitespace removed.
         
         Parameters
