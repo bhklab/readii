@@ -46,7 +46,6 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
     corr_fig : matplotlib.pyplot.figure
         Figure object containing a Seaborn heatmap.
     """
-
     if diagonal:
         logger.debug(f"Creating {triangle} traingle mask for diagonal correlation plot.")
         # Set up mask for hiding half the matrix in the plot
@@ -136,7 +135,6 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
     bin_edges : np.ndarray
         Numpy array containing the bin edges for the histogram.
     """
-    
     # Convert to numpy to use histogram function
     feature_correlation_arr = correlation_matrix.to_numpy()
 

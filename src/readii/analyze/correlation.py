@@ -147,7 +147,6 @@ def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
     pd.DataFrame
         Dataframe containing the cross correlations from the correlation matrix.
     """
-
     try:
         validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
     except ValueError as e:
