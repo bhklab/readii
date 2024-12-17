@@ -7,10 +7,10 @@ from readii.io.loaders.general import loadFileToDataFrame
 from readii.utils import logger
 
 
-def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str],
+def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str], # noqa
                                    image_types:list, 
                                    drop_labels:Optional[bool]=True, 
-                                   labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]:
+                                   labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]: 
     """Load in all the specified extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
 
     Parameters
