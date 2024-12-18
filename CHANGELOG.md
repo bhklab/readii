@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## v1.28.0 (2024-12-18)
+
+### Features
+
+- Add io/readers to ruff config ([#94](https://github.com/bhklab/readii/pull/94),
+  [`7efc97b`](https://github.com/bhklab/readii/commit/7efc97bfca18c92de5f4a859f96654df53572028))
+
+Updated include list to have the io/readers functions and updated the files so all ruff tests pass.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Enhanced flexibility in loading feature files by accepting both `Path` objects
+  and strings. - Improved error handling and logging for file loading and directory access.
+
+- **Bug Fixes** - Enhanced error handling and logging for file loading and directory access,
+  providing clearer context for issues.
+
+- **Documentation** - Updated docstrings for functions to improve clarity and detail, including
+  return type annotations. <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.27.0 (2024-12-17)
 
 ### Features
