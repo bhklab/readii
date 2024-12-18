@@ -1,6 +1,57 @@
 # CHANGELOG
 
 
+## v1.29.0 (2024-12-18)
+
+### Features
+
+- Add CorrelationWriter ([#96](https://github.com/bhklab/readii/pull/96),
+  [`b241c42`](https://github.com/bhklab/readii/commit/b241c42f576ce967ef8463c74f76397b8e99fcf5))
+
+Created CorrelationWriter class for the analyze portion of the pipeline.
+
+I think there will eventually be a FeatureSetWriter that this should probably inherit from, but I
+  need the Correlation one now for Aerts.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Introduced a `CorrelationWriter` class for managing the writing of correlation
+  data to files with customizable paths and filenames. - Added support for saving correlation data
+  in both CSV and Excel formats.
+
+- **Bug Fixes** - Implemented error handling for invalid correlation data, existing files, and
+  filename format validation.
+
+- **Tests** - Added a comprehensive suite of unit tests for the `CorrelationWriter` class, covering
+  various scenarios for saving correlation data. <!-- end of auto-generated comment: release notes
+  by coderabbit.ai -->
+
+---------
+
+Co-authored-by: Jermiah Joseph <jermiahjoseph98@gmail.com>
+
+
+## v1.28.0 (2024-12-18)
+
+### Features
+
+- Add io/readers to ruff config ([#94](https://github.com/bhklab/readii/pull/94),
+  [`7efc97b`](https://github.com/bhklab/readii/commit/7efc97bfca18c92de5f4a859f96654df53572028))
+
+Updated include list to have the io/readers functions and updated the files so all ruff tests pass.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Enhanced flexibility in loading feature files by accepting both `Path` objects
+  and strings. - Improved error handling and logging for file loading and directory access.
+
+- **Bug Fixes** - Enhanced error handling and logging for file loading and directory access,
+  providing clearer context for issues.
+
+- **Documentation** - Updated docstrings for functions to improve clarity and detail, including
+  return type annotations. <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.27.0 (2024-12-17)
 
 ### Features
