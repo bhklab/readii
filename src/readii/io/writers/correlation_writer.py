@@ -84,7 +84,22 @@ class CorrelationWriter(BaseWriter):
                 raise CorrelationWriterIOError(msg)
             else:
                 logger.warning(f"File {out_path} already exists. Overwriting.")
-                
+        
+        # Check if the correlation dataframe is a DataFrame
+        if not isinstance(correlation_df, DataFrame):
+            msg = f"Correlation dataframe must be a pandas DataFrame, got {type(correlation_df)}"
+            raise CorrelationWriterValidationError(msg)
+        
+        # Check if the correlation dataframe is empty
+        if correlation_df.empty:
+            msg = "Correlation dataframe is empty"
+            raise CorrelationWriterValidationError(msg)
+        
+        # Check that the columns and index of the correlation dataframe are the same
+        if not correlation_df.columns.equals(correlation_df.index):
+            msg = "Correlation dataframe columns and index are not the same"
+            raise CorrelationWriterValidationError(msg)
+
         logger.debug("Saving correlation dataframe to file", out_path=out_path)
         try:
             match out_path.suffix:
