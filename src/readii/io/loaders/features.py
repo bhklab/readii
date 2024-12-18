@@ -53,7 +53,7 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str], # noqa
     for image_type in image_types:
         try:
             # Extract the image type feature csv file from the feature directory  
-            matching_files = [file for file in feature_file_list if (image_type in file)]  
+            matching_files = [file for file in feature_file_list if (image_type in file.stem)]  
 
             match len(matching_files):
                 case 1:
