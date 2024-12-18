@@ -1,6 +1,27 @@
 # CHANGELOG
 
 
+## v1.29.1 (2024-12-18)
+
+### Bug Fixes
+
+- Look for image type in Path stem as Path is not iterable
+  ([#97](https://github.com/bhklab/readii/pull/97),
+  [`875a6c3`](https://github.com/bhklab/readii/commit/875a6c3cb1c3d10a8225f45f5770380b83562003))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Improved file matching logic for identifying features based on image types. -
+  Enhanced clarity in handling scenarios for matching files with updated control flow.
+
+- **Bug Fixes** - Retained consistent error handling with appropriate logging for warnings and
+  exceptions.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.29.0 (2024-12-18)
 
 ### Features
