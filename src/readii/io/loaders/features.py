@@ -1,18 +1,17 @@
-import os
-import pandas as pd 
+from pathlib import Path
+from typing import Dict, Optional, Union
 
-from typing import Optional, Dict
+import pandas as pd
 
 from readii.io.loaders.general import loadFileToDataFrame
-
 from readii.utils import logger
 
 
-def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
+def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str], # noqa
                                    image_types:list, 
                                    drop_labels:Optional[bool]=True, 
-                                   labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]:
-    """Function to load in all the extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
+                                   labels_to_drop:Optional[list]=None)->Dict[str,pd.DataFrame]: 
+    """Load in all the specified extracted imaging feature sets from a directory and return them as a dictionary of dataframes.
 
     Parameters
     ----------
@@ -31,6 +30,10 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     feature_sets : dict
         Dictionary of dataframes containing the extracted radiomics features.
     """
+    # Convert directory to Path object if it is a string
+    if isinstance(extracted_feature_dir, str):
+        extracted_feature_dir = Path(extracted_feature_dir)
+
     # Set default labels to drop if not specified
     if labels_to_drop is None:
         labels_to_drop = ["patient_ID","survival_time_in_years","survival_event_binary"]
@@ -39,28 +42,44 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
     feature_sets = {}
 
     # Check if the passed in extracted feature directory exists
-    if not os.path.isdir(extracted_feature_dir):
-        raise FileNotFoundError(f"Extracted feature directory {extracted_feature_dir} does not exist.")
+    if not extracted_feature_dir.exists() or not extracted_feature_dir.is_dir():
+        msg = f"Extracted feature directory {extracted_feature_dir} does not exist."
+        logger.error(f"Extracted feature directory {extracted_feature_dir} does not exist.")
+        raise FileNotFoundError()
     
-    feature_file_list = os.listdir(extracted_feature_dir)
+    feature_file_list = sorted(extracted_feature_dir.glob("*.csv"))
 
     # Loop through all the files in the directory
     for image_type in image_types:
         try:
             # Extract the image type feature csv file from the feature directory  
-            matching_files = [file for file in feature_file_list if (image_type in file) and (file.endswith(".csv"))]  
-            if matching_files:  
-                image_type_feature_file = matching_files[0]  
-                # Remove the image type file from the list of feature files  
-                feature_file_list.remove(image_type_feature_file)
-        except IndexError:
-            logger.warning(f"No {image_type} feature csv files found in {extracted_feature_dir}")
-            # Skip to the next image type
-            continue
+            matching_files = [file for file in feature_file_list if (image_type in file)]  
+
+            match len(matching_files):
+                case 1:
+                    # Only one file found, use it  
+                    pass
+                case 0:
+                    # No files found for this image type
+                    logger.warning(f"No {image_type} feature csv files found in {extracted_feature_dir}")
+                    # Skip to the next image type
+                    continue
+                case _:
+                    # Multiple files found
+                    msg = f"Multiple {image_type} feature csv files found in {extracted_feature_dir}. First one will be used."
+                    logger.warning(msg)
+
+            image_type_feature_file = matching_files[0]  
+            # Remove the image type file from the list of feature files  
+            feature_file_list.remove(image_type_feature_file)
+
+        except Exception as e:
+            logger.warning(f"Error loading {image_type} feature csv files from {extracted_feature_dir}: {e}")
+            raise e
 
 
         # Get the full path to the feature file
-        feature_file_path = os.path.join(extracted_feature_dir, image_type_feature_file)
+        feature_file_path = extracted_feature_dir / image_type_feature_file
             
         # Load the feature data into a pandas dataframe
         raw_feature_data = loadFileToDataFrame(feature_file_path)
@@ -70,6 +89,7 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
             if drop_labels:
                 # Data is now only extracted features
                 raw_feature_data.drop(labels_to_drop, axis=1, inplace=True)
+
         except KeyError:
             logger.warning(f"{feature_file_path} does not have the labels {labels_to_drop} to drop.")
             # Skip to the next image type
@@ -77,9 +97,11 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:str,
 
         # Save the dataframe to the feature_sets dictionary
         feature_sets[image_type] = raw_feature_data
+    # end image type loop
 
     # After processing all image types, check if any feature sets were loaded 
     if not feature_sets:
-        raise ValueError(f"No valid feature sets were loaded from {extracted_feature_dir}")
+        logger.error(f"No valid feature sets were loaded from {extracted_feature_dir}")
+        raise ValueError()
     
     return feature_sets

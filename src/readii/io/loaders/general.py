@@ -3,6 +3,8 @@ from pathlib import Path
 import pandas as pd
 import yaml
 
+from readii.utils import logger
+
 
 class ConfigError(Exception):
     """Base class for errors in the config module."""
@@ -40,16 +42,21 @@ def loadImageDatasetConfig(dataset_name: str, config_dir_path: str | Path) -> di
 
     if not config_file_path.exists():
         msg = f"Config file {config_file_path} does not exist."
-        raise FileNotFoundError(msg)
+        logger.error(msg)
+        raise FileNotFoundError()
     
     try:
         with config_file_path.open("r") as f:
             config = yaml.safe_load(f)
     except yaml.YAMLError as ye:
-        raise ConfigError("Invalid YAML in config file") from ye
+        msg = f"Invalid YAML config file for {dataset_name}."
+        logger.exception(msg)
+        raise ConfigError() from ye
 
     if not config:
-        raise ConfigError("Config file is empty or invalid")
+        msg = f"{dataset_name} config file is empty or invalid."
+        logger.error(msg)
+        raise ConfigError()
 
     return config
 
@@ -70,11 +77,14 @@ def loadFileToDataFrame(file_path: str | Path) -> pd.DataFrame:
     """
     file_path = Path(file_path)
     if not file_path:
-        raise ValueError("File is empty")
+        msg = f"File {file_path} is empty"
+        logger.error(msg)
+        raise ValueError()
 
     if not file_path.exists():
         msg = f"File {file_path} does not exist"
-        raise FileNotFoundError(msg)
+        logger.error(msg)
+        raise FileNotFoundError()
 
     # Get the file extension
     file_extension = file_path.suffix
@@ -86,14 +96,22 @@ def loadFileToDataFrame(file_path: str | Path) -> pd.DataFrame:
             df = pd.read_csv(file_path)
         else:
             msg = f"Unsupported file format {file_extension}. Please provide a .csv or .xlsx file."
-            raise ValueError(msg)
+            logger.exception(msg)
+            raise ValueError()
 
     except pd.errors.EmptyDataError as e:
-        raise DataFrameLoadError("File is empty") from e
+        msg = f"File {file_path} is empty"
+        logger.exception(msg)
+        raise DataFrameLoadError() from e
 
     except (pd.errors.ParserError, ValueError) as e:
-        raise DataFrameLoadError("Error parsing file") from e
+        msg = "Error pargins {file_path}"
+        logger.exception(msg)
+        raise DataFrameLoadError() from e
 
     if df.empty:
-        raise DataFrameLoadError("Dataframe is empty")
+        msg = "Loaded Dataframe is empty"
+        logger.exception(msg)
+        raise DataFrameLoadError()
+    
     return df
