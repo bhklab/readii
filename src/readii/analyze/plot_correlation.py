@@ -8,7 +8,8 @@ from matplotlib.figure import Figure
 from scipy.linalg import issymmetric
 
 from readii.analyze.correlation import getSelfCorrelations
-from readii.io.writers.base_writer import BaseWriter, PlotWriter
+from readii.io.writers.base_writer import BaseWriter
+from readii.io.writers.plot_writer import PlotWriter
 from readii.utils import logger
 
 
