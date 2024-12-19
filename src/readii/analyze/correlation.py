@@ -1,6 +1,5 @@
 import pandas as pd
 
-from readii.data.select import validateDataframeSubsetSelection
 from readii.utils import logger
 
 
@@ -96,7 +95,6 @@ def getSelfCorrelations(correlation_matrix:pd.DataFrame,
     pd.DataFrame
         Dataframe containing the vertical self correlations from the correlation matrix.    
     """
-    
     # Get the rows and columns with the same feature type name suffix
     self_correlations = correlation_matrix.filter(like=feature_type_name, axis=0).filter(like=feature_type_name, axis=1)
         
@@ -163,8 +161,6 @@ def getSelfAndCrossCorrelations(correlation_matrix:pd.DataFrame,
     cross_correlations : pd.DataFrame
         Dataframe containing the cross correlations from the correlation matrix.
     """
-
-
     try:
         vertical_correlations, horizontal_correlations = getSelfCorrelations(correlation_matrix, vertical_feature_name), getSelfCorrelations(correlation_matrix, horizontal_feature_name)
 
