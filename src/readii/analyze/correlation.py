@@ -107,9 +107,9 @@ def getSelfCorrelations(correlation_matrix:pd.DataFrame,
 
 
 
-def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
-                              vertical_feature_name:str = "_vertical",
-                              horizontal_feature_name:str = "_horizontal") -> pd.DataFrame:
+def getCrossCorrelations(correlation_matrix:pd.DataFrame,
+                         vertical_feature_name:str = "_vertical",
+                         horizontal_feature_name:str = "_horizontal") -> pd.DataFrame:
     """Get the cross correlation matrix subsection for a correlation matrix. Gets the top right quadrant of the correlation matrix so vertical and horizontal features are correctly labeled.
 
     Parameters
