@@ -7,6 +7,9 @@ import seaborn as sns
 from matplotlib.figure import Figure
 from scipy.linalg import issymmetric
 
+from readii.analyze.correlation import getSelfCorrelations
+from readii.io.writers.base_writer import BaseWriter
+from readii.io.writers.plot_writer import PlotWriter
 from readii.utils import logger
 
 
@@ -186,3 +189,43 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
     plt.title(subtitle, fontsize=10)
 
     return dist_fig, bin_values, bin_edges
+
+
+def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
+                        feature_type_name:str,
+                        correlation_method:str = "pearson",
+                        cmap='nipy_spectral',
+                        save_path:Optional[str] = None,) -> None:
+
+    self_corr = getSelfCorrelations(correlation_matrix, feature_type_name)
+
+    self_corr_heatmap = plotCorrelationHeatmap(self_corr, 
+                                               diagonal=True, 
+                                                cmap=cmap, 
+                                                xlabel=feature_type_name, 
+                                                ylabel=feature_type_name,
+                                                title=f"{correlation_method.capitalize()} Self Correlations", subtitle=f"{feature_type_name}")
+
+
+    if save_path is not None:
+        heatmap_writer = PlotWriter(root_directory =  save_path / "heatmap",
+                            filename_format = "{ColorMap}/" + "{FeatureType}_{CorrelationType}_self_correlation_heatmap.png",
+                            overwrite = False,
+                            create_dirs = True
+                            )
+        
+        self_corr_save_path = heatmap_writer.resolve_path(FeatureType = feature_type_name,
+                                                 CorrelationType = correlation_method,
+                                                 ColorMap = cmap)
+        if self_corr_save_path.exists():
+            logger.warning(f"Correlation heatmap already exists at {self_corr_save_path}.")
+
+        else:
+            logger.debug("Saving correlation heatmaps.")
+
+            self_corr_save_path = heatmap_writer.save(self_corr_heatmap, FeatureType = feature_type_name, CorrelationType = correlation_method, ColorMap = cmap)
+
+        return self_corr_heatmap, self_corr_save_path
+
+    else:
+        return self_corr_heatmap
