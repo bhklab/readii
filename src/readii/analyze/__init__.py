@@ -1,17 +1,17 @@
 """Module to perform analysis on READII outputs."""
 from .correlation import (
-    getCrossCorrelationMatrix,
+    getCrossCorrelations,
     getFeatureCorrelations,
-    getHorizontalSelfCorrelations,
-    getVerticalSelfCorrelations,
+    getSelfAndCrossCorrelations,
+    getSelfCorrelations,
 )
 from .plot_correlation import plotCorrelationHeatmap, plotCorrelationHistogram
 
 __all__ = [
     'getFeatureCorrelations',
-    'getVerticalSelfCorrelations',
-    'getHorizontalSelfCorrelations',
-    'getCrossCorrelationMatrix',
+    'getSelfCorrelations',
+    'getCrossCorrelations',
+    'getSelfAndCrossCorrelations',
     'plotCorrelationHeatmap',
     'plotCorrelationHistogram'
 ]
