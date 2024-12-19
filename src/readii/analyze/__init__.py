@@ -2,8 +2,8 @@
 from .correlation import (
     getCrossCorrelations,
     getFeatureCorrelations,
+    getSelfAndCrossCorrelations,
     getSelfCorrelations,
-    getSelfAndCrossCorrelations
 )
 from .plot_correlation import plotCorrelationHeatmap, plotCorrelationHistogram
 
