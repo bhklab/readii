@@ -163,3 +163,39 @@ def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
         raise e
     
     return correlation_matrix.iloc[0:num_vertical_features, num_vertical_features:]
+
+
+
+def getSelfAndCrossCorrelations(correlation_matrix:pd.DataFrame,
+                                num_vertical_features:int,
+                                num_horizontal_features:int) -> pd.DataFrame:
+    """Get the vertical and horizontal self correlations and cross correlations from a correlation matrix.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to get the self and cross correlations from.
+    num_vertical_features : int
+        Number of vertical features in the correlation matrix.
+    num_horizontal_features : int
+        Number of horizontal features in the correlation matrix.
+
+    Returns
+    -------
+    vertical_correlations : pd.DataFrame
+        Dataframe containing the vertical self correlations from the correlation matrix.
+    horizontal_correlations : pd.DataFrame
+        Dataframe containing the horizontal self correlations from the correlation matrix.
+    cross_correlations : pd.DataFrame
+        Dataframe containing the cross correlations from the correlation matrix.
+    """
+    try:
+        vertical_correlations = getVerticalSelfCorrelations(correlation_matrix, num_vertical_features)
+        horizontal_correlations = getHorizontalSelfCorrelations(correlation_matrix, num_horizontal_features)
+        cross_correlations = getCrossCorrelationMatrix(correlation_matrix, num_vertical_features)
+    except Exception as e:
+        msg = f"Error getting self and cross correlations from correlation matrix: {e}"
+        logger.exception(msg)
+        raise e
+    
+    return vertical_correlations, horizontal_correlations, cross_correlations
