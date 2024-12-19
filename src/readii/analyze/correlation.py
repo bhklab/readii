@@ -170,7 +170,7 @@ def getSelfAndCrossCorrelations(correlation_matrix:pd.DataFrame,
         raise e
     
     try:
-        cross_correlations = getCrossCorrelationMatrix(correlation_matrix, vertical_feature_name, horizontal_feature_name)
+        cross_correlations = getCrossCorrelations(correlation_matrix, vertical_feature_name, horizontal_feature_name)
     except Exception as e:
         msg = f"Error getting cross correlations from correlation matrix: {e}"
         logger.exception(msg)
