@@ -11742,8 +11742,8 @@ packages:
   timestamp: 1728642895644
 - pypi: .
   name: readii
-  version: 1.29.0
-  sha256: abc3680060af41d49e9b45569053c6c1b6ecacf00f1abd4d73ec09d1ea137a4b
+  version: 1.29.1
+  sha256: a9fffc3e6f8516e93d828baf70ebc1aca37081183fd2063cea7bf542885c0b0d
   requires_dist:
   - simpleitk>=2.3.1
   - matplotlib>=3.9.2,<4

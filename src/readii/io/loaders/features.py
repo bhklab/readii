@@ -47,6 +47,7 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str], # noqa
         logger.error(f"Extracted feature directory {extracted_feature_dir} does not exist.")
         raise FileNotFoundError()
     
+    # Get list of all the csv files in the directory with their full paths
     feature_file_list = sorted(extracted_feature_dir.glob("*.csv"))
 
     # Loop through all the files in the directory
@@ -69,17 +70,13 @@ def loadFeatureFilesFromImageTypes(extracted_feature_dir:Union[Path|str], # noqa
                     msg = f"Multiple {image_type} feature csv files found in {extracted_feature_dir}. First one will be used."
                     logger.warning(msg)
 
-            image_type_feature_file = matching_files[0]  
+            feature_file_path = matching_files[0]  
             # Remove the image type file from the list of feature files  
-            feature_file_list.remove(image_type_feature_file)
+            feature_file_list.remove(feature_file_path)
 
         except Exception as e:
             logger.warning(f"Error loading {image_type} feature csv files from {extracted_feature_dir}: {e}")
             raise e
-
-
-        # Get the full path to the feature file
-        feature_file_path = extracted_feature_dir / image_type_feature_file
             
         # Load the feature data into a pandas dataframe
         raw_feature_data = loadFileToDataFrame(feature_file_path)
