@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v1.30.0 (2024-12-19)
+
+### Features
+
+- Fix loaders some more ([#98](https://github.com/bhklab/readii/pull/98),
+  [`6272a03`](https://github.com/bhklab/readii/commit/6272a03fd72b71e00e296ddc002b14b05a70e57f))
+
+Didn't test updating from os to pathlib enough, but should be good now. Added basic test, needs to
+  be expanded upon.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Introduced a new variable for improved file path handling in the feature
+  loading process. - Added a comment for clarity on retrieving the full path to the feature file.
+
+- **Bug Fixes** - Updated logic for removing the image type file from the feature files list.
+
+- **Tests** - Added a new test function to validate the functionality of the feature loading
+  function. 	- Implemented a fixture for testing with a temporary feature file. <!-- end of
+  auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.29.1 (2024-12-18)
 
 ### Bug Fixes
