@@ -1,5 +1,4 @@
 from readii.analyze.correlation import getFeatureCorrelations
-from readii.io.writers.plot_writer import PlotWriter
 
 from readii.analyze.plot_correlation import (
     saveCorrelationHeatmap,
