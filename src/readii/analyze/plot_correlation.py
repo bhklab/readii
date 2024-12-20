@@ -13,14 +13,44 @@ from readii.io.writers.plot_writer import PlotWriter, PlotWriterPlotExistsError
 from readii.utils import logger
 
 
-
 def saveCorrelationHeatmap(plot_figure:Figure,
                            correlation_directory:Path,
                            cmap:str,
                            feature_types:list[str],
                            correlation_type:str,
                            overwrite:bool = False) -> Path:
-    
+    """Save a heatmap figure to a file with a PlotWriter.
+
+    Parameters
+    ----------
+    plot_figure : matplotlib.figure.Figure
+        The plot to save.
+    correlation_directory : pathlib.Path
+        The directory to save the heatmap to.
+    cmap : str
+        The colormap used for the heatmap.
+    feature_types : list[str]
+        The feature types on the x and y axes of the heatmap. Cross correlatins will be concatenated with "_vs_" to create the title.
+    correlation_type : str
+        The correlation method + type used for the heatmap. For example, "pearson_self".
+    overwrite : bool, optional
+        Whether to overwrite an existing file. The default is False.
+
+    Returns
+    -------
+    Path
+        The path to the saved file.
+        
+    Example
+    -------
+    >>> saveCorrelationHeatmap(corr_fig,
+                                correlation_directory=Path("correlations"),
+                                cmap="nipy_spectral",
+                                feature_types=["vertical", "horizontal"],
+                                correlation_type="pearson_cross")
+
+    File will be saved to correlations/heatmap/nipy_spectral/vertical_vs_horizontal_pearson_cross_correlation_heatmap.png
+    """
     # Set up the writer
     corr_heatmap_writer = PlotWriter(root_directory = correlation_directory,
                                      filename_format = "heatmap/{ColorMap}/{FeaturesPlotted}_{CorrelationType}_correlation_heatmap.png",
@@ -54,7 +84,35 @@ def saveCorrelationHistogram(plot_figure:Figure,
                              feature_types:list[str],
                              correlation_type:str,
                              overwrite:bool = False) -> None:
-    
+    """Save a histogram figure to a file with a PlotWriter.
+
+    Parameters
+    ----------
+    plot_figure : matplotlib.figure.Figure
+        The plot to save.
+    correlation_directory : pathlib.Path
+        The directory to save the heatmap to.
+    feature_types : list[str]
+        The feature types from the correlation matrix used for the histogram. Cross correlatins will be concatenated with "_vs_" to create the title.
+    correlation_type : str
+        The correlation method + type used for the heatmap. For example, "pearson_self".
+    overwrite : bool, optional
+        Whether to overwrite an existing file. The default is False.
+
+    Returns
+    -------
+    Path
+        The path to the saved file.
+        
+    Example
+    -------
+    >>> saveCorrelationHistogram(corr_fig,
+                                 correlation_directory=Path("correlations"),
+                                 feature_types=["vertical", "horizontal"],
+                                 correlation_type="pearson_cross")
+
+    File will be saved to correlations/histogram/vertical_vs_horizontal_pearson_cross_correlation_histogram.png
+    """
     corr_histogram_writer = PlotWriter(root_directory = correlation_directory,
                                        filename_format= "histogram/{FeaturesPlotted}_{CorrelationType}_correlation_histogram.png",
                                        overwrite=overwrite,
