@@ -19,6 +19,10 @@ class PlotWriterIOError(PlotWriterError):
 
     pass
 
+class PlotWriterPlotExistsError(PlotWriterError):
+    """Raised when a plot already exists at the specified path."""
+
+    pass
 
 class PlotWriterValidationError(PlotWriterError):
     """Raised when validation of writer configuration fails."""
@@ -83,7 +87,7 @@ class PlotWriter(BaseWriter):
         if out_path.exists():
             if not self.overwrite:
                 msg = f"File {out_path} already exists. \nSet {self.__class__.__name__}.overwrite to True to overwrite."
-                raise PlotWriterIOError(msg)
+                raise PlotWriterPlotExistsError(msg)
             else:
                 logger.warning(f"File {out_path} already exists. Overwriting.")
                 
