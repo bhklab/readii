@@ -301,26 +301,12 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                 subtitle=f"{feature_type_name}")
 
     if save_dir_path is not None:
-        # Create a PlotWriter instance to save the heatmap
-        heatmap_writer = PlotWriter(root_directory = save_dir_path / "heatmap",
-                            filename_format = "{ColorMap}/" + "{FeatureType}_{CorrelationType}_self_correlation_heatmap.png",
-                            overwrite = False,
-                            create_dirs = True
-                            )
-        
-        # Get the output path for the heatmap
-        self_corr_save_path = heatmap_writer.resolve_path(FeatureType = feature_type_name,
-                                                 CorrelationType = correlation_method,
-                                                 ColorMap = cmap)
-        # Check if the heatmap already exists
-        if self_corr_save_path.exists():
-            logger.warning(f"Correlation heatmap already exists at {self_corr_save_path}.")
-
-        else:
-            logger.debug("Saving correlation heatmaps.")
-            # Save the heatmap
-            self_corr_save_path = heatmap_writer.save(self_corr_heatmap, FeatureType = feature_type_name, CorrelationType = correlation_method, ColorMap = cmap)
-
+        # Save the heatmap to a png file
+        self_corr_save_path = saveCorrelationHeatmap(self_corr_heatmap,
+                                                     save_dir_path,
+                                                     cmap=cmap,
+                                                     feature_types=[feature_type_name],
+                                                     correlation_type=f"{correlation_method}_self")
         # Return the figure and path to the saved heatmap
         return self_corr_heatmap, self_corr_save_path
 
@@ -375,31 +361,12 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                 subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
     
     if save_dir_path is not None:
-        # Create a PlotWriter instance to save the heatmap
-        heatmap_writer = PlotWriter(root_directory = save_dir_path / "heatmap",
-                                    filename_format = "{ColorMap}/" + "{VerticalFeatureType}_vs_{HorizontalFeatureType}_{CorrelationType}_cross_correlation_heatmap.png",
-                                    overwrite = False,
-                                    create_dirs = True
-                                    )
-        
-        # Get the output path for the heatmap
-        cross_corr_save_path = heatmap_writer.resolve_path(VerticalFeatureType = vertical_feature_name,
-                                                           HorizontalFeatureType = horizontal_feature_name,
-                                                           CorrelationType = correlation_method,
-                                                           ColorMap = cmap)
-        
-        # Check if the heatmap already exists
-        if cross_corr_save_path.exists():
-            logger.warning(f"Correlation heatmap already exists at {cross_corr_save_path}.")
-
-        else:
-            logger.debug("Saving correlation heatmap.")
-            # Save the heatmap
-            cross_corr_save_path = heatmap_writer.save(cross_corr_heatmap, 
-                                                       VerticalFeatureType = vertical_feature_name, 
-                                                       HorizontalFeatureType = horizontal_feature_name, 
-                                                       CorrelationType = correlation_method, 
-                                                       ColorMap = cmap)
+        # Save the heatmap to a png file
+        cross_corr_save_path = saveCorrelationHeatmap(cross_corr_heatmap,
+                                                      save_dir_path,
+                                                      cmap=cmap,
+                                                      feature_types=[vertical_feature_name, horizontal_feature_name],
+                                                      correlation_type=f"{correlation_method}_cross")
         # Return the figure and the path to the saved heatmap 
         return cross_corr_heatmap, cross_corr_save_path
         
@@ -460,27 +427,12 @@ def plotSelfCorrHistogram(correlation_matrix:pd.DataFrame,
                                                     subtitle = f"{feature_type_name}")
     
     if save_dir_path is not None:
-        # Create a PlotWriter instance to save the histogram
-        hist_writer = PlotWriter(root_directory = save_dir_path / "histogram",
-                                 filename_format = "{FeatureType}_{CorrelationType}_self_correlation_histogram.png",
-                                 overwrite = False,
-                                 create_dirs = True
-                                 )
-        
-        # Get the output path for the histogram
-        self_corr_save_path = hist_writer.resolve_path(FeatureType = feature_type_name,
-                                                       CorrelationType = correlation_method)
-        
-        # Check if the histogram already exists
-        if self_corr_save_path.exists():
-            logger.warning(f"Correlation histogram already exists at {self_corr_save_path}.")
+        # Save the histogram to a png file
+        self_corr_save_path = saveCorrelationHistogram(self_corr_hist,
+                                                       save_dir_path,
+                                                       feature_types=[feature_type_name],
+                                                       correlation_type=f"{correlation_method}_self")
 
-        else:
-            logger.debug("Saving correlation histogram.")
-            # Save the histogram
-            self_corr_save_path = hist_writer.save(self_corr_hist, 
-                                                   FeatureType = feature_type_name, 
-                                                   CorrelationType = correlation_method)
         # Return the figure and the path to the saved histogram 
         return self_corr_hist, self_corr_save_path
         
@@ -541,29 +493,12 @@ def plotCrossCorrHistogram(correlation_matrix:pd.DataFrame,
                                                subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
     
     if save_dir_path is not None:
-        # Create a PlotWriter instance to save the histogram
-        hist_writer = PlotWriter(root_directory = save_dir_path / "histogram",
-                                 filename_format = "{VerticalFeatureType}_vs_{HorizontalFeatureType}_{CorrelationType}_cross_correlation_histogram.png",
-                                 overwrite = False,
-                                 create_dirs = True
-                                 )
+        # Save the histogram to a png file
+        cross_corr_save_path = saveCorrelationHistogram(cross_corr_hist,
+                                                        save_dir_path,
+                                                        feature_types=[vertical_feature_name, horizontal_feature_name],
+                                                        correlation_type=f"{correlation_method}_cross")
         
-        # Get the output path for the histogram
-        cross_corr_save_path = hist_writer.resolve_path(VerticalFeatureType = vertical_feature_name,
-                                                        HorizontalFeatureType = horizontal_feature_name,
-                                                        CorrelationType = correlation_method)
-        
-        # Check if the histogram already exists
-        if cross_corr_save_path.exists():
-            logger.warning(f"Correlation histogram already exists at {cross_corr_save_path}.")
-
-        else:
-            logger.debug("Saving correlation histogram.")
-            # Save the histogram
-            cross_corr_save_path = hist_writer.save(cross_corr_hist, 
-                                                    VerticalFeatureType = vertical_feature_name, 
-                                                    HorizontalFeatureType = horizontal_feature_name, 
-                                                    CorrelationType = correlation_method)
         # Return the figure and the path to the saved histogram 
         return cross_corr_hist, cross_corr_save_path
 
