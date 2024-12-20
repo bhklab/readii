@@ -5,7 +5,11 @@ from readii.analyze.plot_correlation import (
     saveCorrelationHeatmap,
     plotCorrelationHeatmap,
     saveCorrelationHistogram,
-    plotCorrelationHistogram
+    plotCorrelationHistogram,
+    plotSelfCorrHeatmap,
+    plotCrossCorrHeatmap,
+    plotSelfCorrHistogram,
+    plotCrossCorrHistogram
 )
 
 from matplotlib.figure import Figure
@@ -117,7 +121,7 @@ def test_save_corr_heatmap(correlation_matrix, correlations_dir, correlation_typ
     ]
 )
 def test_save_corr_histogram(correlation_matrix, correlations_dir, correlation_type, feature_types):
-    """Test saving a heatmap from a correlation matrix"""
+    """Test saving a histogram from a correlation matrix"""
     corr_fig, _, _ = plotCorrelationHistogram(correlation_matrix)
     
     expected_path = correlations_dir / "histogram" / ("_vs_".join(feature_types)) + f"_{correlation_type}_correlation_histogram.png"
@@ -130,3 +134,54 @@ def test_save_corr_histogram(correlation_matrix, correlations_dir, correlation_t
         "Wrong path returned, expect {expected_path}"  
     assert actual_path.exists(), \
         "Figure is not being saved to path provided or at all."
+    
+
+
+def test_plot_selfcorr_heatmap_defaults(correlation_matrix, vertical_feature_name):
+    """Test plotting a self-correlation heatmap from a correlation matrix"""
+    corr_fig = plotSelfCorrHeatmap(correlation_matrix,
+                                   feature_type_name=vertical_feature_name)
+    assert isinstance(corr_fig, Figure), \
+        "Wrong return type, expect a matplotlib Figure"
+    assert corr_fig.get_suptitle() == f"Pearson Self Correlations", \
+        "Wrong title, expect Pearson Self Correlations"
+    assert corr_fig.get_axes()[0].get_title(), \
+        "Wrong subtitle, expect vertical"
+    
+
+def test_plot_crosscorr_heatmap_defaults(correlation_matrix, vertical_feature_name, horizontal_feature_name):
+    """Test plotting a cross-correlation heatmap from a correlation matrix"""
+    corr_fig = plotCrossCorrHeatmap(correlation_matrix,
+                                    vertical_feature_name=vertical_feature_name,
+                                    horizontal_feature_name=horizontal_feature_name)
+    assert isinstance(corr_fig, Figure), \
+        "Wrong return type, expect a matplotlib Figure"
+    assert corr_fig.get_suptitle() == f"Pearson Cross Correlations", \
+        "Wrong title, expect Pearson Cross Correlations"
+    assert corr_fig.get_axes()[0].get_title(), \
+        "Wrong subtitle, expect vertical vs horizontal"
+
+
+def test_plot_selfcorr_histogram_defaults(correlation_matrix, vertical_feature_name):
+    """Test plotting a self-correlation histogram from a correlation matrix"""
+    corr_fig = plotSelfCorrHistogram(correlation_matrix,
+                                     feature_type_name=vertical_feature_name)
+    assert isinstance(corr_fig, Figure), \
+        "Wrong return type, expect a matplotlib Figure"
+    assert corr_fig.get_suptitle() == f"Distribution of Pearson Self Correlations", \
+        "Wrong title, expect Distribution of Pearson Self Correlations"
+    assert corr_fig.get_axes()[0].get_title(), \
+        "Wrong subtitle, expect vertical"
+
+
+def test_plot_crosscorr_histogram_defaults(correlation_matrix, vertical_feature_name, horizontal_feature_name):
+    """Test plotting a cross-correlation histogram from a correlation matrix"""
+    corr_fig = plotCrossCorrHistogram(correlation_matrix,
+                                      vertical_feature_name=vertical_feature_name,
+                                      horizontal_feature_name=horizontal_feature_name)
+    assert isinstance(corr_fig, Figure), \
+        "Wrong return type, expect a matplotlib Figure"
+    assert corr_fig.get_suptitle() == f"Distribution of Pearson Cross Correlations", \
+        "Wrong title, expect Pearon Cross Correlations"
+    assert corr_fig.get_axes()[0].get_title(), \
+        "Wrong subtitle, expect vertical vs horizontal"
