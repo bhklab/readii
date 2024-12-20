@@ -7,8 +7,7 @@ import seaborn as sns
 from matplotlib.figure import Figure
 from scipy.linalg import issymmetric
 
-from readii.analyze.correlation import getSelfCorrelations
-from readii.io.writers.base_writer import BaseWriter
+from readii.analyze.correlation import getSelfCorrelations, getCrossCorrelations
 from readii.io.writers.plot_writer import PlotWriter
 from readii.utils import logger
 
@@ -195,7 +194,7 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                         feature_type_name:str,
                         correlation_method:str = "pearson",
                         cmap='nipy_spectral',
-                        save_path:Optional[str] = None,) -> None:
+                        save_dir_path:Optional[str] = None):
     """Plot a heatmap of the self correlations from a correlation matrix.
     
     Parameters
@@ -208,8 +207,9 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
         Method to use for calculating correlations. Default is "pearson".
     cmap : str, optional
         Colormap to use for the heatmap. Default is "nipy_spectral".
-    save_path : str, optional
+    save_dir_path : str, optional
         Path to save the heatmap to. If None, the heatmap will not be saved. Default is None.
+        File will be saved to {save_dir_path}/heatmap/{cmap}/{feature_type_name}_{correlation_method}_self_correlation_heatmap.png
     
     Returns
     -------
@@ -232,9 +232,9 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                 title=f"{correlation_method.capitalize()} Self Correlations", subtitle=f"{feature_type_name}")
 
 
-    if save_path is not None:
+    if save_dir_path is not None:
         # Create a PlotWriter instance to save the heatmap
-        heatmap_writer = PlotWriter(root_directory =  save_path / "heatmap",
+        heatmap_writer = PlotWriter(root_directory =  save_dir_path / "heatmap",
                             filename_format = "{ColorMap}/" + "{FeatureType}_{CorrelationType}_self_correlation_heatmap.png",
                             overwrite = False,
                             create_dirs = True
@@ -259,3 +259,5 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
     else:
         # Return the figure without saving
         return self_corr_heatmap
+
+
