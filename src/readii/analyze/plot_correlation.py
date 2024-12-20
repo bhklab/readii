@@ -232,7 +232,8 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                 cmap=cmap, 
                                                 xlabel=feature_type_name, 
                                                 ylabel=feature_type_name,
-                                                title=f"{correlation_method.capitalize()} Self Correlations", subtitle=f"{feature_type_name}")
+                                                title=f"{correlation_method.capitalize()} Self Correlations", 
+                                                subtitle=f"{feature_type_name}")
 
     if save_dir_path is not None:
         # Create a PlotWriter instance to save the heatmap
@@ -301,11 +302,12 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
 
     # Make the heatmap figure
     cross_corr_heatmap = plotCorrelationHeatmap(cross_corr, 
-                                               diagonal=True, 
+                                                diagonal=True, 
                                                 cmap=cmap, 
                                                 xlabel=vertical_feature_name, 
                                                 ylabel=horizontal_feature_name,
-                                                title=f"{correlation_method.capitalize()} Cross Correlations", subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
+                                                title=f"{correlation_method.capitalize()} Cross Correlations", 
+                                                subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
     
     if save_dir_path is not None:
         # Create a PlotWriter instance to save the heatmap
@@ -341,3 +343,165 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
         return cross_corr_heatmap
     
 
+########################################################################################################################
+################################## SELF AND CROSS CORRELATION HISTOGRAMS ###############################################
+########################################################################################################################
+
+def plotSelfCorrHistogram(correlation_matrix:pd.DataFrame,
+                          feature_type_name:str,
+                          correlation_method:str = "pearson",
+                          num_bins:int = 100,
+                          y_lower_bound:int = 0,
+                          y_upper_bound:int = None,
+                          save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+    """Plot a histogram of the self correlations from a correlation matrix.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to plot.
+    feature_type_name : str
+        Name of the feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix.
+    correlation_method : str, optional
+        Method to use for calculating correlations. Default is "pearson".
+    num_bins : int, optional
+        Number of bins to use for the histogram generation. The default is 100.
+    y_lower_bound : int, optional
+        Lower bound for the y-axis of the histogram. The default is 0.
+    y_upper_bound : int, optional
+        Upper bound for the y-axis of the histogram. The default is None.
+    save_dir_path : str, optional
+        Path to save the histogram to. If None, the histogram will not be saved. Default is None.
+        File will be saved to {save_dir_path}/histogram/{feature_type_name}_{correlation_method}_self_correlation_histogram.png
+    
+    Returns
+    -------
+    self_corr_hist : plt.Figure
+        Figure object containing the histogram of the self correlations.
+    if save_dir_path is not None:
+        self_corr_save_path : Path
+            Path to the saved histogram.
+    """
+    # Get the self correlations for the specified feature type
+    self_corr = getSelfCorrelations(correlation_matrix, feature_type_name)
+
+    # Make the histogram figure
+    self_corr_hist, _, _ = plotCorrelationHistogram(self_corr,
+                                                    num_bins=num_bins,
+                                                    xlabel = f"{correlation_method.capitalize()} Self Correlations",
+                                                    y_lower_bound = y_lower_bound,
+                                                    y_upper_bound = y_upper_bound,
+                                                    title = f"Distribution of {correlation_method.capitalize()} Self Correlations",
+                                                    subtitle = f"{feature_type_name}")
+    
+    if save_dir_path is not None:
+        # Create a PlotWriter instance to save the histogram
+        hist_writer = PlotWriter(root_directory = save_dir_path / "histogram",
+                                 filename_format = "{FeatureType}_{CorrelationType}_self_correlation_histogram.png",
+                                 overwrite = False,
+                                 create_dirs = True
+                                 )
+        
+        # Get the output path for the histogram
+        self_corr_save_path = hist_writer.resolve_path(FeatureType = feature_type_name,
+                                                       CorrelationType = correlation_method)
+        
+        # Check if the histogram already exists
+        if self_corr_save_path.exists():
+            logger.warning(f"Correlation histogram already exists at {self_corr_save_path}.")
+
+        else:
+            logger.debug("Saving correlation histogram.")
+            # Save the histogram
+            self_corr_save_path = hist_writer.save(self_corr_hist, 
+                                                   FeatureType = feature_type_name, 
+                                                   CorrelationType = correlation_method)
+        # Return the figure and the path to the saved histogram 
+        return self_corr_hist, self_corr_save_path
+        
+    else:
+        # Return the histogram figure
+        return self_corr_hist
+
+
+
+def plotCrossCorrHistogram(correlation_matrix:pd.DataFrame,
+                           vertical_feature_name:str,
+                           horizontal_feature_name:str,
+                           correlation_method:str = "pearson",
+                           num_bins:int = 100,
+                           y_lower_bound:int = 0,
+                           y_upper_bound:int = None,
+                           save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+    """Plot a histogram of the cross correlations from a correlation matrix.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to plot.
+    vertical_feature_name : str
+        Name of the vertical feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix index.
+    horizontal_feature_name : str
+        Name of the horizontal feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix columns.
+    correlation_method : str, optional
+        Method to use for calculating correlations. Default is "pearson".
+    num_bins : int, optional
+        Number of bins to use for the histogram generation. The default is 100.
+    y_lower_bound : int, optional
+        Lower bound for the y-axis of the histogram. The default is 0.
+    y_upper_bound : int, optional
+        Upper bound for the y-axis of the histogram. The default is None.
+    save_dir_path : str, optional
+        Path to save the histogram to. If None, the histogram will not be saved. Default is None.
+        File will be saved to {save_dir_path}/histogram/{vertical_feature_name}_vs_{horizontal_feature_name}_{correlation_method}_cross_correlation_histogram.png
+    
+    Returns
+    -------
+    cross_corr_hist : plt.Figure
+        Figure object containing the histogram of the cross correlations.
+    if save_dir_path is not None:
+        cross_corr_save_path : Path
+            Path to the saved histogram.
+    """
+    # Get the cross correlations for the specified feature type
+    cross_corr = getCrossCorrelations(correlation_matrix, vertical_feature_name, horizontal_feature_name)
+
+    # Make the histogram figure
+    cross_corr_hist = plotCorrelationHistogram(cross_corr, 
+                                               num_bins=num_bins,
+                                               xlabel = f"{correlation_method.capitalize()} Correlation",
+                                               y_lower_bound = y_lower_bound,
+                                               y_upper_bound = y_upper_bound,
+                                               title = f"Distribution of {correlation_method.capitalize()} Cross Correlations",
+                                               subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
+    
+    if save_dir_path is not None:
+        # Create a PlotWriter instance to save the histogram
+        hist_writer = PlotWriter(root_directory = save_dir_path / "histogram",
+                                 filename_format = "{VerticalFeatureType}_vs_{HorizontalFeatureType}_{CorrelationType}_cross_correlation_histogram.png",
+                                 overwrite = False,
+                                 create_dirs = True
+                                 )
+        
+        # Get the output path for the histogram
+        cross_corr_save_path = hist_writer.resolve_path(VerticalFeatureType = vertical_feature_name,
+                                                        HorizontalFeatureType = horizontal_feature_name,
+                                                        CorrelationType = correlation_method)
+        
+        # Check if the histogram already exists
+        if cross_corr_save_path.exists():
+            logger.warning(f"Correlation histogram already exists at {cross_corr_save_path}.")
+
+        else:
+            logger.debug("Saving correlation histogram.")
+            # Save the histogram
+            cross_corr_save_path = hist_writer.save(cross_corr_hist, 
+                                                    VerticalFeatureType = vertical_feature_name, 
+                                                    HorizontalFeatureType = horizontal_feature_name, 
+                                                    CorrelationType = correlation_method)
+        # Return the figure and the path to the saved histogram 
+        return cross_corr_hist, cross_corr_save_path
+
+    else:
+        # Return the histogram figure
+        return cross_corr_hist
