@@ -1,6 +1,26 @@
 # CHANGELOG
 
 
+## v1.31.0 (2024-12-19)
+
+### Features
+
+- Update correlation functions to get subsections of matrix
+  ([#103](https://github.com/bhklab/readii/pull/103),
+  [`343d876`](https://github.com/bhklab/readii/commit/343d876272d3e34592b46ba37586f4bcf7cf54f8))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Enhanced correlation analysis methods for improved clarity and functionality. -
+  Introduced a new method to retrieve both self and cross correlations in a single call.
+
+- **Bug Fixes** - Improved error handling for cases with no matching features, providing specific
+  error messages.
+
+- **Documentation** 	- Updated public API to reflect new method names and signatures. <!-- end of
+  auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.30.0 (2024-12-19)
 
 ### Features

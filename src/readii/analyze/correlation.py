@@ -1,6 +1,5 @@
 import pandas as pd
 
-from readii.data.select import validateDataframeSubsetSelection
 from readii.utils import logger
 
 
@@ -80,86 +79,101 @@ def getFeatureCorrelations(vertical_features:pd.DataFrame,
 
 
 
-def getVerticalSelfCorrelations(correlation_matrix:pd.DataFrame,
-                                num_vertical_features:int) -> pd.DataFrame:
-    """Get the vertical (y-axis) self correlations from a correlation matrix. Gets the top left quadrant of the correlation matrix.
+def getSelfCorrelations(correlation_matrix:pd.DataFrame,
+                        feature_type_name:str) -> pd.DataFrame:
+    """Get self correlations from a correlation matrix based on feature type name suffix in index.
 
     Parameters
     ----------
     correlation_matrix : pd.DataFrame
         Dataframe containing the correlation matrix to get the vertical self correlations from.
-    num_vertical_features : int
-        Number of vertical features in the correlation matrix.
+    feature_type_name : str
+        Name of the feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix.
 
     Returns
     -------
     pd.DataFrame
         Dataframe containing the vertical self correlations from the correlation matrix.    
     """
-    try: 
-        validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
-    except ValueError as e:
-        msg = "Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
+    # Get the rows and columns with the same feature type name suffix
+    self_correlations = correlation_matrix.filter(like=feature_type_name, axis=0).filter(like=feature_type_name, axis=1)
+        
+    if self_correlations.empty:
+        msg = f"No features with found with {feature_type_name} suffix in the correlation matrix."
         logger.exception(msg)
-        raise e
+        raise ValueError()
 
-    # Get the correlation matrix for vertical vs vertical - this is the top left corner of the matrix
-    return correlation_matrix.iloc[0:num_vertical_features, 0:num_vertical_features]
-
-
-
-def getHorizontalSelfCorrelations(correlation_matrix:pd.DataFrame,
-                                  num_horizontal_features:int) -> pd.DataFrame:
-    """Get the horizontal (x-axis) self correlations from a correlation matrix. Gets the bottom right quadrant of the correlation matrix.
-
-    Parameters
-    ----------
-    correlation_matrix : pd.DataFrame
-        Dataframe containing the correlation matrix to get the horizontal self correlations from.
-    num_horizontal_features : int
-        Number of horizontal features in the correlation matrix.
-
-    Returns
-    -------
-    pd.DataFrame
-        Dataframe containing the horizontal self correlations from the correlation matrix.
-    """
-    try: 
-        validateDataframeSubsetSelection(correlation_matrix, num_horizontal_features, num_horizontal_features)
-    except ValueError as e: 
-        msg = "Number of horizontalfeatures provided is greater than the number of rows or columns in the correlation matrix."
-        logger.exception(msg)
-        raise e
-
-    # Get the index of the start of the horizontal correlations
-    start_of_horizontal_correlations = len(correlation_matrix.columns) - num_horizontal_features
-
-    # Get the correlation matrix for horizontal vs horizontal - this is the bottom right corner of the matrix
-    return correlation_matrix.iloc[start_of_horizontal_correlations:, start_of_horizontal_correlations:]
+    return self_correlations
 
 
 
-def getCrossCorrelationMatrix(correlation_matrix:pd.DataFrame,
-                              num_vertical_features:int) -> pd.DataFrame:
+def getCrossCorrelations(correlation_matrix:pd.DataFrame,
+                         vertical_feature_name:str = "_vertical",
+                         horizontal_feature_name:str = "_horizontal") -> pd.DataFrame:
     """Get the cross correlation matrix subsection for a correlation matrix. Gets the top right quadrant of the correlation matrix so vertical and horizontal features are correctly labeled.
 
     Parameters
-    ----------
+    ----------    
     correlation_matrix : pd.DataFrame
         Dataframe containing the correlation matrix to get the cross correlation matrix subsection from.
-    num_vertical_features : int
-        Number of vertical features in the correlation matrix.
-    
+    vertical_feature_name : str
+        Name of the vertical feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix index.
+    horizontal_feature_name : str
+        Name of the horizontal feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix columns.
+
     Returns
     -------
-    pd.DataFrame
+    cross_correlations : pd.DataFrame
+        Dataframe containing the cross correlations from the correlation matrix.
+    """
+    # Get the rows with the vertical feature name suffix and the columns with the horizontal feature name suffix
+    cross_correlations = correlation_matrix.filter(like=vertical_feature_name, axis=0).filter(like=horizontal_feature_name, axis=1)
+    
+    if cross_correlations.empty:
+        msg = f"No features with found with {vertical_feature_name} and {horizontal_feature_name} suffix in the correlation matrix."
+        logger.exception(msg)
+        raise ValueError()
+    
+    return cross_correlations
+
+
+
+def getSelfAndCrossCorrelations(correlation_matrix:pd.DataFrame,
+                                vertical_feature_name:str = '_vertical',
+                                horizontal_feature_name:str = '_horizontal') -> pd.DataFrame:
+    """Get the vertical and horizontal self correlations and cross correlations from a correlation matrix.
+
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to get the self and cross correlations from.
+    vertical_feature_name : str
+        Name of the vertical feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix.
+    horizontal_feature_name : str
+        Name of the horizontal feature type to get self correlations for. Must be the suffix of some feature names in the correlation matrix.
+
+    Returns
+    -------
+    vertical_correlations : pd.DataFrame
+        Dataframe containing the vertical self correlations from the correlation matrix.
+    horizontal_correlations : pd.DataFrame
+        Dataframe containing the horizontal self correlations from the correlation matrix.
+    cross_correlations : pd.DataFrame
         Dataframe containing the cross correlations from the correlation matrix.
     """
     try:
-        validateDataframeSubsetSelection(correlation_matrix, num_vertical_features, num_vertical_features)
-    except ValueError as e:
-        msg = "Number of vertical features provided is greater than the number of rows or columns in the correlation matrix."
+        vertical_correlations, horizontal_correlations = getSelfCorrelations(correlation_matrix, vertical_feature_name), getSelfCorrelations(correlation_matrix, horizontal_feature_name)
+
+    except Exception as e:
+        msg = f"Error getting self correlations from correlation matrix: {e}"
         logger.exception(msg)
         raise e
     
-    return correlation_matrix.iloc[0:num_vertical_features, num_vertical_features:]
+    try:
+        cross_correlations = getCrossCorrelations(correlation_matrix, vertical_feature_name, horizontal_feature_name)
+    except Exception as e:
+        msg = f"Error getting cross correlations from correlation matrix: {e}"
+        logger.exception(msg)
+        raise e
+
+    return vertical_correlations, horizontal_correlations, cross_correlations
