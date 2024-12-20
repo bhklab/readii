@@ -178,7 +178,7 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
                              y_upper_bound:Optional[int] = None,
                              title:Optional[str] = "Distribution of Correlations for Features",
                              subtitle:Optional[str] = "",
-                             ) -> Figure:
+                             ) -> tuple[Figure, np.ndarray, np.ndarray]:
     """Plot a histogram to show the distribution of correlation values for a correlation matrix.
 
     Parameters
