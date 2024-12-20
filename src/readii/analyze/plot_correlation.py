@@ -191,6 +191,9 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
     return dist_fig, bin_values, bin_edges
 
 
+########################################################################################################################
+################################## SELF AND CROSS CORRELATION HEATMAPS##################################################
+########################################################################################################################
 def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                         feature_type_name:str,
                         correlation_method:str = "pearson",
@@ -231,10 +234,9 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                 ylabel=feature_type_name,
                                                 title=f"{correlation_method.capitalize()} Self Correlations", subtitle=f"{feature_type_name}")
 
-
     if save_dir_path is not None:
         # Create a PlotWriter instance to save the heatmap
-        heatmap_writer = PlotWriter(root_directory =  save_dir_path / "heatmap",
+        heatmap_writer = PlotWriter(root_directory = save_dir_path / "heatmap",
                             filename_format = "{ColorMap}/" + "{FeatureType}_{CorrelationType}_self_correlation_heatmap.png",
                             overwrite = False,
                             create_dirs = True
@@ -307,7 +309,7 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
     
     if save_dir_path is not None:
         # Create a PlotWriter instance to save the heatmap
-        heatmap_writer = PlotWriter(root_directory =  save_dir_path / "heatmap",
+        heatmap_writer = PlotWriter(root_directory = save_dir_path / "heatmap",
                                     filename_format = "{ColorMap}/" + "{VerticalFeatureType}_vs_{HorizontalFeatureType}_{CorrelationType}_cross_correlation_heatmap.png",
                                     overwrite = False,
                                     create_dirs = True
@@ -337,3 +339,5 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
     else:
         # Return the heatmap figure
         return cross_corr_heatmap
+    
+
