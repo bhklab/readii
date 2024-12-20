@@ -484,7 +484,7 @@ def plotCrossCorrHistogram(correlation_matrix:pd.DataFrame,
     cross_corr = getCrossCorrelations(correlation_matrix, vertical_feature_name, horizontal_feature_name)
 
     # Make the histogram figure
-    cross_corr_hist = plotCorrelationHistogram(cross_corr, 
+    cross_corr_hist, _, _ = plotCorrelationHistogram(cross_corr, 
                                                num_bins=num_bins,
                                                xlabel = f"{correlation_method.capitalize()} Correlation",
                                                y_lower_bound = y_lower_bound,
