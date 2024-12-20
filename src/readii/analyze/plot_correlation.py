@@ -9,8 +9,74 @@ from matplotlib.figure import Figure
 from scipy.linalg import issymmetric
 
 from readii.analyze.correlation import getCrossCorrelations, getSelfCorrelations
-from readii.io.writers.plot_writer import PlotWriter
+from readii.io.writers.plot_writer import PlotWriter, PlotWriterPlotExistsError
 from readii.utils import logger
+
+
+
+def saveCorrelationHeatmap(plot_figure:Figure,
+                           correlation_directory:Path,
+                           cmap:str,
+                           feature_types:list[str],
+                           correlation_type:str,
+                           overwrite:bool = False) -> Path:
+    
+    # Set up the writer
+    corr_heatmap_writer = PlotWriter(root_directory = correlation_directory,
+                                     filename_format = "heatmap/{ColorMap}/{FeaturesPlotted}_{CorrelationType}_correlation_heatmap.png",
+                                     overwrite = overwrite,
+                                     create_dirs = True)
+    
+    # Turn feature types into a string
+    # Single feature type will be in the form "feature_type"
+    # Multiple feature types will be in the form "feature_type_vs_feature_type"
+    feature_type_str = "_vs_".join(feature_types)
+
+    # Save the heatmap
+    try:
+        return corr_heatmap_writer.save(plot_figure,
+                                        ColorMap=cmap,
+                                        FeaturesPlotted=feature_type_str,
+                                        CorrelationType=correlation_type)
+     
+    except PlotWriterPlotExistsError as e:
+        logger.warning(e)
+    
+        # If plot file already exists, return the path to the existing plot
+        return corr_heatmap_writer.resolve_path(ColorMap=cmap,
+                                                FeaturesPlotted=feature_type_str,
+                                                CorrelationType=correlation_type)
+
+
+
+def saveCorrelationHistogram(plot_figure:Figure,
+                             correlation_directory:Path,
+                             feature_types:list[str],
+                             correlation_type:str,
+                             overwrite:bool = False) -> None:
+    
+    corr_histogram_writer = PlotWriter(root_directory = correlation_directory,
+                                       filename_format= "histogram/{FeaturesPlotted}_{CorrelationType}_correlation_histogram.png",
+                                       overwrite=overwrite,
+                                       create_dirs=True)
+    
+    # Turn feature types into a string
+    # Single feature type will be in the form "feature_type"
+    # Multiple feature types will be in the form "feature_type_vs_feature_type"
+    feature_type_str = "_vs_".join(feature_types)
+
+    # Save the heatmap
+    try:
+        return corr_histogram_writer.save(plot_figure,
+                                          FeaturesPlotted=feature_type_str,
+                                          CorrelationType=correlation_type)
+    except PlotWriterPlotExistsError as e:
+        logger.warning(e)
+
+        # If plot file already exists, return the path to the existing plot
+        return corr_histogram_writer.resolve_path(FeaturesPlotted=feature_type_str,
+                                                  CorrelationType=correlation_type)
+
 
 
 def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
@@ -21,8 +87,7 @@ def plotCorrelationHeatmap(correlation_matrix_df:pd.DataFrame,
                            ylabel:Optional[str] = "",
                            title:Optional[str] = "",
                            subtitle:Optional[str] = "",
-                           show_tick_labels:bool = False
-                           ) -> Figure:
+                           show_tick_labels:bool = False) -> Figure:
     """Plot a correlation dataframe as a heatmap.
 
     Parameters
@@ -114,7 +179,7 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
                              title:Optional[str] = "Distribution of Correlations for Features",
                              subtitle:Optional[str] = "",
                              ) -> Figure:
-    """Plot a histogram to show thedistribution of correlation values for a correlation matrix.
+    """Plot a histogram to show the distribution of correlation values for a correlation matrix.
 
     Parameters
     ----------
@@ -285,7 +350,7 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
         Method to use for calculating correlations. Default is "pearson".
     cmap : str, optional
         Colormap to use for the heatmap. Default is "nipy_spectral".
-    save_path : str, optional
+    save_dir_path : str, optional
         Path to save the heatmap to. If None, the heatmap will not be saved. Default is None.
         File will be saved to {save_dir_path}/heatmap/{cmap}/{vertical_feature_name}_vs_{horizontal_feature_name}_{correlation_method}_cross_correlation_heatmap.png
     
@@ -302,7 +367,7 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
 
     # Make the heatmap figure
     cross_corr_heatmap = plotCorrelationHeatmap(cross_corr, 
-                                                diagonal=True, 
+                                                diagonal=False, 
                                                 cmap=cmap, 
                                                 xlabel=vertical_feature_name, 
                                                 ylabel=horizontal_feature_name,
