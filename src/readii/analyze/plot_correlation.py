@@ -284,6 +284,7 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
         Colormap to use for the heatmap. Default is "nipy_spectral".
     save_path : str, optional
         Path to save the heatmap to. If None, the heatmap will not be saved. Default is None.
+        File will be saved to {save_dir_path}/heatmap/{cmap}/{vertical_feature_name}_vs_{horizontal_feature_name}_{correlation_method}_cross_correlation_heatmap.png
     
     Returns
     -------
