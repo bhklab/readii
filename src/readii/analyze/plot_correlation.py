@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Optional
 
 import matplotlib.pyplot as plt
@@ -7,7 +8,7 @@ import seaborn as sns
 from matplotlib.figure import Figure
 from scipy.linalg import issymmetric
 
-from readii.analyze.correlation import getSelfCorrelations, getCrossCorrelations
+from readii.analyze.correlation import getCrossCorrelations, getSelfCorrelations
 from readii.io.writers.plot_writer import PlotWriter
 from readii.utils import logger
 
@@ -193,8 +194,8 @@ def plotCorrelationHistogram(correlation_matrix:pd.DataFrame,
 def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                         feature_type_name:str,
                         correlation_method:str = "pearson",
-                        cmap='nipy_spectral',
-                        save_dir_path:Optional[str] = None):
+                        cmap:str='nipy_spectral',
+                        save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
     """Plot a heatmap of the self correlations from a correlation matrix.
     
     Parameters
@@ -219,7 +220,6 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
         self_corr_save_path : Path
             Path to the saved heatmap.
     """
-
     # Get the self correlations for the specified feature type
     self_corr = getSelfCorrelations(correlation_matrix, feature_type_name)
 
@@ -261,3 +261,78 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
         return self_corr_heatmap
 
 
+
+def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
+                         vertical_feature_name:str,
+                         horizontal_feature_name:str,
+                         correlation_method:str = "pearson",
+                         cmap:str='nipy_spectral',
+                         save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+    """Plot a heatmap of the cross correlations from a correlation matrix.
+    
+    Parameters
+    ----------
+    correlation_matrix : pd.DataFrame
+        Dataframe containing the correlation matrix to plot.
+    vertical_feature_name : str
+        Name of the vertical feature to get cross correlations for. Must be the suffix of some feature names in the correlation matrix index.
+    horizontal_feature_name : str
+        Name of the horizontal feature to get cross correlations for. Must be the suffix of some feature names in the correlation matrix columns.
+    correlation_method : str, optional
+        Method to use for calculating correlations. Default is "pearson".
+    cmap : str, optional
+        Colormap to use for the heatmap. Default is "nipy_spectral".
+    save_path : str, optional
+        Path to save the heatmap to. If None, the heatmap will not be saved. Default is None.
+    
+    Returns
+    -------
+    cross_corr_heatmap : matplotlib.pyplot.figure
+        Figure object containing the heatmap of the cross correlations.
+    if save_path is not None:
+        cross_corr_save_path : Path
+            Path to the saved heatmap.
+    """
+    # Get the cross correlations for the specified feature type
+    cross_corr = getCrossCorrelations(correlation_matrix, vertical_feature_name, horizontal_feature_name)
+
+    # Make the heatmap figure
+    cross_corr_heatmap = plotCorrelationHeatmap(cross_corr, 
+                                               diagonal=True, 
+                                                cmap=cmap, 
+                                                xlabel=vertical_feature_name, 
+                                                ylabel=horizontal_feature_name,
+                                                title=f"{correlation_method.capitalize()} Cross Correlations", subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
+    
+    if save_dir_path is not None:
+        # Create a PlotWriter instance to save the heatmap
+        heatmap_writer = PlotWriter(root_directory =  save_dir_path / "heatmap",
+                                    filename_format = "{ColorMap}/" + "{VerticalFeatureType}_vs_{HorizontalFeatureType}_{CorrelationType}_cross_correlation_heatmap.png",
+                                    overwrite = False,
+                                    create_dirs = True
+                                    )
+        
+        # Get the output path for the heatmap
+        cross_corr_save_path = heatmap_writer.resolve_path(VerticalFeatureType = vertical_feature_name,
+                                                           HorizontalFeatureType = horizontal_feature_name,
+                                                           CorrelationType = correlation_method,
+                                                           ColorMap = cmap)
+        
+        # Check if the heatmap already exists
+        if cross_corr_save_path.exists():
+            logger.warning(f"Correlation heatmap already exists at {cross_corr_save_path}.")
+
+        else:
+            logger.debug("Saving correlation heatmap.")
+            # Save the heatmap
+            cross_corr_save_path = heatmap_writer.save(cross_corr_heatmap, 
+                                                       VerticalFeatureType = vertical_feature_name, 
+                                                       HorizontalFeatureType = horizontal_feature_name, 
+                                                       CorrelationType = correlation_method, 
+                                                       ColorMap = cmap)
+        # Return the figure and the path to the saved heatmap 
+        return cross_corr_heatmap, cross_corr_save_path
+        
+    else:
+        # Return the heatmap figure
+        return cross_corr_heatmap
