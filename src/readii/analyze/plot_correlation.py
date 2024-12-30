@@ -83,7 +83,7 @@ def saveCorrelationHistogram(plot_figure:Figure,
                              correlation_directory:Path,
                              feature_types:list[str],
                              correlation_type:str,
-                             overwrite:bool = False) -> None:
+                             overwrite:bool = False) -> Path:
     """Save a histogram figure to a file with a PlotWriter.
 
     Parameters
