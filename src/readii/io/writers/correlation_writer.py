@@ -20,6 +20,12 @@ class CorrelationWriterIOError(CorrelationWriterError):
     pass
 
 
+class CorrelationWriterFileExistsError(CorrelationWriterIOError):
+    """Raised when a file already exists at the specified path."""
+
+    pass
+
+
 class CorrelationWriterValidationError(CorrelationWriterError):
     """Raised when validation of writer configuration fails."""
 
