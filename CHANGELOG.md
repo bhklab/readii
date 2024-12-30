@@ -1,6 +1,25 @@
 # CHANGELOG
 
 
+## v1.32.0 (2024-12-30)
+
+### Features
+
+- Update plot correlation functions ([#104](https://github.com/bhklab/readii/pull/104),
+  [`9baffe9`](https://github.com/bhklab/readii/commit/9baffe93e6d3bb9f67887d98348dece5a4de69cf))
+
+add self and cross correlation plot functions
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Introduced functionality for plotting self and cross correlation heatmaps and
+  histograms. - Added methods for generating histograms with customizable parameters and optional
+  saving options. - **Bug Fixes** - Enhanced error handling for plot saving to prevent overwriting
+  existing files. - **Tests** - Added a comprehensive suite of unit tests for correlation plotting
+  functionalities, ensuring correct outputs and file handling. <!-- end of auto-generated comment:
+  release notes by coderabbit.ai -->
+
+
 ## v1.31.0 (2024-12-19)
 
 ### Features
