@@ -106,7 +106,7 @@ def test_save_corr_heatmap(correlation_matrix, correlations_dir, correlation_typ
                                          feature_types=feature_types,
                                          correlation_type=correlation_type)
     assert actual_path == expected_path, \
-        "Wrong path returned, expect {expected_path}"
+        f"Wrong path returned, expect {expected_path}"
     assert actual_path.exists(), \
         "Figure is not being saved to path provided or at all."
 
@@ -130,7 +130,7 @@ def test_save_corr_histogram(correlation_matrix, correlations_dir, correlation_t
                                            feature_types=feature_types,
                                            correlation_type=correlation_type)
     assert actual_path == expected_path, \
-        "Wrong path returned, expect {expected_path}"  
+        f"Wrong path returned, expect {expected_path}"  
     assert actual_path.exists(), \
         "Figure is not being saved to path provided or at all."
     
@@ -181,6 +181,6 @@ def test_plot_crosscorr_histogram_defaults(correlation_matrix, vertical_feature_
     assert isinstance(corr_fig, Figure), \
         "Wrong return type, expect a matplotlib Figure"
     assert corr_fig.get_suptitle() == f"Distribution of Pearson Cross Correlations", \
-        "Wrong title, expect Pearon Cross Correlations"
+        "Wrong title, expect Distribution of Pearson Cross Correlations"
     assert corr_fig.get_axes()[0].get_title(), \
         "Wrong subtitle, expect vertical vs horizontal"
