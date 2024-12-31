@@ -1,6 +1,28 @@
 # CHANGELOG
 
 
+## v1.33.0 (2024-12-30)
+
+### Features
+
+- Add error for when file output by CorrelationWriter already exists
+  ([#106](https://github.com/bhklab/readii/pull/106),
+  [`ef58923`](https://github.com/bhklab/readii/commit/ef589237be7dd41769be507a24e0a406dcdc603e))
+
+Makes it easier to catch times when file exists without resolving the path twice
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Added a new, more specific exception for handling file existence scenarios
+  during correlation writing.
+
+- **Documentation** 	- Updated method documentation to reflect new error handling behavior.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.32.0 (2024-12-30)
 
 ### Features
