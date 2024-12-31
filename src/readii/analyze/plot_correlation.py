@@ -321,7 +321,8 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                         feature_type_name:str,
                         correlation_method:str = "pearson",
                         cmap:str='nipy_spectral',
-                        save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+                        save_dir_path:Optional[str] = None,
+                        overwrite:bool = False) -> tuple[Figure | Figure, Path]:
     """Plot a heatmap of the self correlations from a correlation matrix.
     
     Parameters
@@ -364,7 +365,8 @@ def plotSelfCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                      save_dir_path,
                                                      cmap=cmap,
                                                      feature_types=[feature_type_name],
-                                                     correlation_type=f"{correlation_method}_self")
+                                                     correlation_type=f"{correlation_method}_self",
+                                                     overwrite=overwrite)
         # Return the figure and path to the saved heatmap
         return self_corr_heatmap, self_corr_save_path
 
@@ -379,7 +381,8 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
                          horizontal_feature_name:str,
                          correlation_method:str = "pearson",
                          cmap:str='nipy_spectral',
-                         save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+                         save_dir_path:Optional[str] = None,
+                         overwrite:bool = False) -> tuple[Figure | Figure, Path]:
     """Plot a heatmap of the cross correlations from a correlation matrix.
     
     Parameters
@@ -397,7 +400,9 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
     save_dir_path : str, optional
         Path to save the heatmap to. If None, the heatmap will not be saved. Default is None.
         File will be saved to {save_dir_path}/heatmap/{cmap}/{vertical_feature_name}_vs_{horizontal_feature_name}_{correlation_method}_cross_correlation_heatmap.png
-    
+    overwrite : bool, optional
+        Whether to overwrite an existing plot figure file. The default is False.
+        
     Returns
     -------
     cross_corr_heatmap : matplotlib.pyplot.figure
@@ -424,7 +429,8 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
                                                       save_dir_path,
                                                       cmap=cmap,
                                                       feature_types=[vertical_feature_name, horizontal_feature_name],
-                                                      correlation_type=f"{correlation_method}_cross")
+                                                      correlation_type=f"{correlation_method}_cross",
+                                                      overwrite=overwrite)
         # Return the figure and the path to the saved heatmap 
         return cross_corr_heatmap, cross_corr_save_path
         
@@ -443,7 +449,8 @@ def plotSelfCorrHistogram(correlation_matrix:pd.DataFrame,
                           num_bins:int = 100,
                           y_lower_bound:int = 0,
                           y_upper_bound:int = None,
-                          save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+                          save_dir_path:Optional[str] = None,
+                          overwrite:bool = False) -> tuple[Figure | Figure, Path]:
     """Plot a histogram of the self correlations from a correlation matrix.
 
     Parameters
@@ -463,7 +470,9 @@ def plotSelfCorrHistogram(correlation_matrix:pd.DataFrame,
     save_dir_path : str, optional
         Path to save the histogram to. If None, the histogram will not be saved. Default is None.
         File will be saved to {save_dir_path}/histogram/{feature_type_name}_{correlation_method}_self_correlation_histogram.png
-    
+    overwrite : bool, optional
+        Whether to overwrite an existing plot figure file. The default is False.
+        
     Returns
     -------
     self_corr_hist : plt.Figure
@@ -489,7 +498,8 @@ def plotSelfCorrHistogram(correlation_matrix:pd.DataFrame,
         self_corr_save_path = saveCorrelationHistogram(self_corr_hist,
                                                        save_dir_path,
                                                        feature_types=[feature_type_name],
-                                                       correlation_type=f"{correlation_method}_self")
+                                                       correlation_type=f"{correlation_method}_self",
+                                                       overwrite=overwrite)
 
         # Return the figure and the path to the saved histogram 
         return self_corr_hist, self_corr_save_path
@@ -507,7 +517,8 @@ def plotCrossCorrHistogram(correlation_matrix:pd.DataFrame,
                            num_bins:int = 100,
                            y_lower_bound:int = 0,
                            y_upper_bound:int = None,
-                           save_dir_path:Optional[str] = None) -> tuple[Figure | Figure, Path]:
+                           save_dir_path:Optional[str] = None,
+                           overwrite:bool = False) -> tuple[Figure | Figure, Path]:
     """Plot a histogram of the cross correlations from a correlation matrix.
 
     Parameters
@@ -529,6 +540,8 @@ def plotCrossCorrHistogram(correlation_matrix:pd.DataFrame,
     save_dir_path : str, optional
         Path to save the histogram to. If None, the histogram will not be saved. Default is None.
         File will be saved to {save_dir_path}/histogram/{vertical_feature_name}_vs_{horizontal_feature_name}_{correlation_method}_cross_correlation_histogram.png
+    overwrite : bool, optional
+        Whether to overwrite an existing plot figure file. The default is False.
     
     Returns
     -------
@@ -555,7 +568,8 @@ def plotCrossCorrHistogram(correlation_matrix:pd.DataFrame,
         cross_corr_save_path = saveCorrelationHistogram(cross_corr_hist,
                                                         save_dir_path,
                                                         feature_types=[vertical_feature_name, horizontal_feature_name],
-                                                        correlation_type=f"{correlation_method}_cross")
+                                                        correlation_type=f"{correlation_method}_cross",
+                                                        overwrite=overwrite)
         
         # Return the figure and the path to the saved histogram 
         return cross_corr_hist, cross_corr_save_path
