@@ -1,6 +1,25 @@
 # CHANGELOG
 
 
+## v1.34.0 (2024-12-31)
+
+### Features
+
+- Add overwrite variable to plot self and cross corr functions
+  ([#108](https://github.com/bhklab/readii/pull/108),
+  [`d1f9853`](https://github.com/bhklab/readii/commit/d1f9853cf4613762ccb0f0885e77db4cb07eb71b))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Added an optional `overwrite` parameter to correlation plotting functions -
+  Enhanced control over file saving behavior when generating correlation plots 	- Users can now
+  choose whether to replace existing plot files
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.33.0 (2024-12-30)
 
 ### Features

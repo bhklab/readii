@@ -1,6 +1,6 @@
 [project]
 name = "readii"
-version = "1.33.0"
+version = "1.34.0"
 description = "A package to extract radiomic features!"
 authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 
