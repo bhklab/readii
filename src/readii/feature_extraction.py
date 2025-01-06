@@ -151,7 +151,10 @@ def singleRadiomicFeatureExtraction(
 	# Initialize feature extractor with parameters
 	try:
 		logger.info("Setting up Pyradiomics feature extractor...")
-		featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
+		featureExtractor = featureextractor.RadiomicsFeatureExtractor(
+		            str(pyradiomicsParamFilePath.resolve())
+        )
+
 	except OSError as e:
 		logger.exception(
 			f"Supplied pyradiomics parameter file {pyradiomicsParamFilePath} does not exist or is not at that location: {e}"
