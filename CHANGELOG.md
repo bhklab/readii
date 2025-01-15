@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v1.34.1 (2025-01-15)
+
+### Bug Fixes
+
+- Update toml to fix deprecated "depends_on" key ([#109](https://github.com/bhklab/readii/pull/109),
+  [`2c2c324`](https://github.com/bhklab/readii/commit/2c2c324ce3338267aa6d04fc538771cbe0414a07))
+
+
 ## v1.34.0 (2024-12-31)
 
 ### Features
