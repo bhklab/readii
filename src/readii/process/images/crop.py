@@ -60,11 +60,13 @@ def findBoundingBox(mask:sitk.Image,
     Returns
     -------
     bounding_box : np.ndarray
-        Numpy array containing the bounding box coordinates of the ROI.
+        Numpy array containing the bounding box coordinates around the ROI.
     """
+    # Convert the mask to a uint8 image
     mask_uint = sitk.Cast(mask, sitk.sitkUInt8)
     stats = sitk.LabelShapeStatisticsImageFilter()
     stats.Execute(mask_uint)
+    # Get the bounding box starting coordinates and size
     xstart, ystart, zstart, xsize, ysize, zsize = stats.GetBoundingBox(1)
 
     # Ensure minimum size of 4 pixels along each dimension
@@ -73,8 +75,36 @@ def findBoundingBox(mask:sitk.Image,
     zsize = max(zsize, min_dim_size)
 
     min_coord = [xstart, ystart, zstart]
+    # Calculate the maximum coordinate of the bounding box by adding the size to the starting coordinate
     max_coord = [xstart + xsize, ystart + ysize, zstart + zsize]
+
+    # TODO: Switch to using a class for the bounding box
     # min_coord = Coordinate(x=xstart, y=ystart, z=zstart)
     # max_coord = Coordinate(x=xstart + xsize, y=ystart + ysize, z=zstart + zsize)
 
     return min_coord + max_coord
+
+
+
+def findCentroid(mask:sitk.Image) -> np.ndarray:
+    """Find the centroid of a region of interest (ROI) in a given binary mask image.
+
+    Parameters
+    ----------
+    mask : sitk.Image
+        Mask image to find the centroid within.
+
+    Returns
+    -------
+    centroid : np.ndarray
+        Numpy array containing the coordinates of the ROI centroid.
+    """
+    # Convert the mask to a uint8 image
+    mask_uint = sitk.Cast(mask, sitk.sitkUInt8)
+    stats = sitk.LabelShapeStatisticsImageFilter()
+    stats.Execute(mask_uint)
+    # Get the centroid coordinates as a physical point in the mask
+    centroid_coords = stats.GetCentroid(1)
+    # Convert the physical point to an index in the mask array
+    centroid_idx = mask.TransformPhysicalPointToIndex(centroid_coords)
+    return np.asarray(centroid_idx, dtype=np.float32)
