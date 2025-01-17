@@ -1,3 +1,4 @@
+
 import numpy as np
 import SimpleITK as sitk
 from imgtools.ops.functional import resample
@@ -45,3 +46,35 @@ def resizeImage(image:sitk.Image,
     return resized_image
     
 
+def findBoundingBox(mask:sitk.Image,
+                    min_dim_size:int = 4) -> np.ndarray:
+    """Find the bounding box of a region of interest (ROI) in a given binary mask image.
+    
+    Parameters
+    ----------
+    mask : sitk.Image
+        Mask image to find the bounding box within.
+    min_dim_size : int, optional
+        Minimum size of the bounding box along each dimension. The default is 4.
+    
+    Returns
+    -------
+    bounding_box : np.ndarray
+        Numpy array containing the bounding box coordinates of the ROI.
+    """
+    mask_uint = sitk.Cast(mask, sitk.sitkUInt8)
+    stats = sitk.LabelShapeStatisticsImageFilter()
+    stats.Execute(mask_uint)
+    xstart, ystart, zstart, xsize, ysize, zsize = stats.GetBoundingBox(1)
+
+    # Ensure minimum size of 4 pixels along each dimension
+    xsize = max(xsize, min_dim_size)
+    ysize = max(ysize, min_dim_size)
+    zsize = max(zsize, min_dim_size)
+
+    min_coord = [xstart, ystart, zstart]
+    max_coord = [xstart + xsize, ystart + ysize, zstart + zsize]
+    # min_coord = Coordinate(x=xstart, y=ystart, z=zstart)
+    # max_coord = Coordinate(x=xstart + xsize, y=ystart + ysize, z=zstart + zsize)
+
+    return min_coord + max_coord
