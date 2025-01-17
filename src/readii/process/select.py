@@ -1,15 +1,17 @@
-from pandas import DataFrame
 from typing import Optional
+
+from pandas import DataFrame
 
 from readii.utils import logger
 
 from .label import setPatientIdAsIndex
 
+
 def dropUpToFeature(dataframe:DataFrame,
                     feature_name:str,
                     keep_feature_name_column:Optional[bool] = False
-                    ):
-    """ Function to drop all columns up to and possibly including the specified feature.
+                    ) -> DataFrame:
+    """Drop all columns up to and possibly including the specified feature.
 
     Parameters
     ----------
@@ -50,10 +52,10 @@ def dropUpToFeature(dataframe:DataFrame,
 
 def selectByColumnValue(dataframe:DataFrame, 
                         include_col_values:Optional[dict] = None,
-                        exclude_col_values:Optional[dict] = None) -> DataFrame:
+                        exclude_col_values:Optional[dict] = None
+                        ) -> DataFrame:
     """
-    Get rows of pandas DataFrame based on row values in the columns labelled as keys of the include_col_values and not in the keys of the exclude_col_values.
-    Include variables will be processed first, then exclude variables, in the order they are provided in the corresponding dictionaries.
+    Get rows of pandas DataFrame based on row values in the columns labelled as keys of the include_col_values and not in the keys of the exclude_col_values. Include variables will be processed first, then exclude variables, in the order they are provided in the corresponding dictionaries.
 
     Parameters
     ----------
@@ -95,9 +97,9 @@ def selectByColumnValue(dataframe:DataFrame,
         raise e
     
 
-def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame):
-    """ Function to get out just the features from a PyRadiomics output that includes metadata/diagnostics columns before the features.
-        Will look for the last diagnostics column or the first PyRadiomics feature column with the word "original" in it
+def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame) -> DataFrame:
+    """Get out just the features from a PyRadiomics output that includes metadata/diagnostics columns before the features. Will look for the last diagnostics column or the first PyRadiomics feature column with the word "original" in it.
+
     Parameters
     ----------
     radiomic_data : DataFrame
@@ -137,8 +139,9 @@ def getOnlyPyradiomicsFeatures(radiomic_data:DataFrame):
 def getPatientIntersectionDataframes(dataframe_A:DataFrame, 
                                      dataframe_B:DataFrame,
                                      need_pat_index_A:bool = True,
-                                     need_pat_index_B:bool = True): 
-    """ Function to get the subset of two dataframes based on the intersection of their indices. Intersection will be based on the index of dataframe A.
+                                     need_pat_index_B:bool = True
+                                     ) -> DataFrame: 
+    """Get the subset of two dataframes based on the intersection of their indices. Intersection will be based on the index of dataframe A.
 
     Parameters
     ----------
@@ -158,7 +161,6 @@ def getPatientIntersectionDataframes(dataframe_A:DataFrame,
     intersection_index_dataframeB : DataFrame
         Dataframe containing the rows of dataframe B that are in the intersection of the indices of dataframe A and dataframe B.
     """
-    
     # Set the patient ID column as the index for dataframe A if needed
     if need_pat_index_A:
         dataframe_A = setPatientIdAsIndex(dataframe_A)
@@ -177,46 +179,47 @@ def getPatientIntersectionDataframes(dataframe_A:DataFrame,
     return intersection_index_dataframeA, intersection_index_dataframeB
 
 
-def validateDataframeSubsetSelection(dataframe:DataFrame,
-                                     num_rows:Optional[int] = None,
-                                     num_cols:Optional[int] = None):
+# Katy (Jan 2025): I think I wrote this function for the correlation functions, but I don't think it's used.
+# def validateDataframeSubsetSelection(dataframe:DataFrame,
+#                                      num_rows:Optional[int] = None,
+#                                      num_cols:Optional[int] = None
+#                                      ) -> None:
     
-    # Check if dataframe is a DataFrame
-    if not isinstance(dataframe, DataFrame):
-        msg = f"dataframe must be a pandas DataFrame, got {type(dataframe)}"
-        logger.error(msg)
-        raise TypeError(msg)
+#     # Check if dataframe is a DataFrame
+#     if not isinstance(dataframe, DataFrame):
+#         msg = f"dataframe must be a pandas DataFrame, got {type(dataframe)}"
+#         logger.error(msg)
+#         raise TypeError(msg)
     
-    if num_rows is not None:
-        # Check if num_rows is an integer
-        if not isinstance(num_rows, int):
-            msg = f"num_rows must be an integer, got {type(num_rows)}"
-            logger.error(msg)
-            raise TypeError(msg)
+#     if num_rows is not None:
+#         # Check if num_rows is an integer
+#         if not isinstance(num_rows, int):
+#             msg = f"num_rows must be an integer, got {type(num_rows)}"
+#             logger.error(msg)
+#             raise TypeError(msg)
         
-        if num_rows > dataframe.shape[0]:
-            msg = f"num_rows ({num_rows}) is greater than the number of rows in the dataframe ({dataframe.shape[0]})"
-            logger.error(msg)
-            raise ValueError()
-    else:
-        logger.debug("Number of rows is within the size of the dataframe.")    
+#         if num_rows > dataframe.shape[0]:
+#             msg = f"num_rows ({num_rows}) is greater than the number of rows in the dataframe ({dataframe.shape[0]})"
+#             logger.error(msg)
+#             raise ValueError()
+#     else:
+#         logger.debug("Number of rows is within the size of the dataframe.")    
     
         
-    if num_cols is not None:
-        # Check if num_cols is an integer
-        if not isinstance(num_cols, int):
-            msg = f"num_cols must be an integer, got {type(num_cols)}"
-            logger.error(msg)
-            raise TypeError(msg)
+#     if num_cols is not None:
+#         # Check if num_cols is an integer
+#         if not isinstance(num_cols, int):
+#             msg = f"num_cols must be an integer, got {type(num_cols)}"
+#             logger.error(msg)
+#             raise TypeError(msg)
         
-        if num_cols > dataframe.shape[1]:
-            msg = f"num_cols ({num_cols}) is greater than the number of columns in the dataframe ({dataframe.shape[1]})"
-            logger.error(msg)
-            raise ValueError()
-    else:
-        logger.debug("Number of columns is within the size of the dataframe.")
+#         if num_cols > dataframe.shape[1]:
+#             msg = f"num_cols ({num_cols}) is greater than the number of columns in the dataframe ({dataframe.shape[1]})"
+#             logger.error(msg)
+#             raise ValueError()
+#     else:
+#         logger.debug("Number of columns is within the size of the dataframe.")
 
-    return None
 
 
 
