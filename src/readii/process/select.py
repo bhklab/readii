@@ -74,17 +74,19 @@ def selectByColumnValue(dataframe:DataFrame,
     """
     try:
         if (include_col_values is None) and (exclude_col_values is None):
-            raise ValueError("Must provide one of include_col_values or exclude_col_values.")
+            msg = "Must provide one of include_col_values or exclude_col_values."
+            logger.exception(msg)
+            raise ValueError(msg)
     
         if include_col_values is not None:
-            for key in include_col_values.keys():
+            for key in include_col_values:
                 if key in ["Index", "index"]:
                     dataframe = dataframe[dataframe.index.isin(include_col_values[key])]
                 else:
                     dataframe = dataframe[dataframe[key].isin(include_col_values[key])]
 
         if exclude_col_values is not None:
-            for key in exclude_col_values.keys():
+            for key in exclude_col_values:
                 if key in ["Index", "index"]:
                     dataframe = dataframe[~dataframe.index.isin(exclude_col_values[key])]
                 else:
