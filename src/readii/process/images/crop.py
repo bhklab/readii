@@ -54,17 +54,7 @@ def resizeImage(image:sitk.Image,
     resized_image : sitk.Image
         Resized image.
     """
-    # Check that the number of dimensions in the resized dimensions matches the number of dimensions in the image
-    if len(resized_dimensions) != image.GetDimension():
-        msg = f"Number of dimensions in resized_dimensions ({len(resized_dimensions)}) does not match the number of dimensions in the image ({image.GetDimension()})."
-        logger.exception(msg)
-        raise ValueError(msg)
-    
-    # Check that the resized dimensions are integers
-    if not all(isinstance(dim, int) for dim in resized_dimensions):
-        msg = "Resized dimensions must be integers."
-        logger.exception(msg)
-        raise ValueError(msg)
+    validateNewDimensions(image, resized_dimensions)
     
     # Calculate the new spacing based on the resized dimensions
     original_dimensions = np.array(image.GetSize())
@@ -179,7 +169,7 @@ def cropToCentroid(image:sitk.Image,
 
     img_x, img_y, img_z = image.GetSize()
 
-    
+
     if min_x < 0:
         min_x, max_x = 0, crop_dimensions[0]
     elif max_x > img_x:
