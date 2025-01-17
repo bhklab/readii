@@ -32,9 +32,8 @@ def replaceColumnValues(dataframe:DataFrame,
         logger.exception(msg)
         raise ValueError(msg)
     
-    for new_value in replacement_value_data:
+    for new_value, old_values in replacement_value_data.items():
         # Check if the replacement value is a valid value in the column
-        old_values = replacement_value_data[new_value]
         values_not_found_in_column = set(old_values).difference(set(dataframe[column_to_change].unique()))
 
         if values_not_found_in_column == set(old_values):
@@ -43,7 +42,7 @@ def replaceColumnValues(dataframe:DataFrame,
             raise ValueError(msg)
         
         # Replace the old values with the new value
-        dataframe = dataframe.replace(to_replace=replacement_value_data[new_value], 
+        dataframe = dataframe.replace(to_replace=old_values, 
                                       value=new_value)
         
     return dataframe
