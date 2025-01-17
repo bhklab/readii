@@ -71,15 +71,12 @@ def splitDataByColumnValue(dataframe:DataFrame,
     # Initialize dictionary to store the split dataframes
     split_dataframes = {}
 
-    for split_column_name in split_col_data:
+    for split_column_name, split_col_values in split_col_data.items():
         # Check if the column name is a valid column in the dataframe
         if split_column_name not in dataframe.columns:
             msg = f"Column {split_column_name} not found in dataframe."
             logger.exception(msg)
             raise ValueError(msg)
-    
-        # Get split column values for this column
-        split_col_values = split_col_data[split_column_name]
         
         if impute_value is not None:
             # Get all values in the column that are not one of the split_col_values
