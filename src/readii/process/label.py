@@ -9,7 +9,7 @@ from readii.utils import logger
 
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
-    """Function to find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive).
+    """Find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive).
        If multiple found, will return the first match.
 
        Current regex is: '(pat)?(ient)?(case)?(\s|.)?(id|#)'
@@ -44,8 +44,9 @@ def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
 
 
 def setPatientIdAsIndex(dataframe_to_index:DataFrame,
-                        patient_id_col:str = None):
-    """Function to set the patient ID column as the index of a dataframe.
+                        patient_id_col:str = None
+                        ) -> DataFrame:
+    """Set the patient ID column as the index of a dataframe.
 
     Parameters
     ----------
@@ -64,8 +65,9 @@ def setPatientIdAsIndex(dataframe_to_index:DataFrame,
 
 def convertDaysToYears(dataframe_with_outcome:DataFrame,
                        time_column_label:str,
-                       divide_by:int = 365):
-    """Function to create a copy of a time outcome column mesaured in days and convert it to years.
+                       divide_by:int = 365
+                       ) -> DataFrame:
+    """Create a copy of a time outcome column mesaured in days and convert it to years.
 
     Parameters
     ----------
@@ -94,8 +96,8 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
                             outcome_column_label:str,
                             standard_column_label:str,
                             convert_to_years:bool = False,
-                            ):
-    """Function to set up a time outcome column in a dataframe. Makes a copy of the specified outcome column with a standardized column name and converts it to years if specified.
+                            ) -> DataFrame:
+    """Set up a time outcome column in a dataframe. Makes a copy of the specified outcome column with a standardized column name and converts it to years if specified.
 
     Parameters
     ----------
@@ -139,7 +141,7 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 
 
-def survivalStatusToNumericMapping(event_outcome_column:Series):
+def survivalStatusToNumericMapping(event_outcome_column:Series) -> dict:
     """Convert a survival status column to a numeric column by iterating over unique values and assigning a numeric value to each.
     Alive values will be assigned a value of 0, and dead values will be assigned a value of 1.
     If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2.
@@ -192,8 +194,9 @@ def survivalStatusToNumericMapping(event_outcome_column:Series):
 def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
                             outcome_column_label:str,
                             standard_column_label:str,
-                            event_column_value_mapping:Optional[dict]=None):
-    """Function to set up an event outcome column in a dataframe.
+                            event_column_value_mapping:Optional[dict]=None
+                            ) -> DataFrame:
+    """Set up an event outcome column in a dataframe.
 
     Parameters
     ----------
@@ -281,8 +284,9 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 def addOutcomeLabels(feature_data_to_label:DataFrame,
                      clinical_data:DataFrame,
-                     outcome_labels:Optional[list] = None):
-    """Function to add survival labels to a feature dataframe based on a clinical dataframe.
+                     outcome_labels:Optional[list] = None
+                     ) -> DataFrame:
+    """Add survival labels to a feature dataframe based on a clinical dataframe.
 
     Parameters
     ----------
@@ -292,6 +296,11 @@ def addOutcomeLabels(feature_data_to_label:DataFrame,
         Dataframe containing the clinical data to use for survival labels.
     outcome_labels : list, optional
         List of outcome labels to extract from the clinical dataframe. The default is ["survival_time_in_years", "survival_event_binary"].
+
+    Returns
+    -------
+    outcome_labelled_feature_data : DataFrame
+        Dataframe containing the feature data with survival labels added.
     """
     if outcome_labels is None:
         outcome_labels = ["survival_time_in_years", "survival_event_binary"]
