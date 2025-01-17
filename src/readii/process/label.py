@@ -4,7 +4,7 @@ import numpy as np
 from typing import Optional
 
 from readii.utils import logger
-from readii.data.split import replaceColumnValues
+from readii.process.split import replaceColumnValues
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
     """Function to find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). 
