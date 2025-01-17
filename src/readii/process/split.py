@@ -1,10 +1,13 @@
+from typing import Optional
+
 from pandas import DataFrame
+
 
 def replaceColumnValues(dataframe:DataFrame,
                        column_to_change:str,
                        replacement_value_data:dict
-                       ):
-    """Function to replace specified values in a column with a new value.
+                       ) -> DataFrame:
+    """Replace specified values in a column with a new value.
 
     Parameters
     ----------
@@ -21,12 +24,11 @@ def replaceColumnValues(dataframe:DataFrame,
     dataframe : DataFrame
         Dataframe with values replaced.
     """
-
     # Check if the column name is a valid column in the dataframe
     if column_to_change not in dataframe.columns:
         raise ValueError(f"Column {column_to_change} not found in dataframe.")
     
-    for new_value in replacement_value_data.keys():
+    for new_value in replacement_value_data:
         # Check if the replacement value is a valid value in the column
         old_values = replacement_value_data[new_value]
         values_not_found_in_column = set(old_values).difference(set(dataframe[column_to_change].unique()))
@@ -41,9 +43,9 @@ def replaceColumnValues(dataframe:DataFrame,
 
 def splitDataByColumnValue(dataframe:DataFrame,
                            split_col_data:dict[str,list],
-                           impute_value = None,
-                           ):
-    """Function to split a dataframe into multiple dataframes based on the values in a specified column. Optionally, impute values in the split columns.
+                           impute_value:Optional[object | None] = None,
+                           ) -> dict[str,DataFrame]:
+    """Split a dataframe into multiple dataframes based on the values in a specified column. Optionally, impute values in the split columns.
 
     Parameters
     ----------
@@ -59,11 +61,10 @@ def splitDataByColumnValue(dataframe:DataFrame,
     split_dataframes : dict
         Dictionary of dataframes, where the key is the split value and the value is the dataframe for that split value.
     """
-    
     # Initialize dictionary to store the split dataframes
     split_dataframes = {}
 
-    for split_column_name in split_col_data.keys():
+    for split_column_name in split_col_data:
         # Check if the column name is a valid column in the dataframe
         if split_column_name not in dataframe.columns:
             raise ValueError(f"Column {split_column_name} not found in dataframe.")
