@@ -9,8 +9,7 @@ from readii.utils import logger
 
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
-    """Find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive).
-       If multiple found, will return the first match.
+    r"""Find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). If multiple found, will return the first match.
 
        Current regex is: '(pat)?(ient)?(case)?(\s|.)?(id|#)'
 
@@ -143,6 +142,7 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 def survivalStatusToNumericMapping(event_outcome_column:Series) -> dict:
     """Convert a survival status column to a numeric column by iterating over unique values and assigning a numeric value to each.
+    
     Alive values will be assigned a value of 0, and dead values will be assigned a value of 1.
     If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2.
     Any NaN values will be assigned the value "unknown", then converted to a numeric value.
