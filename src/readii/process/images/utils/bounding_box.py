@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
 
 @dataclass
 class Point3D:
@@ -11,13 +12,16 @@ class Point3D:
     z: int
 
     @property
-    def as_tuple(self):
+    def as_tuple(self) -> tuple[int, int, int]:
+        """Return the point as a tuple."""
         return self.x, self.y, self.z
 
     def __add__(self, other: Point3D) -> Point3D:
+        """Add two points."""
         return Point3D(x=self.x + other.x, y=self.y + other.y, z=self.z + other.z)
 
     def __sub__(self, other: Point3D) -> Point3D:
+        """Subtract two points."""
         return Point3D(x=self.x - other.x, y=self.y - other.y, z=self.z - other.z)
 
 
