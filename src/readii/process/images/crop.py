@@ -1,11 +1,11 @@
 
+from typing import Literal
+
 import numpy as np
 import SimpleITK as sitk
 from imgtools.ops.functional import resample
 
 from readii.utils import logger
-
-from typing import Literal
 
 
 def validate_new_dimensions(image:sitk.Image,
