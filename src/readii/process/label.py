@@ -1,14 +1,15 @@
 import re
-from pandas import DataFrame, Series
-import numpy as np
 from typing import Optional
 
+import numpy as np
+from pandas import DataFrame, Series
+
+from readii.process.split import replaceColumnValues
 from readii.utils import logger
-from readii.data.split import replaceColumnValues
+
 
 def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
-    """Function to find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). 
-       If multiple found, will return the first match.
+    r"""Find a column in a dataframe that contains some form of patient ID or case ID (case-insensitive). If multiple found, will return the first match.
 
        Current regex is: '(pat)?(ient)?(case)?(\s|.)?(id|#)'
 
@@ -22,7 +23,6 @@ def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
     str
         Label for patient identifier column from the dataframe.
     """
-
     # regex to get patient identifier column name in the dataframes
     # catches case-insensitive variations of patient_id, patid, pat id, case_id, case id, caseid, id
     id_search_term = re.compile(pattern= r'(pat)?(ient)?(case)?(\s|.)?(id|#)', flags=re.IGNORECASE)
@@ -43,8 +43,9 @@ def getPatientIdentifierLabel(dataframe_to_search:DataFrame) -> str:
 
 
 def setPatientIdAsIndex(dataframe_to_index:DataFrame,
-                        patient_id_col:str = None):
-    """ Function to set the patient ID column as the index of a dataframe.
+                        patient_id_col:str = None
+                        ) -> DataFrame:
+    """Set the patient ID column as the index of a dataframe.
 
     Parameters
     ----------
@@ -63,8 +64,9 @@ def setPatientIdAsIndex(dataframe_to_index:DataFrame,
 
 def convertDaysToYears(dataframe_with_outcome:DataFrame,
                        time_column_label:str,
-                       divide_by:int = 365):
-    """ Function to create a copy of a time outcome column mesaured in days and convert it to years.
+                       divide_by:int = 365
+                       ) -> DataFrame:
+    """Create a copy of a time outcome column mesaured in days and convert it to years.
 
     Parameters
     ----------
@@ -80,7 +82,6 @@ def convertDaysToYears(dataframe_with_outcome:DataFrame,
     dataframe_with_outcome : DataFrame
         Dataframe with a copy of the specified time column converted to years.
     """
-
     # Set up the new column name for the converted time column
     years_column_label = time_column_label + "_years"
     # Make a copy of the time column with the values converted from days to years and add suffic _years to the column name
@@ -94,8 +95,8 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
                             outcome_column_label:str,
                             standard_column_label:str,
                             convert_to_years:bool = False,
-                            ):
-    """ Function to set up a time outcome column in a dataframe. Makes a copy of the specified outcome column with a standardized column name and converts it to years if specified.
+                            ) -> DataFrame:
+    """Set up a time outcome column in a dataframe. Makes a copy of the specified outcome column with a standardized column name and converts it to years if specified.
 
     Parameters
     ----------
@@ -113,7 +114,6 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
     dataframe_with_outcome : DataFrame
         Dataframe with a copy of the specified outcome column converted to years.    
     """
-
     # Check if the outcome column is numeric
     if not np.issubdtype(dataframe_with_outcome[outcome_column_label].dtype, np.number):
         msg = f"{outcome_column_label} is not numeric. Please confirm outcome_column_label is the correct column or convert the column in the dataframe to numeric."
@@ -140,8 +140,9 @@ def timeOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 
 
-def survivalStatusToNumericMapping(event_outcome_column:Series):
+def survivalStatusToNumericMapping(event_outcome_column:Series) -> dict:
     """Convert a survival status column to a numeric column by iterating over unique values and assigning a numeric value to each.
+    
     Alive values will be assigned a value of 0, and dead values will be assigned a value of 1.
     If "alive" is present, next event value index will start at 1. If "dead" is present, next event value index will start at 2.
     Any NaN values will be assigned the value "unknown", then converted to a numeric value.
@@ -156,7 +157,6 @@ def survivalStatusToNumericMapping(event_outcome_column:Series):
     event_column_value_mapping : dict
         Dictionary mapping the survival status values to numeric values.
     """
-
     # Create a dictionary to map event values to numeric values
     event_column_value_mapping = {}
     # Get a list of all unique event values, set NaN values to unknown, set remaining values to lower case
@@ -194,8 +194,9 @@ def survivalStatusToNumericMapping(event_outcome_column:Series):
 def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
                             outcome_column_label:str,
                             standard_column_label:str,
-                            event_column_value_mapping:Optional[dict]=None):
-    """ Function to set up an event outcome column in a dataframe.
+                            event_column_value_mapping:Optional[dict]=None
+                            ) -> DataFrame:
+    """Set up an event outcome column in a dataframe.
 
     Parameters
     ----------
@@ -215,7 +216,6 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
     dataframe_with_standardized_outcome : DataFrame
         Dataframe with a copy of the specified outcome column converted to numeric values.
     """
-
     # Get the type of the existing event column
     event_variable_type = dataframe_with_outcome[outcome_column_label].dtype
 
@@ -249,7 +249,7 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
         else:
             # Convert all dictionary keys in provided mapping to lowercase
-            event_column_value_mapping = dict((status.lower(), value) for status, value in event_column_value_mapping.items())
+            event_column_value_mapping = {status.lower():value for status, value in event_column_value_mapping.items()}
 
             # Check if user provided dictionary handles all event values in the outcome column
             if set(existing_event_values) != set(event_column_value_mapping.keys()):
@@ -284,8 +284,9 @@ def eventOutcomeColumnSetup(dataframe_with_outcome:DataFrame,
 
 def addOutcomeLabels(feature_data_to_label:DataFrame,
                      clinical_data:DataFrame,
-                     outcome_labels:Optional[list] = None):
-    """ Function to add survival labels to a feature dataframe based on a clinical dataframe.
+                     outcome_labels:Optional[list] = None
+                     ) -> DataFrame:
+    """Add survival labels to a feature dataframe based on a clinical dataframe.
 
     Parameters
     ----------
@@ -295,6 +296,11 @@ def addOutcomeLabels(feature_data_to_label:DataFrame,
         Dataframe containing the clinical data to use for survival labels.
     outcome_labels : list, optional
         List of outcome labels to extract from the clinical dataframe. The default is ["survival_time_in_years", "survival_event_binary"].
+
+    Returns
+    -------
+    outcome_labelled_feature_data : DataFrame
+        Dataframe containing the feature data with survival labels added.
     """
     if outcome_labels is None:
         outcome_labels = ["survival_time_in_years", "survival_event_binary"]

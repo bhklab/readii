@@ -1,10 +1,15 @@
+from typing import Optional
+
 from pandas import DataFrame
+
+from readii.utils import logger
+
 
 def replaceColumnValues(dataframe:DataFrame,
                        column_to_change:str,
                        replacement_value_data:dict
-                       ):
-    """Function to replace specified values in a column with a new value.
+                       ) -> DataFrame:
+    """Replace specified values in a column with a new value.
 
     Parameters
     ----------
@@ -21,19 +26,23 @@ def replaceColumnValues(dataframe:DataFrame,
     dataframe : DataFrame
         Dataframe with values replaced.
     """
-
     # Check if the column name is a valid column in the dataframe
     if column_to_change not in dataframe.columns:
-        raise ValueError(f"Column {column_to_change} not found in dataframe.")
+        msg = f"Column {column_to_change} not found in dataframe."
+        logger.exception(msg)
+        raise ValueError(msg)
     
-    for new_value in replacement_value_data.keys():
+    for new_value, old_values in replacement_value_data.items():
         # Check if the replacement value is a valid value in the column
-        old_values = replacement_value_data[new_value]
         values_not_found_in_column = set(old_values).difference(set(dataframe[column_to_change].unique()))
+
         if values_not_found_in_column == set(old_values):
-            raise ValueError(f"All values in {values_not_found_in_column} are not found to be replaced in column {column_to_change}.")
+            msg = f"All values in {values_not_found_in_column} are not found to be replaced in column {column_to_change}."
+            logger.exception(msg)
+            raise ValueError(msg)
+        
         # Replace the old values with the new value
-        dataframe = dataframe.replace(to_replace=replacement_value_data[new_value], 
+        dataframe = dataframe.replace(to_replace=old_values, 
                                       value=new_value)
         
     return dataframe
@@ -41,9 +50,9 @@ def replaceColumnValues(dataframe:DataFrame,
 
 def splitDataByColumnValue(dataframe:DataFrame,
                            split_col_data:dict[str,list],
-                           impute_value = None,
-                           ):
-    """Function to split a dataframe into multiple dataframes based on the values in a specified column. Optionally, impute values in the split columns.
+                           impute_value:Optional[object | None] = None,
+                           ) -> dict[str,DataFrame]:
+    """Split a dataframe into multiple dataframes based on the values in a specified column. Optionally, impute values in the split columns.
 
     Parameters
     ----------
@@ -59,17 +68,15 @@ def splitDataByColumnValue(dataframe:DataFrame,
     split_dataframes : dict
         Dictionary of dataframes, where the key is the split value and the value is the dataframe for that split value.
     """
-    
     # Initialize dictionary to store the split dataframes
     split_dataframes = {}
 
-    for split_column_name in split_col_data.keys():
+    for split_column_name, split_col_values in split_col_data.items():
         # Check if the column name is a valid column in the dataframe
         if split_column_name not in dataframe.columns:
-            raise ValueError(f"Column {split_column_name} not found in dataframe.")
-    
-        # Get split column values for this column
-        split_col_values = split_col_data[split_column_name]
+            msg = f"Column {split_column_name} not found in dataframe."
+            logger.exception(msg)
+            raise ValueError(msg)
         
         if impute_value is not None:
             # Get all values in the column that are not one of the split_col_values
@@ -88,7 +95,9 @@ def splitDataByColumnValue(dataframe:DataFrame,
         for split_value in split_col_values:
             # Check if the split_value is a valid value in the column
             if split_value not in dataframe[split_column_name].unique():
-                raise ValueError(f"Split value {split_value} not found in column {split_column_name}.")
+                msg = f"Split value {split_value} not found in column {split_column_name}."
+                logger.exception(msg)
+                raise ValueError(msg)
             
             # Split the dataframe by the specified split_value
             split_dataframe = dataframe[dataframe[split_column_name] == split_value]
