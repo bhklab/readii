@@ -49,7 +49,7 @@ def validate_new_dimensions(image:sitk.Image,
 
 def find_bounding_box(mask:sitk.Image,
                       min_dim_size:int = 4
-                      ) -> np.ndarray:
+                      ) -> tuple:
     """Find the bounding box of a region of interest (ROI) in a given binary mask image.
     
     Parameters
@@ -137,7 +137,7 @@ def check_bounding_box_single_dimension(bb_min_val:int,
 def apply_bounding_box_limits(image:sitk.Image,
                               bounding_box:tuple[int,int,int,int,int,int],
                               expected_dimensions:tuple[int,int,int]
-                              ) -> np.ndarray:
+                              ) -> tuple:
     """Check that bounding box coordinates are within the image dimensions. If not, move bounding box to the edge of the image and expand to expected dimension.
     
     Parameters
@@ -321,7 +321,7 @@ def crop_to_maxdim_cube(image:sitk.Image,
 
     # Test if bounding box coordinates are within the image, move to image edge if not
     min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, 
-                                                                         bounding_box = [min_x, max_x, min_y, max_y, min_z, max_z],
+                                                                         bounding_box = (min_x, max_x, min_y, max_y, min_z, max_z),
                                                                          expected_dimensions = [max_dim, max_dim, max_dim])
     # Crop image to the cube bounding box
     img_crop = image[min_x:max_x, min_y:max_y, min_z:max_z]
