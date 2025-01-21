@@ -331,11 +331,11 @@ def crop_to_maxdim_cube(image:sitk.Image,
 
 
 
-def crop_with_pyradiomics(image:sitk.Image,
-                          mask:sitk.Image,
-                          mask_label:int = None
-                          ) -> tuple[sitk.Image, sitk.Image]:
-    """Crop an image to a bounding box around a region of interest in the mask using PyRadiomics functions.
+def crop_with_pyradiomics(image:sitk.Image,  
+                          mask:sitk.Image,  
+                          mask_label: int | None = None  
+                          ) -> tuple[sitk.Image, sitk.Image]:  
+    """Crop an image to a bounding box around a region of interest in the mask using PyRadiomics functions.  
 
     Parameters
     ----------
