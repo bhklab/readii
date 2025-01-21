@@ -445,5 +445,9 @@ def crop_image_to_mask(image:sitk.Image,
         
         case "pyradiomics":
             cropped_image, cropped_mask = crop_with_pyradiomics(image, mask)
+        
+        case _:
+            msg = f"Invalid crop method: {crop_method}. Must be one of 'bbox', 'centroid', 'cube', or 'pyradiomics'."
+            raise ValueError(msg)
     
     return cropped_image, cropped_mask
