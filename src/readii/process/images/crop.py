@@ -395,7 +395,7 @@ def crop_image_to_mask(image:sitk.Image,
     cropped_mask : sitk.Image
         Cropped mask.
     """
-    if resize_dimensions is None and crop_method is not "pyradiomics":  
+    if resize_dimensions is None and crop_method != "pyradiomics":  
         msg = f"resize_dimensions is required for crop_method '{crop_method}'."  
         raise ValueError(msg)
 
