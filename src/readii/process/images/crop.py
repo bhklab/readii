@@ -62,29 +62,29 @@ def find_bounding_box(mask:sitk.Image,
     Returns
     -------
     bounding_box : np.ndarray
-        Numpy array containing the bounding box coordinates around the ROI.
+        Numpy array containing the bounding box coordinates around the ROI. Order is [min_x, max_x, min_y, max_y, min_z, max_z].
     """
     # Convert the mask to a uint8 image
     mask_uint = sitk.Cast(mask, sitk.sitkUInt8)
     stats = sitk.LabelShapeStatisticsImageFilter()
     stats.Execute(mask_uint)
     # Get the bounding box starting coordinates and size
-    xstart, ystart, zstart, xsize, ysize, zsize = stats.GetBoundingBox(1)
+    min_x, min_y, min_z, size_x, size_y, size_z = stats.GetBoundingBox(1)
 
     # Ensure minimum size of 4 pixels along each dimension
-    xsize = max(xsize, min_dim_size)
-    ysize = max(ysize, min_dim_size)
-    zsize = max(zsize, min_dim_size)
+    size_x = max(size_x, min_dim_size)
+    size_y = max(size_y, min_dim_size)
+    size_z = max(size_z, min_dim_size)
 
     
     # Calculate the maximum coordinate of the bounding box by adding the size to the starting coordinate
-    xend, yend, zend = xstart + xsize, ystart + ysize, zstart + zsize
+    max_x, max_y, max_z = min_x + size_x, min_y + size_y, min_z + size_z
 
     # TODO: Switch to using a class for the bounding box
     # min_coord = Coordinate(x=xstart, y=ystart, z=zstart)
     # max_coord = Coordinate(x=xstart + xsize, y=ystart + ysize, z=zstart + zsize)
 
-    return xstart, xend, ystart, yend, zstart, zend
+    return min_x, max_x, min_y, max_y, min_z, max_z
 
 
 def check_bounding_box_single_dimension(bb_min_val:int, 
@@ -145,14 +145,14 @@ def apply_bounding_box_limits(image:sitk.Image,
     image : sitk.Image
         Image to check the bounding box coordinates against.
     bounding_box : tuple[int,int,int,int,int,int]
-        Bounding box to check the coordinates of.
+        Bounding box to check the coordinates of. Order is [min_x, max_x, min_y, max_y, min_z, max_z].
     expected_dimensions : tuple[int,int,int]
         Expected dimensions of the bounding box. Used if the bounding box needs to be shifted to the edge of the image.
     
     Returns
     -------
     min_x, min_y, min_z, max_x, max_y, max_z : tuple[int,int,int,int,int,int]
-        Updated bounding box coordinates.
+        Updated bounding box coordinates. Order is [min_x, max_x, min_y, max_y, min_z, max_z].
     """
     # Get the size of the image to use to determine if crop dimensions are larger than the image
     img_x, img_y, img_z = image.GetSize()
@@ -229,7 +229,7 @@ def crop_to_centroid(image:sitk.Image,
 
     # Test if bounding box coordinates are within the image, move to image edge if not
     min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, 
-                                                                         bounding_box = [min_x, max_x, min_y, max_y, min_z, max_z],
+                                                                         bounding_box = (min_x, max_x, min_y, max_y, min_z, max_z),
                                                                          expected_dimensions = crop_dimensions)
 
     return image[min_x:max_x, min_y:max_y, min_z:max_z]
@@ -247,7 +247,7 @@ def crop_to_bounding_box(image:sitk.Image,
     image : sitk.Image
         Image to crop.
     bounding_box : tuple[int,int,int,int,int,int]
-        Bounding box to crop the image to. The order is (min_x, min_y, min_z, max_x, max_y, max_z).
+        Bounding box to crop the image to. Order is [min_x, max_x, min_y, max_y, min_z, max_z].
     resize_dimensions : tuple[int,int,int]
         Dimensions to resize the image to.
     
@@ -262,11 +262,10 @@ def crop_to_bounding_box(image:sitk.Image,
     # Check that the number of bounding box dimensions match the image dimensions
     validate_new_dimensions(image, int(len(bounding_box)/2))
 
-    # Get bounding box dimensions for limit testing
-    bounding_box_dimensions = np.array(bounding_box[3:]) - np.array(bounding_box[:3])
-
     # Test if bounding box coordinates are within the image, move to image edge if not
-    min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, bounding_box, bounding_box_dimensions)
+    min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, 
+                                                                         bounding_box, 
+                                                                         expected_dimensions=(max_x - min_x, max_y - min_y, max_z - min_z))
 
     # Crop image to the bounding box
     img_crop = image[min_x:max_x, min_y:max_y, min_z:max_z]
@@ -322,7 +321,7 @@ def crop_to_maxdim_cube(image:sitk.Image,
     # Test if bounding box coordinates are within the image, move to image edge if not
     min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, 
                                                                          bounding_box = (min_x, max_x, min_y, max_y, min_z, max_z),
-                                                                         expected_dimensions = [max_dim, max_dim, max_dim])
+                                                                         expected_dimensions = (max_dim, max_dim, max_dim))
     # Crop image to the cube bounding box
     img_crop = image[min_x:max_x, min_y:max_y, min_z:max_z]
     # Resample the image to the new dimensions and spacing
@@ -385,7 +384,7 @@ def crop_image_to_mask(image:sitk.Image,
     mask : sitk.Image
         Mask to crop the image to. Will also be cropped.
     crop_method : str, optional
-        Method to use to crop the image to the mask. Must be one of "bounding_box", "centroid", or "cube".
+        Method to use to crop the image to the mask. Must be one of "bounding_box", "centroid", "cube, or "pyradiomics".
     resize_dimensions : tuple[int,int,int]
         Dimensions to resize the image to.
     
