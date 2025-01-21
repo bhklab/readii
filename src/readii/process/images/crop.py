@@ -1,5 +1,5 @@
 
-from typing import Literal
+from typing import Literal, Optional
 
 import numpy as np
 import SimpleITK as sitk
@@ -374,7 +374,7 @@ def crop_with_pyradiomics(image:sitk.Image,
 def crop_image_to_mask(image:sitk.Image,
                        mask:sitk.Image,
                        crop_method:Literal["bounding_box", "centroid", "cube", "pyradiomics"],
-                       resize_dimensions:tuple[int,int,int]
+                       resize_dimensions:Optional[tuple[int,int,int]]
                        ) -> tuple[sitk.Image, sitk.Image]:
     """Crop an image and mask to an ROI in the mask and resize to a specified crop dimensions.
 
