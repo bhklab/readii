@@ -3,7 +3,7 @@ from typing import Literal
 
 import numpy as np
 import SimpleITK as sitk
-from imgtools.ops.functional import resample
+from imgtools.ops.functional import resize
 from radiomics import imageoperations
 
 from readii.image_processing import getROIVoxelLabel
@@ -44,37 +44,6 @@ def validate_new_dimensions(image:sitk.Image,
         msg = "New dimensions must be a tuple of integers or a single integer."
         logger.exception(msg)
         raise ValueError(msg)
-    
-
-
-def resize_image(image:sitk.Image,
-                 resize_dimensions:tuple
-                ) -> sitk.Image:
-    """Resize an image to specified dimensions via linear interpolation.
-
-    Parameters
-    ----------
-    image : sitk.Image
-        Image to resize.
-    resize_dimensions : tuple
-        Tuple of integers representing the new dimensions to resize the image to. Must have the same number of dimensions as the image.
-
-    Returns
-    -------
-    resized_image : sitk.Image
-        Resized image.
-    """
-    validate_new_dimensions(image, resize_dimensions)
-    
-    # Calculate the new spacing based on the resized dimensions
-    original_dimensions = np.array(image.GetSize())
-    original_spacing = np.array(image.GetSpacing())
-    resized_spacing = original_spacing * original_dimensions / resize_dimensions
-
-    # Resample the image to the new dimensions and spacing
-    resized_image = resample(image, spacing=resized_spacing, output_size=resize_dimensions)
-
-    return resized_image
 
 
 
@@ -302,7 +271,7 @@ def crop_to_bounding_box(image:sitk.Image,
     # Crop image to the bounding box
     img_crop = image[min_x:max_x, min_y:max_y, min_z:max_z]
     # Resample the image to the new dimensions and spacing
-    img_crop = resize_image(img_crop, resize_dimensions)
+    img_crop = resize(img_crop, size = resize_dimensions)
     return img_crop
 
 
@@ -357,7 +326,7 @@ def crop_to_maxdim_cube(image:sitk.Image,
     # Crop image to the cube bounding box
     img_crop = image[min_x:max_x, min_y:max_y, min_z:max_z]
     # Resample the image to the new dimensions and spacing
-    img_crop = resize_image(img_crop, resize_dimensions)
+    img_crop = resize(img_crop, size=resize_dimensions)
     return img_crop
 
 

@@ -11,7 +11,6 @@ from readii.process.images.crop import (
     crop_to_maxdim_cube,
     find_bounding_box,
     find_centroid,
-    resize_image,
     validate_new_dimensions,
 )
 
