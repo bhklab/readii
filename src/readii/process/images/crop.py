@@ -353,7 +353,7 @@ def crop_with_pyradiomics(image:sitk.Image,
         Cropped mask.
     """
     # Get the label of the region of interest in the mask if not provided
-    if not mask_label:
+    if mask_label is None:
         mask_label = getROIVoxelLabel(mask)
     
     # Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
