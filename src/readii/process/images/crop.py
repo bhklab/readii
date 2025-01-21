@@ -400,7 +400,7 @@ def crop_image_to_mask(image:sitk.Image,
         raise ValueError(msg)
 
     match crop_method:            
-        case "bbox":
+        case "bounding_box":
             bbox_coords = find_bounding_box(mask)
             cropped_image = crop_to_bounding_box(image, bbox_coords, resize_dimensions)
             cropped_mask = crop_to_bounding_box(mask, bbox_coords, resize_dimensions)
