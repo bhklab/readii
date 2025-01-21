@@ -395,7 +395,11 @@ def crop_image_to_mask(image:sitk.Image,
     cropped_mask : sitk.Image
         Cropped mask.
     """
-    match crop_method:
+    if resize_dimensions is None and crop_method is not "pyradiomics":  
+        msg = f"resize_dimensions is required for crop_method '{crop_method}'."  
+        raise ValueError(msg)
+
+    match crop_method:            
         case "bbox":
             bbox_coords = find_bounding_box(mask)
             cropped_image = crop_to_bounding_box(image, bbox_coords, resize_dimensions)
