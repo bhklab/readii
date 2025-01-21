@@ -262,10 +262,13 @@ def crop_to_bounding_box(image:sitk.Image,
     # Check that the number of bounding box dimensions match the image dimensions
     validate_new_dimensions(image, int(len(bounding_box)/2))
 
+    # Current bounding box dimensions
+    current_image_dimensions = (max_x - min_x, max_y - min_y, max_z - min_z)
+
     # Test if bounding box coordinates are within the image, move to image edge if not
     min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, 
                                                                          bounding_box, 
-                                                                         expected_dimensions=(max_x - min_x, max_y - min_y, max_z - min_z))
+                                                                         expected_dimensions=current_image_dimensions)
 
     # Crop image to the bounding box
     img_crop = image[min_x:max_x, min_y:max_y, min_z:max_z]
