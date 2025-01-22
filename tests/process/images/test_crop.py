@@ -54,7 +54,7 @@ def lung4D_mask(lung4D_ct_path, lung4D_rt_path):
 @pytest.mark.parametrize(
     "crop_method, expected_size",
     [
-        ("bbox", (50, 50, 50)),
+        ("bounding_box", (50, 50, 50)),
         ("centroid", (50, 50, 50)),
         ("cube", (50, 50, 50)),
         # ("pyradiomics", (22, 28, 14)),
