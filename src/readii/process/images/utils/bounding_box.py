@@ -35,6 +35,11 @@ class Size3D(Point3D):
 @dataclass
 class Coordinate(Point3D):
     """Represent a coordinate in 3D space."""
+    
+    def __add__(self, other: Size3D) -> Coordinate:
+        """Add a size to a coordinate to get a second coordinate."""
+        return Coordinate(x=self.x + other.x, y=self.y + other.y, z=self.z + other.z)
+
 
     pass
 
