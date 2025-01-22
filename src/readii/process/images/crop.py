@@ -9,7 +9,7 @@ from radiomics import imageoperations
 from readii.image_processing import getROIVoxelLabel
 from readii.utils import logger
 
-from readii.process.images.utils.bounding_box import Coordinate, Size3D
+from readii.process.images.utils.bounding_box import Centroid, Coordinate, Size3D
 
 def validate_new_dimensions(image:sitk.Image,
                             new_dimensions:tuple | int
@@ -191,8 +191,10 @@ def find_centroid(mask:sitk.Image) -> np.ndarray:
     # Get the centroid coordinates as a physical point in the mask
     centroid_coords = stats.GetCentroid(1)
     # Convert the physical point to an index in the mask array
-    centroid_idx = mask.TransformPhysicalPointToIndex(centroid_coords)
-    return centroid_idx
+    centroid_x, centroid_y, centroid_z = mask.TransformPhysicalPointToIndex(centroid_coords)
+    # Convert to a Centroid object
+    centroid = Centroid(centroid_x, centroid_y, centroid_z)
+    return centroid
 
 
 
