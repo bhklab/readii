@@ -6,7 +6,6 @@ from dataclasses import dataclass
 @dataclass
 class Point3D:
     """Represent a point in 3D space."""
-
     x: int
     y: int
     z: int
@@ -39,9 +38,11 @@ class Coordinate(Point3D):
     def __add__(self, other: Size3D) -> Coordinate:
         """Add a size to a coordinate to get a second coordinate."""
         return Coordinate(x=self.x + other.x, y=self.y + other.y, z=self.z + other.z)
-
-
-    pass
+    
+    def __sub__(self, other: Size3D) -> Coordinate:
+        """Subtract a size from a coordinate to get a second coordinate."""
+        return Coordinate(x=self.x - other.x, y=self.y - other.y, z=self.z - other.z)
+    
 
 
 @dataclass
