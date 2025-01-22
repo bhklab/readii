@@ -9,6 +9,7 @@ from radiomics import imageoperations
 from readii.image_processing import getROIVoxelLabel
 from readii.utils import logger
 
+from readii.process.images.utils.bounding_box import Coordinate, Size3D
 
 def validate_new_dimensions(image:sitk.Image,
                             new_dimensions:tuple | int
@@ -49,7 +50,7 @@ def validate_new_dimensions(image:sitk.Image,
 
 def find_bounding_box(mask:sitk.Image,
                       min_dim_size:int = 4
-                      ) -> tuple:
+                      ) -> tuple[Coordinate, Coordinate, Size3D]:
     """Find the bounding box of a region of interest (ROI) in a given binary mask image.
     
     Parameters
@@ -61,30 +62,31 @@ def find_bounding_box(mask:sitk.Image,
     
     Returns
     -------
-    bounding_box : np.ndarray
-        Numpy array containing the bounding box coordinates around the ROI. Order is [min_x, max_x, min_y, max_y, min_z, max_z].
+    bounding_box : tuple[Coordinate, Coordinate, Size3D]
+        Tuple containing the minimum and maximum coordinates for a bounding box, along with the size of the bounding box
     """
     # Convert the mask to a uint8 image
     mask_uint = sitk.Cast(mask, sitk.sitkUInt8)
     stats = sitk.LabelShapeStatisticsImageFilter()
     stats.Execute(mask_uint)
-    # Get the bounding box starting coordinates and size
-    min_x, min_y, min_z, size_x, size_y, size_z = stats.GetBoundingBox(1)
-
-    # Ensure minimum size of 4 pixels along each dimension
+    # Get the bounding box starting/minimum coordinates and size
+    coord_x, coord_y, coord_z, size_x, size_y, size_z = stats.GetBoundingBox(1)
+    
+    # Ensure minimum size of 4 pixels along each dimension (requirement of cropping method)
     size_x = max(size_x, min_dim_size)
     size_y = max(size_y, min_dim_size)
     size_z = max(size_z, min_dim_size)
+    
+    # Create an object to store the bounding box size in same manner as coordinates
+    bbox_size = Size3D(size_x, size_y, size_z)
 
+    # Create an object to store the minimum bounding box coordinate
+    bbox_min_coord = Coordinate(coord_x, coord_y, coord_z)
     
     # Calculate the maximum coordinate of the bounding box by adding the size to the starting coordinate
-    max_x, max_y, max_z = min_x + size_x, min_y + size_y, min_z + size_z
+    bbox_max_coord = bbox_min_coord + bbox_size
 
-    # TODO: Switch to using a class for the bounding box
-    # min_coord = Coordinate(x=xstart, y=ystart, z=zstart)
-    # max_coord = Coordinate(x=xstart + xsize, y=ystart + ysize, z=zstart + zsize)
-
-    return min_x, max_x, min_y, max_y, min_z, max_z
+    return bbox_min_coord, bbox_max_coord, bbox_size
 
 
 def check_bounding_box_single_dimension(bb_min_val:int, 
@@ -264,6 +266,7 @@ def crop_to_bounding_box(image:sitk.Image,
 
     # Current bounding box dimensions
     current_image_dimensions = (max_x - min_x, max_y - min_y, max_z - min_z)
+    # bounding_box[1] - bounding_box[0], bounding_box[]
 
     # Test if bounding box coordinates are within the image, move to image edge if not
     min_x, max_x, min_y, max_y, min_z, max_z = apply_bounding_box_limits(image, 
@@ -422,7 +425,7 @@ def crop_image_to_mask(image:sitk.Image,
             cropped_image, cropped_mask = crop_with_pyradiomics(image, mask)
         
         case _:
-            msg = f"Invalid crop method: {crop_method}. Must be one of 'bbox', 'centroid', 'cube', or 'pyradiomics'."
+            msg = f"Invalid crop method: {crop_method}. Must be one of 'bounding_box', 'centroid', 'cube', or 'pyradiomics'."
             raise ValueError(msg)
     
     return cropped_image, cropped_mask
