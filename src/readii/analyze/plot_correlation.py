@@ -418,8 +418,8 @@ def plotCrossCorrHeatmap(correlation_matrix:pd.DataFrame,
     cross_corr_heatmap = plotCorrelationHeatmap(cross_corr, 
                                                 diagonal=False, 
                                                 cmap=cmap, 
-                                                xlabel=vertical_feature_name, 
-                                                ylabel=horizontal_feature_name,
+                                                xlabel=horizontal_feature_name, 
+                                                ylabel=vertical_feature_name,
                                                 title=f"{correlation_method.capitalize()} Cross Correlations", 
                                                 subtitle=f"{vertical_feature_name} vs {horizontal_feature_name}")
     
