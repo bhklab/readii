@@ -53,19 +53,28 @@ def test_loadSegmentationSEG(nsclcSEGPath):
         "Wrong origin"
 
 
-def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath):
+
+@pytest.mark.parametrize(
+    "roiNames, expected",
+    [
+        ({"GTV":'Tumor_c.*'}, "GTV"),
+        ('Tumor_c.*', "Tumor_c40"),
+        (["Tumor_c40"], "Tumor_c40"),
+    ]
+)
+def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath, roiNames, expected):
     """Test loading a RTSTRUCT file"""
     actual = loadSegmentation(segImagePath = lung4DRTSTRUCTPath,
                               modality = 'RTSTRUCT',
                               baseImageDirPath = lung4DCTPath,
-                              roiNames = {"GTV":'Tumor_c.*'})
+                              roiNames = roiNames)
 
     assert isinstance(actual, dict), \
         "Wrong object type, should be dictionary"
-    assert list(actual.keys()) == ['GTV'], \
+    assert list(actual.keys()) == [expected], \
         f"Segmentation label is wrong, should be GTV, getting {list(actual.keys())}"
     
-    actualImage = actual['GTV']
+    actualImage = actual[expected]
 
     assert isinstance(actualImage, sitk.Image), \
         "Wrong object type"
