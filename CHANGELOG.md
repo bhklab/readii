@@ -1,6 +1,25 @@
 # CHANGELOG
 
 
+## v1.34.2 (2025-01-30)
+
+### Bug Fixes
+
+- Axes labelling in plotCrossCorrHeatmap ([#115](https://github.com/bhklab/readii/pull/115),
+  [`49b38ce`](https://github.com/bhklab/readii/commit/49b38ce8096ed9be0ab49eac4e9dfe06f6ad87f5))
+
+Swap vertical and horizontal feature labels on x and y axes of cross correlation heatmap
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **Bug Fixes** - Corrected axis label assignments in cross-correlation heatmap visualization to
+  improve accuracy of feature representation.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.34.1 (2025-01-15)
 
 ### Bug Fixes
