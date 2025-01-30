@@ -1,6 +1,25 @@
 # CHANGELOG
 
 
+## v1.34.3 (2025-01-30)
+
+### Bug Fixes
+
+- Pattern resolver update ([#116](https://github.com/bhklab/readii/pull/116),
+  [`39a6d6b`](https://github.com/bhklab/readii/commit/39a6d6b12092dd78e7e237221d0531f4d3f47306))
+
+`PatternResolver` in `med-imagetools` updated the input argument from `pattern_parser` to
+  `pattern_matcher`, updated this to match here.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **Chores** - Updated parameter naming in the `PatternResolver` class for improved clarity and
+  consistency. - Modified the `roiNames` parameter format in segmentation loading tests for better
+  structure and clarity. - Adjusted expected output labels in segmentation tests to reflect new
+  naming conventions. - Reorganized import statements to source functions from a new module,
+  maintaining accessibility. <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.34.2 (2025-01-30)
 
 ### Bug Fixes
