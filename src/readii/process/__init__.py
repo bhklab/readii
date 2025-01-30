@@ -9,14 +9,14 @@ from .label import (
     survivalStatusToNumericMapping,
     timeOutcomeColumnSetup,
 )
-from .select import (
-    dropUpToFeature,
-    getOnlyPyradiomicsFeatures,
-    selectByColumnValue,
-)
 from .split import (
     replaceColumnValues,
     splitDataByColumnValue,
+)
+from .subset import (
+    dropUpToFeature,
+    getOnlyPyradiomicsFeatures,
+    selectByColumnValue,
 )
 
 __all__ = [
