@@ -63,7 +63,7 @@ def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath):
     assert isinstance(actual, dict), \
         "Wrong object type, should be dictionary"
     assert list(actual.keys()) == ['GTV'], \
-        f"Segmentation label is wrong, should be Tumor_c40, getting {list(actual.keys())}"
+        f"Segmentation label is wrong, should be GTV, getting {list(actual.keys())}"
     
     actualImage = actual['GTV']
 
