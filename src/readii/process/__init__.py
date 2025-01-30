@@ -9,7 +9,7 @@ from .label import (
     survivalStatusToNumericMapping,
     timeOutcomeColumnSetup,
 )
-from .select import (
+from .subset import (
     dropUpToFeature,
     getOnlyPyradiomicsFeatures,
     selectByColumnValue,
