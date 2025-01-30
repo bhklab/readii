@@ -58,7 +58,7 @@ class PatternResolver:
 
 		try:
 			self.pattern_parser = PatternParser(
-				self.filename_format, pattern_parser=self.DEFAULT_PATTERN
+				self.filename_format, pattern_matcher=self.DEFAULT_PATTERN
 			)
 			self.formatted_pattern, self.keys = self.parse()  # Validate the pattern by parsing it
 		except InvalidPatternError as e:
