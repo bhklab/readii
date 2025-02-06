@@ -44,7 +44,7 @@ def lung4DRTSTRUCTImage():
 def pyradiomicsParamFilePath():
     return "src/readii/data/default_pyradiomics.yaml"
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def nsclcMetadataPath():
     oldpath = Path("tests/output/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
     newpath = Path("tests/NSCLC_Radiogenomics/procdata/ct_to_seg_match_list_NSCLC_Radiogenomics.csv")
@@ -53,7 +53,7 @@ def nsclcMetadataPath():
     yield newpath.as_posix()
     newpath.unlink()
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def lung4DMetadataPath():
     oldpath = Path("tests/output/ct_to_seg_match_list_4D-Lung.csv")
     newpath = Path("tests/4D-Lung/procdata/ct_to_seg_match_list_4D-Lung.csv")
