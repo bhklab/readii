@@ -74,17 +74,7 @@ pytest-cov = "*"
 pytest-xdist = "*"
 
 [tool.pixi.feature.test.tasks.test]
-cmd = [
-  "pytest",
-  "--numprocesses=auto",
-  "-s",
-  "--verbose",
-  "--cov=readii",
-  "--cov-report=xml:coverage-report/coverage.xml",
-  "--cov-config=config/coverage.toml",
-]
-inputs = ["src", "tests", "config/coverage.toml"]
-outputs = ["coverage-report/coverage.xml"]
+cmd = "pytest -c config/pytest.ini --rootdir ."
 description = "Run pytest (Note: run `coverage` task to do both)"
 
 [tool.pixi.feature.test.tasks.coverage]
