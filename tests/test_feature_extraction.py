@@ -51,7 +51,9 @@ def nsclcMetadataPath():
     newpath.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(oldpath, newpath)
     yield newpath.as_posix()
-    newpath.unlink()
+
+    if newpath.exists():
+        newpath.unlink()
 
 @pytest.fixture(scope="module")
 def lung4DMetadataPath():
@@ -60,7 +62,9 @@ def lung4DMetadataPath():
     newpath.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy(oldpath, newpath)
     yield newpath.as_posix()
-    newpath.unlink()
+
+    if newpath.exists():
+        newpath.unlink()
 
 
 def test_singleRadiomicFeatureExtraction_SEG(nsclcCTImage, nsclcSEGImage, pyradiomicsParamFilePath):
