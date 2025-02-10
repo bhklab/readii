@@ -4,6 +4,8 @@ import SimpleITK as sitk
 from imgtools.coretypes.box import RegionBox
 from imgtools.ops.functional import resize
 
+from readii.utils import logger
+
 CropMethods = Literal["bounding_box", "centroid", "cube", "pyradiomics"]
 
 
@@ -25,8 +27,8 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
         Voxel value of the region of interest to crop to in the mask. Set to 1 by default.
     crop_method : str, default "cube"
         Method to use to crop the image to the mask. Must be one of "bounding_box", "centroid", "cube".
-    resize_dimensions : tuple[int,int,int], optional
-        Dimensions to resize the image to.
+    resize_dimensions : int, optional
+        Dimension to resize the image to. Will apply this value in all dimensions, so result will be a cube.
     
     Returns
     -------
@@ -47,6 +49,15 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
     If `resize_dimension` is provided, the cropped image and mask are resized to the specified dimensions
     using `imgtools.ops.functional.resize` with linear interpolation.
     """
+
+    # Check that the provided label is present in the mask
+    stats = sitk.LabelShapeStatisticsImageFilter()
+    stats.Execute(mask)
+    if label not in stats.GetLabels():
+        msg = f"Label {label} not present in mask. Must be one of {stats.GetLabels()}"
+        logger.exception(msg)
+        raise ValueError(msg)
+
     # Generate bounding box based on the specified crop method
     match crop_method:
         case "bounding_box":
@@ -57,7 +68,7 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
             if resize_dimension == None:
                 # Set resize_dimension to 50 if not provided -> default expected dimension for FMCIB
                 resize_dimension = 50
-            
+
             # Generate a cube bounding box with resize_dimensions around the centroid of a mask
             crop_box = RegionBox.from_mask_centroid(mask, label).expand_to_cube(resize_dimension)
         
