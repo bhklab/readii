@@ -1,7 +1,8 @@
+from typing import Literal
+
+import SimpleITK as sitk
 from imgtools.coretypes.box import RegionBox
 from imgtools.ops.functional import resize
-from typing import Literal, Optional
-import SimpleITK as sitk
 
 CropMethods = Literal["bounding_box", "centroid", "cube", "pyradiomics"]
 
@@ -46,7 +47,6 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
     If `resize_dimension` is provided, the cropped image and mask are resized to the specified dimensions
     using `imgtools.ops.functional.resize` with linear interpolation.
     """
-
     # Generate bounding box based on the specified crop method
     match crop_method:
         case "bounding_box":
@@ -82,9 +82,9 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
 
 
 if __name__ == "__main__":
-    from rich import print
-    from imgtools.coretypes import Coordinate3D
     from imgtools.io import read_dicom_series
+    from rich import print as rprint
+
     from readii.loaders import loadRTSTRUCTSITK
 
     image = read_dicom_series("tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543")
@@ -93,18 +93,18 @@ if __name__ == "__main__":
                             baseImageDirPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543",
                             roiNames = "Tumor_c.*")
 
-    print("Original image size:", image.GetSize())
+    rprint("Original image size:", image.GetSize())
 
     mask = rois["Tumor_c40"]
 
     bbox_image, bbox_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "bounding_box")
-    print(f"Bounding box: {bbox_image.GetSize()}")
-    print(f"Bounding box mask: {bbox_mask.GetSize()}")
+    rprint(f"Bounding box: {bbox_image.GetSize()}")
+    rprint(f"Bounding box mask: {bbox_mask.GetSize()}")
 
     centroid_image, centroid_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "centroid")
-    print(f"Centroid: {centroid_image.GetSize()}")
-    print(f"Centroid mask: {centroid_mask.GetSize()}")
+    rprint(f"Centroid: {centroid_image.GetSize()}")
+    rprint(f"Centroid mask: {centroid_mask.GetSize()}")
 
     cube_image, cube_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "cube")
-    print(f"Cube: {cube_image.GetSize()}")
-    print(f"Cube mask: {cube_mask.GetSize()}")
+    rprint(f"Cube: {cube_image.GetSize()}")
+    rprint(f"Cube mask: {cube_mask.GetSize()}")
