@@ -93,18 +93,17 @@ if __name__ == "__main__":
                             baseImageDirPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543",
                             roiNames = "Tumor_c.*")
 
-    print(image.GetSize())
+    print("Original image size:", image.GetSize())
 
     mask = rois["Tumor_c40"]
 
-    print(mask.GetSize())
-    # bbox_image, bbox_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "bounding_box")
-    # print(f"Bounding box: {bbox_image.GetSize()}")
-    # print(f"Bounding box mask: {bbox_mask.GetSize()}")
+    bbox_image, bbox_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "bounding_box")
+    print(f"Bounding box: {bbox_image.GetSize()}")
+    print(f"Bounding box mask: {bbox_mask.GetSize()}")
 
-    # centroid_image, centroid_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "centroid")
-    # print(f"Centroid: {centroid_image.GetSize()}")
-    # print(f"Centroid mask: {centroid_mask.GetSize()}")
+    centroid_image, centroid_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "centroid")
+    print(f"Centroid: {centroid_image.GetSize()}")
+    print(f"Centroid mask: {centroid_mask.GetSize()}")
 
     cube_image, cube_mask = crop_and_resize_image_and_mask(image, mask, crop_method = "cube")
     print(f"Cube: {cube_image.GetSize()}")
