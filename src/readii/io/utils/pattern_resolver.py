@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing import Any, ClassVar, Dict, Tuple
 
 from imgtools.dicom.sort.exceptions import InvalidPatternError  # type: ignore
-from imgtools.dicom.sort.parser import PatternParser  # type: ignore
+from imgtools.pattern_parser.parser import PatternParser  # type: ignore
 
 from readii.utils import logger
 
@@ -58,7 +58,7 @@ class PatternResolver:
 
 		try:
 			self.pattern_parser = PatternParser(
-				self.filename_format, pattern_parser=self.DEFAULT_PATTERN
+				self.filename_format, pattern_matcher=self.DEFAULT_PATTERN
 			)
 			self.formatted_pattern, self.keys = self.parse()  # Validate the pattern by parsing it
 		except InvalidPatternError as e:
