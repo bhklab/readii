@@ -43,31 +43,39 @@ def lung4D_mask(lung4D_ct_path, lung4D_rt_path):
 
 
 def test_default_crop_and_resize_image(lung4D_image, lung4D_mask):
+    expected_size = (92, 92, 92)
     cropped_image, cropped_mask = crop_and_resize_image_and_mask(lung4D_image, lung4D_mask)
-    assert cropped_image.GetSize() == (50, 50, 50), \
-        f"Cropped image size is incorrect, expected {(50, 50, 50)}, got {cropped_image.GetSize()}"
-    assert cropped_mask.GetSize() == (50, 50, 50), \
-        f"Cropped mask size is incorrect, expected {(50, 50, 50)}, got {cropped_mask.GetSize()}"
+    assert cropped_image.GetSize() == expected_size, \
+        f"Cropped image size is incorrect, expected {expected_size}, got {cropped_image.GetSize()}"
+    assert cropped_mask.GetSize() == expected_size, \
+        f"Cropped mask size is incorrect, expected {expected_size}, got {cropped_mask.GetSize()}"
 
 @pytest.mark.parametrize(
-    "crop_method, resize_dimnesion, expected_size",
+    "crop_method, resize_dimension, expected_size",
     [
+        # No resizing
         ("bounding_box", None, (51, 92, 28)),
         ("centroid", None, (50, 50, 50)),
         ("cube", None, (92, 92, 92)),
-        ("bounding_box", (50, 50, 50), (50, 50, 50)),
-        ("centroid", (50, 50, 50), (50, 50, 50)),
-        ("cube", (50, 50, 50), (50, 50, 50)),
-        ("bounding_box", (49, 49, 49), (49, 49, 49)),
-        ("centroid", (49, 49, 49), (49, 49, 49)),
-        ("cube", (49, 49, 49), (49, 49, 49)),
+        # Resize down to 50x50x50
+        ("bounding_box", 50, (50, 50, 50)),
+        ("centroid", 50, (50, 50, 50)),
+        ("cube", 50, (50, 50, 50)),
+        # Resize to odd value
+        ("bounding_box", 49, (49, 49, 49)),
+        ("centroid", 49, (49, 49, 49)),
+        ("cube", 49, (49, 49, 49)),
+        # Resize up to 98x98x98
+        ("bounding_box", 98, (98, 98, 98)),
+        ("centroid", 98, (98, 98, 98)),
+        ("cube", 98, (98, 98, 98)),
     ],
 )
 def test_crop_and_resize_image_and_mask_methods_and_resize_dimension(
     lung4D_image,
     lung4D_mask,
     crop_method,
-    resize_dimension
+    resize_dimension,
     expected_size,
 ):
     """Test cropping image to mask with different methods"""
@@ -84,30 +92,4 @@ def test_crop_and_resize_image_and_mask_methods_and_resize_dimension(
         cropped_mask.GetSize() == expected_size
     ), f"Cropped mask size is incorrect, expected {expected_size}, got {cropped_mask.GetSize()}"
 
-
-
-####################################################################################################
-# Parameterized tests for find_centroid and find_bounding_box
-
-
-# @pytest.fixture
-# def image_and_mask_with_roi(request, label_value: int = 1):
-#     """
-#     Fixture to create a 3D image and mask with a specified region of interest (ROI).
-
-#     This fixture is used indirectly in parameterized tests via the `indirect` keyword
-#     in `pytest.mark.parametrize`. The `request.param` provides the ROI coordinates, which
-#     are used to define the region of interest in the mask. The ROI is specified as a
-#     6-tuple (x_min, x_max, y_min, y_max, z_min, z_max).
-
-#     """
-#     # Create a 3D image
-#     image = sitk.Image(100, 100, 100, sitk.sitkInt16)
-#     mask = sitk.Image(100, 100, 100, sitk.sitkUInt8)
-
-#     # Unpack ROI from the request parameter and apply it to the mask
-#     roi = request.param
-#     mask[roi[0] : roi[1], roi[2] : roi[3], roi[4] : roi[5]] = label_value
-
-#     return image, mask
 
