@@ -6,7 +6,7 @@ from imgtools.ops.functional import resize
 
 from readii.utils import logger
 
-CropMethods = Literal["bounding_box", "centroid", "cube", "pyradiomics"]
+CropMethods = Literal["bounding_box", "centroid", "cube"]
 
 
 def crop_and_resize_image_and_mask(image: sitk.Image,
