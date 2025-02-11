@@ -49,7 +49,6 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
     If `resize_dimension` is provided, the cropped image and mask are resized to the specified dimensions
     using `imgtools.ops.functional.resize` with linear interpolation.
     """
-
     # Check that the provided label is present in the mask
     stats = sitk.LabelShapeStatisticsImageFilter()
     stats.Execute(mask)
