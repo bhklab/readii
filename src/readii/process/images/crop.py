@@ -78,16 +78,22 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
             crop_box = crop_box.expand_to_cube(max(crop_box.size))
         
         case _:
-            msg = f"Invalid crop method: {crop_method}. Must be one of 'bounding_box', 'centroid', 'cube', or 'pyradiomics'."
+            msg = f"Invalid crop method: {crop_method}. Must be one of 'bounding_box', 'centroid', or 'cube'."
             raise ValueError(msg)
 
     # Crop the image and mask to the bounding box
     cropped_image, cropped_mask = crop_box.crop_image_and_mask(image, mask)
 
     if resize_dimension is not None:
-        # Resize and resample the cropped image and mask with linear interpolation to desired dimensions
-        cropped_image = resize(cropped_image, size = resize_dimension)
-        cropped_mask = resize(cropped_mask, size = resize_dimension)
+        # Resize and resample the cropped image with linear interpolation to desired dimensions
+        cropped_image = resize(cropped_image, size = resize_dimension, interpolation = 'linear')
+
+        # Resize and resample the cropped mask with nearest neighbor interpolation to desired dimensions
+        # This can end up being returned as a float32 image, so need to cast to uint8 to avoid issues with label values
+        cropped_mask = resize(cropped_mask, size = resize_dimension, interpolation = 'nearest')
+
+        # Cast the cropped mask to uint8 to avoid issues with label values
+        cropped_mask = sitk.Cast(cropped_mask, sitk.sitkUInt8)
 
     return cropped_image, cropped_mask
 
