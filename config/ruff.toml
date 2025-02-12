@@ -145,8 +145,6 @@ max-complexity = 10
 convention = "numpy"
 
 
-[lint.flake8-builtins]
-builtins-allowed-modules = ["io"]
 
 
 [format]
