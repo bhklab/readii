@@ -64,7 +64,7 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
             crop_box = RegionBox.from_mask_bbox(mask, label)
         
         case "centroid":
-            if resize_dimension == None:
+            if resize_dimension is None:
                 # Set resize_dimension to 50 if not provided -> default expected dimension for FMCIB
                 resize_dimension = 50
 
