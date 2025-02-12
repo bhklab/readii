@@ -1,6 +1,39 @@
 # CHANGELOG
 
 
+## v1.35.0 (2025-02-12)
+
+### Features
+
+- Add image cropping preprocessing ([#119](https://github.com/bhklab/readii/pull/119),
+  [`978bdb5`](https://github.com/bhklab/readii/commit/978bdb51bf6669b95a02ce2a94ff8c4fc3735169))
+
+Using crop methods from med-imagetools, setup three crop methods that can be used as preprocessing
+  steps for feature extraction. Three methods migrated from readii-fmcib = bbox, centroid, cube
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Refined visualization in the notebook with updated image display settings,
+  including adjusted colormaps and layout. - Introduced functionality to crop and resize images and
+  masks using multiple methods and configurable dimensions. - **Enhancements** - Improved image
+  slice display with the option to specify a custom display axis. - **Tests** - Added comprehensive
+  tests to validate the new image processing and cropping features. - **Documentation** 	- Updated
+  notebook metadata and display settings. <!-- end of auto-generated comment: release notes by
+  coderabbit.ai -->
+
+---------
+
+Co-authored-by: Jermiah <jermiahjoseph98@gmail.com>
+
+### Refactoring
+
+- Remove io module allowance, wrong branch
+  ([`3a4e9d0`](https://github.com/bhklab/readii/commit/3a4e9d0993eb7c8e8846e9795990e12155fcde16))
+
+- Update ruff to allow io module
+  ([`efd5a32`](https://github.com/bhklab/readii/commit/efd5a32beab1f75aa469eed872542c69737aa5be))
+
+
 ## v1.34.3 (2025-01-30)
 
 ### Bug Fixes
@@ -1264,7 +1297,7 @@ BREAKING CHANGE: yarea name no longer used
 - **pipeline**: Change parallel input argument to be false by default
   ([`3f8c46a`](https://github.com/bhklab/readii/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
 
-### BREAKING CHANGES
+### Breaking Changes
 
 - Yarea name no longer used
 
