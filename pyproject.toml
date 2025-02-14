@@ -1,6 +1,6 @@
 [project]
 name = "readii"
-version = "1.29.0"
+version = "1.35.0"
 description = "A package to extract radiomic features!"
 authors = [{ name = "Katy Scott", email = "Katy.Scott@uhn.ca" }]
 
@@ -11,11 +11,11 @@ dependencies = [
   "matplotlib>=3.9.2,<4",
   "med-imagetools>=1.9.2",
   "pydicom>=2.3.1",
-  "pyradiomics-bhklab>=3.1.4,<4", 
+  "pyradiomics-bhklab>=3.1.4,<4",
   "orcestra-downloader>=0.9.0,<1",
   "numpy==1.26.4.*",
   "seaborn>=0.13.2,<0.14",
-  "pandas>=2.2.3,<3"
+  "pandas>=2.2.3,<3",
 ]
 requires-python = ">=3.10, <3.13"
 
@@ -135,7 +135,7 @@ inputs = ["src", "config/ruff.toml"]
 description = "Run ruff formatter, use `--diff` to see changes only"
 
 [tool.pixi.feature.style.tasks.qc]
-depends_on = ["_lint", "_format"]
+depends-on = ["_lint", "_format"]
 description = "Run all quality control tasks"
 
 #################################### RELEASE & BUILD ###############################################

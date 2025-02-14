@@ -160,8 +160,9 @@ def displayImageSlice(
     sliceDim:Optional[str]="first", 
     cmap=plt.cm.Greys_r, 
     dispMin:Optional[int]=None, 
-    dispMax:Optional[int]=None
-) -> None:
+    dispMax:Optional[int]=None,
+    ax:Optional[plt.Axes]=None
+) -> plt.Axes:
     """Function to display a 2D slice from a 3D image
         By default, displays slice in greyscale with min and max range set to min and max value in the slice.
 
@@ -179,6 +180,8 @@ def displayImageSlice(
         Value to use as min for cmap in display
     dispMax : int
         Value to use as max for cmap in display
+    ax : plt.Axes
+        Axis to plot the slice on. If None, will create a new axis.
     """
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.Image:
@@ -198,10 +201,15 @@ def displayImageSlice(
     else:
         raise ValueError("sliceDim must be either 'first' or 'last'")
 
-    # Display the slice of the image
-    plt.imshow(dispSlice, cmap=cmap, vmin=dispMin, vmax=dispMax)
-    plt.axis("off")
+    if ax is None:
+        # Create a new axis
+        fig, ax = plt.subplots()
 
+    # Display the slice of the image
+    ax.imshow(dispSlice, cmap=cmap, vmin=dispMin, vmax=dispMax)
+    ax.axis("off")
+
+    return ax
 
 def displayCTSegOverlay(
     ctImage,

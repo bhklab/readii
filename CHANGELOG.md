@@ -1,6 +1,208 @@
 # CHANGELOG
 
 
+## v1.35.0 (2025-02-12)
+
+### Features
+
+- Add image cropping preprocessing ([#119](https://github.com/bhklab/readii/pull/119),
+  [`978bdb5`](https://github.com/bhklab/readii/commit/978bdb51bf6669b95a02ce2a94ff8c4fc3735169))
+
+Using crop methods from med-imagetools, setup three crop methods that can be used as preprocessing
+  steps for feature extraction. Three methods migrated from readii-fmcib = bbox, centroid, cube
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Refined visualization in the notebook with updated image display settings,
+  including adjusted colormaps and layout. - Introduced functionality to crop and resize images and
+  masks using multiple methods and configurable dimensions. - **Enhancements** - Improved image
+  slice display with the option to specify a custom display axis. - **Tests** - Added comprehensive
+  tests to validate the new image processing and cropping features. - **Documentation** 	- Updated
+  notebook metadata and display settings. <!-- end of auto-generated comment: release notes by
+  coderabbit.ai -->
+
+---------
+
+Co-authored-by: Jermiah <jermiahjoseph98@gmail.com>
+
+### Refactoring
+
+- Remove io module allowance, wrong branch
+  ([`3a4e9d0`](https://github.com/bhklab/readii/commit/3a4e9d0993eb7c8e8846e9795990e12155fcde16))
+
+- Update ruff to allow io module
+  ([`efd5a32`](https://github.com/bhklab/readii/commit/efd5a32beab1f75aa469eed872542c69737aa5be))
+
+
+## v1.34.3 (2025-01-30)
+
+### Bug Fixes
+
+- Pattern resolver update ([#116](https://github.com/bhklab/readii/pull/116),
+  [`39a6d6b`](https://github.com/bhklab/readii/commit/39a6d6b12092dd78e7e237221d0531f4d3f47306))
+
+`PatternResolver` in `med-imagetools` updated the input argument from `pattern_parser` to
+  `pattern_matcher`, updated this to match here.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **Chores** - Updated parameter naming in the `PatternResolver` class for improved clarity and
+  consistency. - Modified the `roiNames` parameter format in segmentation loading tests for better
+  structure and clarity. - Adjusted expected output labels in segmentation tests to reflect new
+  naming conventions. - Reorganized import statements to source functions from a new module,
+  maintaining accessibility. <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.34.2 (2025-01-30)
+
+### Bug Fixes
+
+- Axes labelling in plotCrossCorrHeatmap ([#115](https://github.com/bhklab/readii/pull/115),
+  [`49b38ce`](https://github.com/bhklab/readii/commit/49b38ce8096ed9be0ab49eac4e9dfe06f6ad87f5))
+
+Swap vertical and horizontal feature labels on x and y axes of cross correlation heatmap
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **Bug Fixes** - Corrected axis label assignments in cross-correlation heatmap visualization to
+  improve accuracy of feature representation.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.34.1 (2025-01-15)
+
+### Bug Fixes
+
+- Update toml to fix deprecated "depends_on" key ([#109](https://github.com/bhklab/readii/pull/109),
+  [`2c2c324`](https://github.com/bhklab/readii/commit/2c2c324ce3338267aa6d04fc538771cbe0414a07))
+
+
+## v1.34.0 (2024-12-31)
+
+### Features
+
+- Add overwrite variable to plot self and cross corr functions
+  ([#108](https://github.com/bhklab/readii/pull/108),
+  [`d1f9853`](https://github.com/bhklab/readii/commit/d1f9853cf4613762ccb0f0885e77db4cb07eb71b))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Added an optional `overwrite` parameter to correlation plotting functions -
+  Enhanced control over file saving behavior when generating correlation plots 	- Users can now
+  choose whether to replace existing plot files
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.33.0 (2024-12-30)
+
+### Features
+
+- Add error for when file output by CorrelationWriter already exists
+  ([#106](https://github.com/bhklab/readii/pull/106),
+  [`ef58923`](https://github.com/bhklab/readii/commit/ef589237be7dd41769be507a24e0a406dcdc603e))
+
+Makes it easier to catch times when file exists without resolving the path twice
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Added a new, more specific exception for handling file existence scenarios
+  during correlation writing.
+
+- **Documentation** 	- Updated method documentation to reflect new error handling behavior.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.32.0 (2024-12-30)
+
+### Features
+
+- Update plot correlation functions ([#104](https://github.com/bhklab/readii/pull/104),
+  [`9baffe9`](https://github.com/bhklab/readii/commit/9baffe93e6d3bb9f67887d98348dece5a4de69cf))
+
+add self and cross correlation plot functions
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Introduced functionality for plotting self and cross correlation heatmaps and
+  histograms. - Added methods for generating histograms with customizable parameters and optional
+  saving options. - **Bug Fixes** - Enhanced error handling for plot saving to prevent overwriting
+  existing files. - **Tests** - Added a comprehensive suite of unit tests for correlation plotting
+  functionalities, ensuring correct outputs and file handling. <!-- end of auto-generated comment:
+  release notes by coderabbit.ai -->
+
+
+## v1.31.0 (2024-12-19)
+
+### Features
+
+- Update correlation functions to get subsections of matrix
+  ([#103](https://github.com/bhklab/readii/pull/103),
+  [`343d876`](https://github.com/bhklab/readii/commit/343d876272d3e34592b46ba37586f4bcf7cf54f8))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Enhanced correlation analysis methods for improved clarity and functionality. -
+  Introduced a new method to retrieve both self and cross correlations in a single call.
+
+- **Bug Fixes** - Improved error handling for cases with no matching features, providing specific
+  error messages.
+
+- **Documentation** 	- Updated public API to reflect new method names and signatures. <!-- end of
+  auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.30.0 (2024-12-19)
+
+### Features
+
+- Fix loaders some more ([#98](https://github.com/bhklab/readii/pull/98),
+  [`6272a03`](https://github.com/bhklab/readii/commit/6272a03fd72b71e00e296ddc002b14b05a70e57f))
+
+Didn't test updating from os to pathlib enough, but should be good now. Added basic test, needs to
+  be expanded upon.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Introduced a new variable for improved file path handling in the feature
+  loading process. - Added a comment for clarity on retrieving the full path to the feature file.
+
+- **Bug Fixes** - Updated logic for removing the image type file from the feature files list.
+
+- **Tests** - Added a new test function to validate the functionality of the feature loading
+  function. 	- Implemented a fixture for testing with a temporary feature file. <!-- end of
+  auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.29.1 (2024-12-18)
+
+### Bug Fixes
+
+- Look for image type in Path stem as Path is not iterable
+  ([#97](https://github.com/bhklab/readii/pull/97),
+  [`875a6c3`](https://github.com/bhklab/readii/commit/875a6c3cb1c3d10a8225f45f5770380b83562003))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **New Features** - Improved file matching logic for identifying features based on image types. -
+  Enhanced clarity in handling scenarios for matching files with updated control flow.
+
+- **Bug Fixes** - Retained consistent error handling with appropriate logging for warnings and
+  exceptions.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.29.0 (2024-12-18)
 
 ### Features
@@ -1095,7 +1297,7 @@ BREAKING CHANGE: yarea name no longer used
 - **pipeline**: Change parallel input argument to be false by default
   ([`3f8c46a`](https://github.com/bhklab/readii/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
 
-### BREAKING CHANGES
+### Breaking Changes
 
 - Yarea name no longer used
 
