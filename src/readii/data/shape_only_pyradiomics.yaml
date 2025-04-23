@@ -1,0 +1,26 @@
+imageType:
+    Original: {}
+
+featureClass:
+    shape: 
+        - VoxelVolume
+        - MeshVolume
+        - SurfaceArea
+        - SurfaceVolumeRatio
+        - Compactness1
+        - Compactness2
+        - Sphericity
+        - SphericalDisproportion
+        - Maximum3DDiameter
+        - Maximum2DDiameterSlice
+        - Maximum2DDiameterColumn
+        - Maximum2DDiameterRow
+        - MajorAxisLength
+        - MinorAxisLength
+        - LeastAxisLength
+        - Elongation
+        - Flatness    
+
+setting:
+    binWidth: 25
+    resampledPixelSpacing: [0., 0., 0.]
