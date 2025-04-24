@@ -52,6 +52,15 @@ class NegativeControlManager:
 		"""Get all combinations of negative control and region strategies."""
 		return product(self.negative_control_strategies, self.region_strategies)
 
+	@property
+	def strategy_list(self) -> List[str]:
+		"""Get all combinations of negative control and region strategies as a list of strings."""
+		strategies = []
+		for strategy_combo in self.strategy_products:
+			strategies.append(f"{strategy_combo[0].negative_control_name}_{strategy_combo[1].region_name}")
+		
+		return strategies
+
 	def apply(
 		self, base_image: ImageInput, mask: ImageInput
 	) -> Iterator[tuple[ImageInput, str, str]]:
