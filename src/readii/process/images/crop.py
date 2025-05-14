@@ -98,12 +98,12 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
 
 
 if __name__ == "__main__":
-    from imgtools.io import read_dicom_series
+    from imgtools.io import read_dicom_auto
     from rich import print as rprint
 
     from readii.loaders import loadRTSTRUCTSITK
 
-    image = read_dicom_series("tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543")
+    image = read_dicom_auto("tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543")
 
     rois = loadRTSTRUCTSITK(rtstructPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm",
                             baseImageDirPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543",
