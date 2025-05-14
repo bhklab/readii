@@ -1,6 +1,5 @@
 from readii.loaders import (
     loadDicomSITK, 
-    loadRTSTRUCTSITK, 
     loadSegmentation,
 ) 
 

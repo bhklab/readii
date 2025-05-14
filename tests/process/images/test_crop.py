@@ -1,5 +1,4 @@
 import pytest
-import SimpleITK as sitk
 
 from readii.image_processing import loadDicomSITK, loadSegmentation
 from readii.process.images.crop import (

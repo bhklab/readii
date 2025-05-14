@@ -13,10 +13,8 @@ from typing import Dict, Optional
 
 import pydicom
 import SimpleITK as sitk
-from imgtools import io
 from imgtools.io.readers import read_dicom_auto
 # from imgtools.ops import StructureSetToSegmentation
-from imgtools.coretypes import RTStructureSet
 
 from readii.utils import logger
 
