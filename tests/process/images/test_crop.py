@@ -37,13 +37,13 @@ def lung4D_mask(lung4D_ct_path, lung4D_rt_path):
         lung4D_rt_path,
         modality="RTSTRUCT",
         baseImageDirPath=lung4D_ct_path,
-        roiNames="Tumor_c.*",
+        roiNames=["Tumor_c40"],
     )
     return segDictionary["Tumor_c40"]
 
 
 def test_default_crop_and_resize_image(lung4D_image, lung4D_mask):
-    expected_size = (92, 92, 92)
+    expected_size = (93, 93, 93)
     cropped_image, cropped_mask = crop_and_resize_image_and_mask(lung4D_image, lung4D_mask)
     assert cropped_image.GetSize() == expected_size, \
         f"Cropped image size is incorrect, expected {expected_size}, got {cropped_image.GetSize()}"
@@ -54,9 +54,9 @@ def test_default_crop_and_resize_image(lung4D_image, lung4D_mask):
     "crop_method, resize_dimension, expected_size",
     [
         # No resizing
-        ("bounding_box", None, (51, 92, 28)),
+        ("bounding_box", None, (52, 93, 28)),
         ("centroid", None, (50, 50, 50)),
-        ("cube", None, (92, 92, 92)),
+        ("cube", None, (93, 93, 93)),
         # Resize down to 50x50x50
         ("bounding_box", 50, (50, 50, 50)),
         ("centroid", 50, (50, 50, 50)),
