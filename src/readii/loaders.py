@@ -14,7 +14,9 @@ from typing import Dict, Optional
 import pydicom
 import SimpleITK as sitk
 from imgtools import io
-from imgtools.ops import StructureSetToSegmentation
+from imgtools.io.readers import read_dicom_auto
+# from imgtools.ops import StructureSetToSegmentation
+from imgtools.coretypes import RTStructureSet
 
 from readii.utils import logger
 
@@ -67,36 +69,26 @@ def loadRTSTRUCTSITK(
 	baseImageDirPath = Path(baseImageDirPath)
 
 	logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
-	baseImage: io.Scan = io.read_dicom_scan(baseImageDirPath.resolve())
-	segImage: io.StructureSet = io.read_dicom_rtstruct(rtstructPath.resolve())
+	baseImage = read_dicom_auto(path =baseImageDirPath.resolve())
+	segImage = read_dicom_auto(path =rtstructPath.resolve(), modality="RTSTRUCT")
 
 	# Set up segmentation loader
 	logger.debug(f"Making mask using ROI names: {roiNames}")
-	makeMask = StructureSetToSegmentation(roi_names=roiNames)
 
-	try:
-		# Get the individual ROI masks
-		segMasks = makeMask(
-			segImage,
-			baseImage.image,
-			existing_roi_indices={"background": 0},
-			ignore_missing_regex=False,
-		)
-	except ValueError:
-		return {}
+	img_size = baseImage.size
 
-	# Get list of ROIs present in this rtstruct
-	loadedROINames = segMasks.raw_roi_names
-	# Initialize dictionary to store ROI names and images
-	roiStructs = {}
-	# Get each roi and its label and store in dictionary
-	for roi in loadedROINames:
-		# Get the mask for this ROI
-		roiMask = segMasks.get_label(name=roi)
-		# Store the ROI name and image
-		roiStructs[roi] = roiMask
+	segMasks = {}
+	for roi in roiNames:
+		try:
+			mask_ndarray = segImage.get_mask_ndarray(reference_image = baseImage,
+													roi_name = roi,
+													mask_img_size = [img_size.depth, img_size.height, img_size.width, 1],
+													continuous = False)
+			segMasks[roi] = sitk.GetImageFromArray(mask_ndarray)
+		except ValueError:
+			segMasks[roi] = None
 
-	return roiStructs
+	return segMasks
 
 
 def loadSegmentation(
