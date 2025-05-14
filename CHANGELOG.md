@@ -1,6 +1,73 @@
 # CHANGELOG
 
 
+## v1.35.1 (2025-05-14)
+
+### Bug Fixes
+
+- Handle errors caused by MIT2.0 update ([#124](https://github.com/bhklab/readii/pull/124),
+  [`2a899a7`](https://github.com/bhklab/readii/commit/2a899a7b66c63a6ff45ba92b87b83c63b595ce18))
+
+Updating import paths for the logger, io, resize, etc. Updated RTSTRUCT loader to use new MIT setup
+  Updated some image readers to use read_dicom_auto Updated tests for loading RTSTRUCTS with new MIT
+  methods
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **Refactor** - Improved the method for loading DICOM and RTSTRUCT files, unifying the approach and
+  updating ROI mask extraction for greater clarity and reliability. - Updated several import
+  statements to use new module paths.
+
+- **Tests** - Adjusted test fixtures and expected outputs to reflect changes in ROI specification
+  and image dimensions. - Simplified test cases for segmentation loading and updated expected image
+  properties.
+
+- **Chores** - Updated dependency requirements to support newer versions of a key imaging library.
+  <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+### Build System
+
+- Upgrade numpy ([#120](https://github.com/bhklab/readii/pull/120),
+  [`08db913`](https://github.com/bhklab/readii/commit/08db913b0e1f53127ef42aa47a92110a892c9633))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **Chores** - Updated the supported version range for the numpy dependency to allow newer versions.
+  - Standardized the reference to NaN values in tests to use lowercase np.nan for consistency.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+### Chores
+
+- Enhance testing CI/CD ([#117](https://github.com/bhklab/readii/pull/117),
+  [`389a003`](https://github.com/bhklab/readii/commit/389a00390d464aa2b11c7ab85b72c71680842722))
+
+- copied over the pytest config from med-imagetools - can easily view errors in gha during pytest
+  [without going into the action
+  logs](https://github.com/bhklab/med-imagetools/actions/runs/13116280733/attempts/1#summary-36591278874)
+
+- small fix to the fixtures that delete temporary paths and are used by multiple tests (can cause
+  errors during parallel runs)
+
+- also cleanups for each PRs gha caches
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+## Summary by CodeRabbit
+
+- **Tests** - Enhanced test execution with more detailed feedback and immediate halt on failures for
+  quicker diagnostics. - Introduced a comprehensive test summary report for improved visibility of
+  test outcomes. - Streamlined test command configurations for simpler and more efficient execution.
+  - Improved test fixture management to ensure more robust setup and cleanup during test runs. <!--
+  end of auto-generated comment: release notes by coderabbit.ai -->
+
+---------
+
+Co-authored-by: Katy Scott <k.l.scott16@gmail.com>
+
+
 ## v1.35.0 (2025-02-12)
 
 ### Features
