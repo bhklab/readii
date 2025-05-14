@@ -14,7 +14,6 @@ from typing import Dict, Optional
 import pydicom
 import SimpleITK as sitk
 from imgtools.io.readers import read_dicom_auto
-# from imgtools.ops import StructureSetToSegmentation
 
 from readii.utils import logger
 
@@ -67,6 +66,11 @@ def loadRTSTRUCTSITK(
 	baseImageDirPath = Path(baseImageDirPath)
 
 	logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
+	if not baseImageDirPath.exists():  
+		raise FileNotFoundError(f"Base-image directory not found: {baseImageDirPath}")  
+	if not rtstructPath.exists():  
+		raise FileNotFoundError(f"RTSTRUCT file not found: {rtstructPath}")  
+	
 	baseImage = read_dicom_auto(path =baseImageDirPath.resolve())
 	segImage = read_dicom_auto(path =rtstructPath.resolve(), modality="RTSTRUCT")
 
