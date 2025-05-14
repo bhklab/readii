@@ -66,10 +66,14 @@ def loadRTSTRUCTSITK(
 	baseImageDirPath = Path(baseImageDirPath)
 
 	logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
-	if not baseImageDirPath.exists():  
-		raise FileNotFoundError(f"Base-image directory not found: {baseImageDirPath}")  
-	if not rtstructPath.exists():  
-		raise FileNotFoundError(f"RTSTRUCT file not found: {rtstructPath}")  
+	if not baseImageDirPath.exists(): 
+		message = f"Base-image directory not found: {baseImageDirPath}"
+		logger.error(message)
+		raise FileNotFoundError(message)  
+	if not rtstructPath.exists():
+		message = f"RTSTRUCT file not found: {rtstructPath}"
+		logger.error(message)
+		raise FileNotFoundError(message)  
 	
 	baseImage = read_dicom_auto(path =baseImageDirPath.resolve())
 	segImage = read_dicom_auto(path =rtstructPath.resolve(), modality="RTSTRUCT")
