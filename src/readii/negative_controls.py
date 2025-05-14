@@ -1,11 +1,8 @@
-from venv import logger
 import SimpleITK as sitk
 from SimpleITK import Image
 import numpy as np
-import random
 
-from readii.image_processing import alignImages, getROIVoxelLabel
-from readii.utils import logger 
+from readii.image_processing import alignImages
 
 from typing import Optional, Union
 from numpy import ndarray

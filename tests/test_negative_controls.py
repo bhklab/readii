@@ -1,19 +1,16 @@
 import numpy as np
 
 from readii.image_processing import *
-from radiomics import imageoperations
 from readii.negative_controls import (
     makeShuffleImage,
     makeRandomImage,
     makeRandomSampleFromDistributionImage,
     negativeControlROIOnly,
-    negativeControlNonROIOnly,
-    applyNegativeControl
+    negativeControlNonROIOnly
 )
 
 
 import pytest
-import collections
 
 
 @pytest.fixture

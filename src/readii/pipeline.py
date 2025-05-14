@@ -1,5 +1,4 @@
 from argparse import ArgumentParser
-from ast import arg
 import os
 
 from readii.metadata import *

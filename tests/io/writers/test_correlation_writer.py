@@ -2,9 +2,8 @@ import pytest
 
 import pandas as pd
 import numpy as np
-from pathlib import Path
 from readii.analyze.correlation import getFeatureCorrelations
-from readii.io.writers.correlation_writer import CorrelationWriter, CorrelationWriterValidationError, CorrelationWriterError, CorrelationWriterIOError # type: ignore
+from readii.io.writers.correlation_writer import CorrelationWriter, CorrelationWriterValidationError, CorrelationWriterIOError # type: ignore
 
 @pytest.fixture
 def random_feature_correlations():

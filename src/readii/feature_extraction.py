@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import SimpleITK as sitk  # noqa
-from imgtools.io import read_dicom_series
+from imgtools.io.readers import read_dicom_auto
 from joblib import Parallel, delayed
 from radiomics import featureextractor, imageoperations, logging
 
@@ -220,7 +220,7 @@ def featureExtraction(
 
 		plogger.debug("Loading CT images", ctDirPath=ctDirPath)
 		# Load CT by passing in specific series to find in a directory
-		ctImage = read_dicom_series(path=ctDirPath.as_posix(), series_id=ctSeriesID)
+		ctImage = read_dicom_auto(path=ctDirPath.as_posix(), series_id=ctSeriesID)
 
 		# Get list of segmentations to iterate over
 		segSeriesIDList = ctSeriesInfo["series_seg"].unique()
