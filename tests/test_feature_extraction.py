@@ -37,8 +37,8 @@ def lung4DRTSTRUCTImage():
     lung4DRTSTRUCTPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm"
     lung4DCTPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543"
     segDictionary = loadSegmentation(lung4DRTSTRUCTPath, modality = 'RTSTRUCT',
-                                     baseImageDirPath = lung4DCTPath, roiNames = {'GTV':'Tumor_c.*'})
-    return segDictionary['GTV']
+                                     baseImageDirPath = lung4DCTPath, roiNames = ['Tumor_c40'])
+    return segDictionary['Tumor_c40']
 
 @pytest.fixture
 def pyradiomicsParamFilePath():
@@ -91,19 +91,20 @@ def test_singleRadiomicFeatureExtraction_RTSTRUCT(lung4DCTImage, lung4DRTSTRUCTI
     """Test single image feature extraction with a CT and RTSTRUCT"""
 
     actual = singleRadiomicFeatureExtraction(lung4DCTImage, lung4DRTSTRUCTImage, pyradiomicsParamFilePath)
+
     assert type(actual) == collections.OrderedDict, \
         "Wrong return type, expect a collections.OrderedDict"
     assert len(actual) == 1353, \
         "Wrong return size, check pyradiomics parameter file is correct"
     assert actual['diagnostics_Configuration_Settings']['label'] == 1, \
         "Wrong label getting passed for ROI"
-    assert actual['diagnostics_Image-original_Size'] == (51, 92, 28), \
+    assert actual['diagnostics_Image-original_Size'] == (52, 93, 28), \
         "Cropped CT image is incorrect size"
-    assert actual['diagnostics_Mask-original_Size'] == (51, 92, 28), \
+    assert actual['diagnostics_Mask-original_Size'] == (52, 93, 28), \
         "Cropped segmentation mask is incorrect size"
     assert actual['diagnostics_Mask-original_Size'] == actual['diagnostics_Image-original_Size'], \
         "Cropped CT and segmentation mask dimensions do not match"
-    assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(66346.66666666667), \
+    assert actual['original_shape_MeshVolume'].tolist()== pytest.approx(71110.66666666667), \
         "Volume feature is incorrect"
 
 
@@ -142,7 +143,7 @@ def test_4DLung_radiomicFeatureExtraction_output(lung4DMetadataPath):
     """Test output creation from radiomic feature extraction for RTSTRUCT dataset"""
     actual = radiomicFeatureExtraction(lung4DMetadataPath,
                                        imageDirPath = "tests/",
-                                       roiNames = "Tumor_c40",
+                                       roiNames = ["Tumor_c40"],
                                        outputDirPath = "tests/4D-Lung/results/")
     expected_path = "tests/4D-Lung/results/features/radiomicfeatures_original_4D-Lung.csv"
     assert os.path.exists(expected_path)
