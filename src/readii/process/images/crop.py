@@ -2,7 +2,7 @@ from typing import Literal
 
 import SimpleITK as sitk
 from imgtools.coretypes.box import RegionBox
-from imgtools.ops.functional import resize
+from imgtools.transforms.functional import resize
 
 from readii.utils import logger
 
