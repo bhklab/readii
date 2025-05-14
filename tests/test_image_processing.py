@@ -18,8 +18,8 @@ def lung4DRTSTRUCTImage():
     lung4DRTSTRUCTPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-47.35/1-1.dcm"
     lung4DCTPath = "tests/4D-Lung/113_HM10395/11-26-1999-NA-p4-13296/1.000000-P4P113S303I10349 Gated 40.0B-29543"
     segDictionary = loadSegmentation(lung4DRTSTRUCTPath, modality = 'RTSTRUCT',
-                                     baseImageDirPath = lung4DCTPath, roiNames = {'GTV':'Tumor_c.*'})
-    return segDictionary['GTV']
+                                     baseImageDirPath = lung4DCTPath, roiNames = ['Tumor_c40'])
+    return segDictionary['Tumor_c40']
 
 
 def test_flattenImage(nsclcSEGImage):
@@ -58,7 +58,7 @@ def test_getROIVoxelLabel(segImage, expected, request):
     "segImage, expected",
     [
         ("nsclcSEGImage", (238, 252, 124)),
-        ("lung4DRTSTRUCTImage", (63, 314, 318))
+        ("lung4DRTSTRUCTImage", (63, 312, 328))
     ]
 )
 def test_getROICenterCoords(segImage, expected, request):
