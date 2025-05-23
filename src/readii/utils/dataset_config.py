@@ -9,7 +9,7 @@ def get_full_data_name(config: Union[Dict | Path]):
     
     match type(config):
         case Path():
-            dataset_config = loadImageDatasetConfig(config)
+            dataset_config = loadImageDatasetConfig(config.stem, config.parent)
         case Dict():
             dataset_config = config
         case _:
