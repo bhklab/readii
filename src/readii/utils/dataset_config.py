@@ -17,4 +17,11 @@ def get_full_data_name(config: Union[Dict | Path]):
             logger.debug(message)
             raise TypeError(message) 
 
-    return dataset_config['DATA_SOURCE'] + "_" + dataset_config['DATASET_NAME']
+    try:
+        data_source = dataset_config['DATA_SOURCE']
+        dataset_name = dataset_config['DATASET_NAME']
+        return f"{data_source}_{dataset_name}"
+    except KeyError as e:
+        message = f"Missing required key in dataset configuration: {e}"
+        logger.error(message)
+        raise ValueError(message) from e
