@@ -1,6 +1,24 @@
 # CHANGELOG
 
 
+## v1.36.0 (2025-05-23)
+
+### Features
+
+- Add function for getting full data name, combined data source and dataset name (used in
+  readii_2_roqc) ([#127](https://github.com/bhklab/readii/pull/127),
+  [`71e184f`](https://github.com/bhklab/readii/commit/71e184fe7dd992674f1640e4d62bb8b290d4fdfc))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Added a utility to generate a combined dataset name from configuration details.
+  <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+---------
+
+Co-authored-by: coderabbitai[bot] <136622811+coderabbitai[bot]@users.noreply.github.com>
+
+
 ## v1.35.1 (2025-05-14)
 
 ### Bug Fixes
