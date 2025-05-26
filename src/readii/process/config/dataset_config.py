@@ -5,7 +5,7 @@ from readii.io.loaders.general import loadImageDatasetConfig
 from readii.utils import logger
 
 
-def get_full_data_name(config: Union[Dict | Path]):
+def get_full_data_name(config: Union[Dict | Path]) -> str:
     """Combine DATA_SOURCE and DATASET_NAME config variables into a single string."""
     match type(config):
         case Path():
