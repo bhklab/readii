@@ -38,7 +38,16 @@ def loadImageDatasetConfig(dataset_name: str, config_dir_path: str | Path) -> di
     >>> config = loadImageDatasetConfig("NSCLC_Radiogenomics", "config")
     """
     config_dir_path = Path(config_dir_path)
-    config_file_path = config_dir_path / f"{dataset_name}.yaml"
+
+    match Path(dataset_name).suffix:
+        case '.yaml':
+            config_file_path = config_dir_path / f"{dataset_name}"
+        case '':
+            config_file_path = config_dir_path / f"{dataset_name}.yaml"
+        case _:
+            msg = f"Invalid dataset name {dataset_name}. Must be a string with no extension except .yaml."
+            logger.error(msg)
+            raise ValueError(msg)    
 
     if not config_file_path.exists():
         msg = f"Config file {config_file_path} does not exist."
