@@ -7,10 +7,10 @@ from readii.utils import logger
 
 def get_full_data_name(config: Union[Dict | Path]) -> str:
     """Combine DATA_SOURCE and DATASET_NAME config variables into a single string."""
-    match type(config):
+    match config:
         case Path():
             dataset_config = loadImageDatasetConfig(config.stem, config.parent)
-        case Dict():
+        case dict():
             dataset_config = config
         case _:
             message = "Error getting full data name: config must be of type Path or Dict."
