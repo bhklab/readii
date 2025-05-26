@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Dict, Union
 
-from readii.io.loaders import loadImageDatasetConfig
+from readii.io.loaders.general import loadImageDatasetConfig
 from readii.utils import logger
 
 def get_full_data_name(config: Union[Dict | Path]):
