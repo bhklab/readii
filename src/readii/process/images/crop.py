@@ -1,5 +1,6 @@
 from typing import Literal
 
+import numpy as np
 import SimpleITK as sitk
 from imgtools.coretypes.box import RegionBox
 from imgtools.transforms.functional import resize
@@ -13,7 +14,7 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
                                    mask: sitk.Image,
                                    label: int = 1,
                                    crop_method: CropMethods = "cube",
-                                   resize_dimension: int | None = None
+                                   resize_dimension: int | list[int] | np.ndarray | None = None
                                   ) -> tuple[sitk.Image, sitk.Image]:
     """Crop an image and mask to an ROI in the mask and resize to a specified crop dimensions.
 
@@ -65,11 +66,26 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
         
         case "centroid":
             if resize_dimension is None:
-                # Set resize_dimension to 50 if not provided -> default expected dimension for FMCIB
-                resize_dimension = 50
-
-            # Generate a cube bounding box with resize_dimensions around the centroid of a mask
-            crop_box = RegionBox.from_mask_centroid(mask, label).expand_to_cube(resize_dimension)
+                # Set to 50 if not provided -> default expected dimension for FMCIB
+                centroid_dimension = 50
+            elif isinstance(resize_dimension, (list, tuple, np.ndarray)):
+                # Ensure all values are identical to form a cube; collapse to a single int
+                unique_vals = {int(v) for v in resize_dimension}
+                if len(unique_vals) == 1:
+                    centroid_dimension = int(next(iter(unique_vals)))
+                else:
+                    message = (
+                        "If using centroid crop method, resize_dimension must be a single value, "
+                        "or a list/tuple/array of identical values, or None. "
+                        f"Current value: {resize_dimension}."
+                    )
+                    logger.error(message)
+                    raise ValueError(message)
+            else:
+                # Single scalar provided
+                centroid_dimension = int(resize_dimension)
+            # Generate a cube bounding box with resize dimension around the centroid of a mask
+            crop_box = RegionBox.from_mask_centroid(mask, label, centroid_dimension)
         
         case "cube":
             # Generate a bounding box around the mask, then expand the dimensions to a cube with the maximum bounding box dimension
