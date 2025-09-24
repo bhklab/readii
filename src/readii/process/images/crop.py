@@ -3,6 +3,7 @@ from typing import Literal
 import SimpleITK as sitk
 from imgtools.coretypes.box import RegionBox
 from imgtools.transforms.functional import resize
+import numpy as np
 
 from readii.utils import logger
 
@@ -13,7 +14,7 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
                                    mask: sitk.Image,
                                    label: int = 1,
                                    crop_method: CropMethods = "cube",
-                                   resize_dimension: int | None = None
+                                   resize_dimension: int | list[int] | np.ndarray | None = None
                                   ) -> tuple[sitk.Image, sitk.Image]:
     """Crop an image and mask to an ROI in the mask and resize to a specified crop dimensions.
 
@@ -69,7 +70,7 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
                 resize_dimension = 50
 
             # Generate a cube bounding box with resize_dimensions around the centroid of a mask
-            crop_box = RegionBox.from_mask_centroid(mask, label).expand_to_cube(resize_dimension)
+            crop_box = RegionBox.from_mask_centroid(mask, label, resize_dimension)
         
         case "cube":
             # Generate a bounding box around the mask, then expand the dimensions to a cube with the maximum bounding box dimension
