@@ -70,30 +70,17 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
                 centroid_dimension = 50
             elif isinstance(resize_dimension, (list, tuple, np.ndarray)):
                 # Ensure all values are identical to form a cube; collapse to a single int
-                if isinstance(resize_dimension, np.ndarray):
-                    uniques = np.unique(resize_dimension)
-                    if uniques.size == 1:
-                        centroid_dimension = int(uniques[0])
-                    else:
-                        message = (
-                            "If using centroid crop method, resize_dimension must be a single value, "
-                            "or a list/tuple/array of identical values, or None. "
-                            f"Current value: {resize_dimension}."
-                        )
-                        logger.error(message)
-                        raise ValueError(message)
+                unique_vals = {int(v) for v in resize_dimension}
+                if len(unique_vals) == 1:
+                    centroid_dimension = int(next(iter(unique_vals)))
                 else:
-                    unique_vals = set(int(v) for v in resize_dimension)
-                    if len(unique_vals) == 1:
-                        centroid_dimension = int(next(iter(unique_vals)))
-                    else:
-                        message = (
-                            "If using centroid crop method, resize_dimension must be a single value, "
-                            "or a list/tuple/array of identical values, or None. "
-                            f"Current value: {resize_dimension}."
-                        )
-                        logger.error(message)
-                        raise ValueError(message)
+                    message = (
+                        "If using centroid crop method, resize_dimension must be a single value, "
+                        "or a list/tuple/array of identical values, or None. "
+                        f"Current value: {resize_dimension}."
+                    )
+                    logger.error(message)
+                    raise ValueError(message)
             else:
                 # Single scalar provided
                 centroid_dimension = int(resize_dimension)
