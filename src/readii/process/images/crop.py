@@ -1,9 +1,9 @@
 from typing import Literal
 
+import numpy as np
 import SimpleITK as sitk
 from imgtools.coretypes.box import RegionBox
 from imgtools.transforms.functional import resize
-import numpy as np
 
 from readii.utils import logger
 
@@ -68,6 +68,16 @@ def crop_and_resize_image_and_mask(image: sitk.Image,
             if resize_dimension is None:
                 # Set resize_dimension to 50 if not provided -> default expected dimension for FMCIB
                 resize_dimension = 50
+            elif isinstance(resize_dimension, list):
+                # Convert to a set to get unique values - if longer than 1 then, raise error
+                match len(set(resize_dimension)):
+                    case 1: # all values in resize dimension are the same, just use the first one
+                        resize_dimension = resize_dimension[0]
+                    case _: # values differ in resize dimension, raise error
+                        message = "If using centroid crop method, resize dimension must be a single value, list of identical values, or None." \
+                        f"Current value: {resize_dimension}."
+                        logger.error(message)
+                        raise ValueError(message)
 
             # Generate a cube bounding box with resize_dimensions around the centroid of a mask
             crop_box = RegionBox.from_mask_centroid(mask, label, resize_dimension)
