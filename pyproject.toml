@@ -11,11 +11,12 @@ dependencies = [
   "matplotlib>=3.9.2,<4",
   "med-imagetools>=2",
   "pydicom>=2.3.1",
-  "pyradiomics-bhklab>=3.1.4,<4",
+  # "pyradiomics-bhklab>=3.1.4,<4",
   "orcestra-downloader>=0.9.0,<1",
   "numpy>=2.2.5,<3",
   "seaborn>=0.13.2,<0.14",
-  "pandas>=2.2.3,<3", 
+  "pandas>=2.2.3,<3",
+
 ]
 requires-python = ">=3.10, <3.13"
 
@@ -41,6 +42,7 @@ platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 
 [tool.pixi.pypi-dependencies]
 readii = { path = ".", editable = true }
+pyradiomics = { git = "https://github.com/AIM-Harvard/pyradiomics.git" }
 
 [tool.pixi.environments]
 dev = { features = ["test", "style", "docs", "dev"], solve-group = "default" }
