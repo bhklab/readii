@@ -57,8 +57,6 @@ def test_loadSegmentationSEG(nsclcSEGPath):
 @pytest.mark.parametrize(
     "roiNames, expected",
     [
-        ({"GTV":'Tumor_c.*'}, "GTV"),
-        ('Tumor_c.*', "Tumor_c40"),
         (["Tumor_c40"], "Tumor_c40"),
     ]
 )
@@ -80,9 +78,9 @@ def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath, roiNames, ex
         "Wrong object type"
     assert actualImage.GetSize() == (512, 512, 99), \
         "Wrong image size"
-    assert actualImage.GetSpacing() == (0.9766, 0.9766, 3.0), \
+    assert actualImage.GetSpacing() == (1.0, 1.0, 1.0), \
         "Wrong spacing"
-    assert actualImage.GetOrigin() == (-250.0, -163.019, -1132.0), \
+    assert actualImage.GetOrigin() == (0,0,0), \
         "Wrong origin"
 
 

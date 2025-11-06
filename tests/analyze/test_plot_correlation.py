@@ -12,7 +12,6 @@ from readii.analyze.plot_correlation import (
 )
 
 from matplotlib.figure import Figure
-from pathlib import Path
 import numpy as np
 import pandas as pd
 import pytest
@@ -83,7 +82,7 @@ def test_diagonal_heatmap(correlation_matrix, triangle):
     corr_fig = plotCorrelationHeatmap(correlation_matrix, diagonal=True, triangle=triangle)
     assert isinstance(corr_fig, Figure), \
         "Wrong return type, expect a matplotlib Figure"
-    assert corr_fig.get_suptitle() == f"Correlation Heatmap", \
+    assert corr_fig.get_suptitle() == "Correlation Heatmap", \
         "Wrong title, expect Correlation Heatmap"
     
 
@@ -142,7 +141,7 @@ def test_plot_selfcorr_heatmap_defaults(correlation_matrix, vertical_feature_nam
                                    feature_type_name=vertical_feature_name)
     assert isinstance(corr_fig, Figure), \
         "Wrong return type, expect a matplotlib Figure"
-    assert corr_fig.get_suptitle() == f"Pearson Self Correlations", \
+    assert corr_fig.get_suptitle() == "Pearson Self Correlations", \
         "Wrong title, expect Pearson Self Correlations"
     assert corr_fig.get_axes()[0].get_title(), \
         "Wrong subtitle, expect vertical"
@@ -155,7 +154,7 @@ def test_plot_crosscorr_heatmap_defaults(correlation_matrix, vertical_feature_na
                                     horizontal_feature_name=horizontal_feature_name)
     assert isinstance(corr_fig, Figure), \
         "Wrong return type, expect a matplotlib Figure"
-    assert corr_fig.get_suptitle() == f"Pearson Cross Correlations", \
+    assert corr_fig.get_suptitle() == "Pearson Cross Correlations", \
         "Wrong title, expect Pearson Cross Correlations"
     assert corr_fig.get_axes()[0].get_title(), \
         "Wrong subtitle, expect vertical vs horizontal"
@@ -167,7 +166,7 @@ def test_plot_selfcorr_histogram_defaults(correlation_matrix, vertical_feature_n
                                      feature_type_name=vertical_feature_name)
     assert isinstance(corr_fig, Figure), \
         "Wrong return type, expect a matplotlib Figure"
-    assert corr_fig.get_suptitle() == f"Distribution of Pearson Self Correlations", \
+    assert corr_fig.get_suptitle() == "Distribution of Pearson Self Correlations", \
         "Wrong title, expect Distribution of Pearson Self Correlations"
     assert corr_fig.get_axes()[0].get_title(), \
         "Wrong subtitle, expect vertical"
@@ -180,7 +179,7 @@ def test_plot_crosscorr_histogram_defaults(correlation_matrix, vertical_feature_
                                       horizontal_feature_name=horizontal_feature_name)
     assert isinstance(corr_fig, Figure), \
         "Wrong return type, expect a matplotlib Figure"
-    assert corr_fig.get_suptitle() == f"Distribution of Pearson Cross Correlations", \
+    assert corr_fig.get_suptitle() == "Distribution of Pearson Cross Correlations", \
         "Wrong title, expect Distribution of Pearson Cross Correlations"
     assert corr_fig.get_axes()[0].get_title(), \
         "Wrong subtitle, expect vertical vs horizontal"
