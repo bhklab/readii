@@ -1,6 +1,162 @@
 # CHANGELOG
 
 
+## v1.36.0 (2025-05-23)
+
+### Features
+
+- Add function for getting full data name, combined data source and dataset name (used in
+  readii_2_roqc) ([#127](https://github.com/bhklab/readii/pull/127),
+  [`71e184f`](https://github.com/bhklab/readii/commit/71e184fe7dd992674f1640e4d62bb8b290d4fdfc))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Added a utility to generate a combined dataset name from configuration details.
+  <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+---------
+
+Co-authored-by: coderabbitai[bot] <136622811+coderabbitai[bot]@users.noreply.github.com>
+
+
+## v1.35.1 (2025-05-14)
+
+### Bug Fixes
+
+- Handle errors caused by MIT2.0 update ([#124](https://github.com/bhklab/readii/pull/124),
+  [`2a899a7`](https://github.com/bhklab/readii/commit/2a899a7b66c63a6ff45ba92b87b83c63b595ce18))
+
+Updating import paths for the logger, io, resize, etc. Updated RTSTRUCT loader to use new MIT setup
+  Updated some image readers to use read_dicom_auto Updated tests for loading RTSTRUCTS with new MIT
+  methods
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **Refactor** - Improved the method for loading DICOM and RTSTRUCT files, unifying the approach and
+  updating ROI mask extraction for greater clarity and reliability. - Updated several import
+  statements to use new module paths.
+
+- **Tests** - Adjusted test fixtures and expected outputs to reflect changes in ROI specification
+  and image dimensions. - Simplified test cases for segmentation loading and updated expected image
+  properties.
+
+- **Chores** - Updated dependency requirements to support newer versions of a key imaging library.
+  <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+### Build System
+
+- Upgrade numpy ([#120](https://github.com/bhklab/readii/pull/120),
+  [`08db913`](https://github.com/bhklab/readii/commit/08db913b0e1f53127ef42aa47a92110a892c9633))
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **Chores** - Updated the supported version range for the numpy dependency to allow newer versions.
+  - Standardized the reference to NaN values in tests to use lowercase np.nan for consistency.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+### Chores
+
+- Enhance testing CI/CD ([#117](https://github.com/bhklab/readii/pull/117),
+  [`389a003`](https://github.com/bhklab/readii/commit/389a00390d464aa2b11c7ab85b72c71680842722))
+
+- copied over the pytest config from med-imagetools - can easily view errors in gha during pytest
+  [without going into the action
+  logs](https://github.com/bhklab/med-imagetools/actions/runs/13116280733/attempts/1#summary-36591278874)
+
+- small fix to the fixtures that delete temporary paths and are used by multiple tests (can cause
+  errors during parallel runs)
+
+- also cleanups for each PRs gha caches
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+## Summary by CodeRabbit
+
+- **Tests** - Enhanced test execution with more detailed feedback and immediate halt on failures for
+  quicker diagnostics. - Introduced a comprehensive test summary report for improved visibility of
+  test outcomes. - Streamlined test command configurations for simpler and more efficient execution.
+  - Improved test fixture management to ensure more robust setup and cleanup during test runs. <!--
+  end of auto-generated comment: release notes by coderabbit.ai -->
+
+---------
+
+Co-authored-by: Katy Scott <k.l.scott16@gmail.com>
+
+
+## v1.35.0 (2025-02-12)
+
+### Features
+
+- Add image cropping preprocessing ([#119](https://github.com/bhklab/readii/pull/119),
+  [`978bdb5`](https://github.com/bhklab/readii/commit/978bdb51bf6669b95a02ce2a94ff8c4fc3735169))
+
+Using crop methods from med-imagetools, setup three crop methods that can be used as preprocessing
+  steps for feature extraction. Three methods migrated from readii-fmcib = bbox, centroid, cube
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **New Features** - Refined visualization in the notebook with updated image display settings,
+  including adjusted colormaps and layout. - Introduced functionality to crop and resize images and
+  masks using multiple methods and configurable dimensions. - **Enhancements** - Improved image
+  slice display with the option to specify a custom display axis. - **Tests** - Added comprehensive
+  tests to validate the new image processing and cropping features. - **Documentation** 	- Updated
+  notebook metadata and display settings. <!-- end of auto-generated comment: release notes by
+  coderabbit.ai -->
+
+---------
+
+Co-authored-by: Jermiah <jermiahjoseph98@gmail.com>
+
+### Refactoring
+
+- Remove io module allowance, wrong branch
+  ([`3a4e9d0`](https://github.com/bhklab/readii/commit/3a4e9d0993eb7c8e8846e9795990e12155fcde16))
+
+- Update ruff to allow io module
+  ([`efd5a32`](https://github.com/bhklab/readii/commit/efd5a32beab1f75aa469eed872542c69737aa5be))
+
+
+## v1.34.3 (2025-01-30)
+
+### Bug Fixes
+
+- Pattern resolver update ([#116](https://github.com/bhklab/readii/pull/116),
+  [`39a6d6b`](https://github.com/bhklab/readii/commit/39a6d6b12092dd78e7e237221d0531f4d3f47306))
+
+`PatternResolver` in `med-imagetools` updated the input argument from `pattern_parser` to
+  `pattern_matcher`, updated this to match here.
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai --> ## Summary by CodeRabbit
+
+- **Chores** - Updated parameter naming in the `PatternResolver` class for improved clarity and
+  consistency. - Modified the `roiNames` parameter format in segmentation loading tests for better
+  structure and clarity. - Adjusted expected output labels in segmentation tests to reflect new
+  naming conventions. - Reorganized import statements to source functions from a new module,
+  maintaining accessibility. <!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
+## v1.34.2 (2025-01-30)
+
+### Bug Fixes
+
+- Axes labelling in plotCrossCorrHeatmap ([#115](https://github.com/bhklab/readii/pull/115),
+  [`49b38ce`](https://github.com/bhklab/readii/commit/49b38ce8096ed9be0ab49eac4e9dfe06f6ad87f5))
+
+Swap vertical and horizontal feature labels on x and y axes of cross correlation heatmap
+
+<!-- This is an auto-generated comment: release notes by coderabbit.ai -->
+
+## Summary by CodeRabbit
+
+- **Bug Fixes** - Corrected axis label assignments in cross-correlation heatmap visualization to
+  improve accuracy of feature representation.
+
+<!-- end of auto-generated comment: release notes by coderabbit.ai -->
+
+
 ## v1.34.1 (2025-01-15)
 
 ### Bug Fixes
@@ -1226,7 +1382,7 @@ BREAKING CHANGE: yarea name no longer used
 - **pipeline**: Change parallel input argument to be false by default
   ([`3f8c46a`](https://github.com/bhklab/readii/commit/3f8c46ade25b16a77cc1ee6175bda039b811561f))
 
-### BREAKING CHANGES
+### Breaking Changes
 
 - Yarea name no longer used
 

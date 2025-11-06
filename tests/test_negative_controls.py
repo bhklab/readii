@@ -1,19 +1,16 @@
 import numpy as np
 
 from readii.image_processing import *
-from radiomics import imageoperations
 from readii.negative_controls import (
     makeShuffleImage,
     makeRandomImage,
     makeRandomSampleFromDistributionImage,
     negativeControlROIOnly,
-    negativeControlNonROIOnly,
-    applyNegativeControl
+    negativeControlNonROIOnly
 )
 
 
 import pytest
-import collections
 
 
 @pytest.fixture
@@ -267,7 +264,7 @@ def test_makeRandomNonRoi(nsclcCropped, randomSeed):
 
     # Make ROI pixels = NaN to help check of min and max values in non-ROI pixels
     original_roi_pixels = sitk.GetArrayFromImage(croppedROI)
-    roiMask = np.where(original_roi_pixels > 0, np.NaN, 1)
+    roiMask = np.where(original_roi_pixels > 0, np.nan, 1)
     masked_randomized_non_roi_pixels = randomized_non_roi_pixels * roiMask
     
     assert croppedCT.GetSize() == randomized_non_roi_image.GetSize(), \
@@ -481,7 +478,7 @@ def test_negativeControlNonROIOnly_wrongNCType(nsclcCropped, wrongNCType):
 
 #     # Make ROI pixels = NaN to help check of min and max values in non-ROI pixels
 #     original_roi_pixels = sitk.GetArrayFromImage(croppedROI)
-#     roiMask = np.where(original_roi_pixels > 0, np.NaN, 1)
+#     roiMask = np.where(original_roi_pixels > 0, np.nan, 1)
 #     masked_randomized_non_roi_pixels = randomized_non_roi_pixels * roiMask
     
 #     assert croppedCT.GetSize() == randomized_non_roi_image.GetSize(), \
