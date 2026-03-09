@@ -219,7 +219,10 @@ def displayCTSegOverlay(
     cmapSeg=plt.cm.brg,
     alpha=0.3,
     crop=False,
-) -> None:
+    dispMin:Optional[int]=None, 
+    dispMax:Optional[int]=None,
+    ax:Optional[plt.Axes]=None
+) -> plt.Axes:
     """Function to display a 2D slice from a CT with the ROI from a segmentation image overlaid in green
     Parameters
     ----------
@@ -238,6 +241,12 @@ def displayCTSegOverlay(
         Value between 0 and 1 indicating transparency of ROI overtop of CT. Default is 0.3
     crop : bool
         Whether to crop the output image to the ROI in the segmentation.
+    dispMin : int
+        Value to use as min for cmap in display
+    dispMax : int
+        Value to use as max for cmap in display
+    ax : plt.Axes
+        Axis to plot the slice on. If None, will create a new axis.
     """
     # If crop indicated, crop the CT and segmentation to just around the ROI
     if crop:
@@ -254,22 +263,33 @@ def displayCTSegOverlay(
     if type(segImage) == sitk.Image:
         segImage = sitk.GetArrayFromImage(segImage)
 
+    if dispMin == None:
+        dispMin = ctImage.min()
+    if dispMax == None:
+        dispMax = ctImage.max()
+
     # Make mask of ROI to ignore background in overlaid plot
     maskSeg = np.ma.masked_where(segImage == 0, segImage)
 
+    if ax is None:
+        # Create a new axis
+        fig, ax = plt.subplots()
+
     # Plot slice of CT
-    plt.imshow(
-        ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=ctImage.min(), vmax=ctImage.max()
+    ax.imshow(
+        ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=dispMin, vmax=dispMax
     )
     # Plot mask of ROI overtop
-    plt.imshow(
+    ax.imshow(
         maskSeg[sliceIdx, :, :],
         cmap=cmapSeg,
         vmin=segImage.min(),
         vmax=segImage.max(),
         alpha=alpha,
     )
-    plt.axis("off")
+    ax.axis("off")
+
+    return ax
 
 
 def getROICenterCoords(segImage: sitk.Image):
