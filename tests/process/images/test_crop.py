@@ -1,6 +1,6 @@
 import pytest
 
-from readii.image_processing import loadDicomSITK, loadSegmentation
+from readii.loaders import loadDicomSITK, loadSegmentation
 from readii.process.images.crop import (
     crop_and_resize_image_and_mask
 )
