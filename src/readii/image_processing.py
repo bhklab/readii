@@ -249,6 +249,12 @@ def displayCTSegOverlay(
         Value to use as max for cmap in display
     ax : plt.Axes
         Axis to plot the slice on. If None, will create a new axis.
+    dispMin : int
+        Value to use as min for cmap in display
+    dispMax : int
+        Value to use as max for cmap in display
+    ax : plt.Axes
+        Axis to plot the slice on. If None, will create a new axis.
     """
     # If crop indicated, crop the CT and segmentation to just around the ROI
     if crop:
@@ -270,8 +276,17 @@ def displayCTSegOverlay(
     if dispMax == None:
         dispMax = ctImage.max()
 
+    if dispMin == None:
+        dispMin = ctImage.min()
+    if dispMax == None:
+        dispMax = ctImage.max()
+
     # Make mask of ROI to ignore background in overlaid plot
     maskSeg = np.ma.masked_where(segImage == 0, segImage)
+
+    if ax is None:
+        # Create a new axis
+        fig, ax = plt.subplots()
 
     if ax is None:
         # Create a new axis
@@ -280,8 +295,11 @@ def displayCTSegOverlay(
     # Plot slice of CT
     ax.imshow(
         ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=dispMin, vmax=dispMax
+    ax.imshow(
+        ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=dispMin, vmax=dispMax
     )
     # Plot mask of ROI overtop
+    ax.imshow(
     ax.imshow(
         maskSeg[sliceIdx, :, :],
         cmap=cmapSeg,
@@ -289,6 +307,9 @@ def displayCTSegOverlay(
         vmax=segImage.max(),
         alpha=alpha,
     )
+    ax.axis("off")
+
+    return ax
     ax.axis("off")
 
     return ax
