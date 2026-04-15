@@ -66,17 +66,17 @@ def loadRTSTRUCTSITK(
 	baseImageDirPath = Path(baseImageDirPath)
 
 	logger.debug(f"Loading RTSTRUCT from directory: {rtstructPath}")
-	if not baseImageDirPath.exists(): 
+	if not baseImageDirPath.exists():
 		message = f"Base-image directory not found: {baseImageDirPath}"
 		logger.error(message)
-		raise FileNotFoundError(message)  
+		raise FileNotFoundError(message)
 	if not rtstructPath.exists():
 		message = f"RTSTRUCT file not found: {rtstructPath}"
 		logger.error(message)
-		raise FileNotFoundError(message)  
-	
-	baseImage = read_dicom_auto(path =baseImageDirPath.resolve())
-	segImage = read_dicom_auto(path =rtstructPath.resolve(), modality="RTSTRUCT")
+		raise FileNotFoundError(message)
+
+	baseImage = read_dicom_auto(path=baseImageDirPath.resolve())
+	segImage = read_dicom_auto(path=rtstructPath.resolve(), modality="RTSTRUCT")
 
 	# Set up segmentation loader
 	logger.debug(f"Making mask using ROI names: {roiNames}")
@@ -86,10 +86,12 @@ def loadRTSTRUCTSITK(
 	segMasks = {}
 	for roi in roiNames:
 		try:
-			mask_ndarray = segImage.get_mask_ndarray(reference_image = baseImage,
-													roi_name = roi,
-													mask_img_size = [img_size.depth, img_size.height, img_size.width, 1],
-													continuous = False)
+			mask_ndarray = segImage.get_mask_ndarray(
+				reference_image=baseImage,
+				roi_name=roi,
+				mask_img_size=[img_size.depth, img_size.height, img_size.width, 1],
+				continuous=False,
+			)
 			segMasks[roi] = sitk.GetImageFromArray(mask_ndarray)
 		except ValueError:
 			segMasks[roi] = None
