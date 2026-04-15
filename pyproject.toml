@@ -32,7 +32,7 @@ classifiers = [
 readii = "readii.pipeline:main"
 readii-datasets = "readii.cli.main:cli"
 
-[tool.pixi.project]
+[tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["linux-64", "osx-arm64", "osx-64", "win-64"]
 
