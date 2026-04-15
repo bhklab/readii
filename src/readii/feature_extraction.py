@@ -124,7 +124,6 @@ def singleRadiomicFeatureExtraction(
 		except ValueError as e:
 			logger.exception(f"Error getting segmentation label: {e}")
 			raise e
-	
 
 	# Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
 	try:
@@ -420,7 +419,9 @@ def radiomicFeatureExtraction(
 	# Filter out None and ensure each result is a list (even if it's empty)
 	features = [f for f in features if (isinstance(f, list) and len(f) > 0)]
 
-	failed_features = [ctSeriesID for ctSeriesID, f in zip(ctSeriesIDList, features) if not f]
+	failed_features = [
+		ctSeriesID for ctSeriesID, f in zip(ctSeriesIDList, features, strict=False) if not f
+	]
 
 	logger.info("Finished feature extraction.", num_features=len(features))
 

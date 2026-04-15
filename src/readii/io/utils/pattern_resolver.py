@@ -14,19 +14,22 @@ class PatternResolverError(Exception):
 
 	pass
 
+
 @dataclass
 class PatternResolver:
 	r"""Handles parsing and validating filename patterns.
-	
+
 	By default, this class uses the following pattern parser:
 
-	>>> DEFAULT_PATTERN: re.Pattern = re.compile(r"%(\w+)|\{(\w+)\}")
+	>>> DEFAULT_PATTERN: re.Pattern = re.compile(
+	...     r"%(\w+)|\{(\w+)\}"
+	... )
 
 	This will match placeholders of the form `{key}` or `%(key)s`.
-	
+
 	Example
 	-------
-	Given a filename format like `"{subject_id}_{date}/{disease}.txt"`, the pattern parser 
+	Given a filename format like `"{subject_id}_{date}/{disease}.txt"`, the pattern parser
 	will extract the following keys:
 
 	>>> pattern_resolver.keys
@@ -39,12 +42,16 @@ class PatternResolver:
 
 	So you could resolve the pattern like this:
 
-	>>> data_dict = {"subject_id": "JohnDoe", "date": "January-01-2025", "disease": "cancer"}
+	>>> data_dict = {
+	...     "subject_id": "JohnDoe",
+	...     "date": "January-01-2025",
+	...     "disease": "cancer",
+	... }
 
-	>>> pattern_resolver.formatted_pattern % data_dict 
+	>>> pattern_resolver.formatted_pattern % data_dict
 	'JohnDoe_01-01-2025/cancer.txt'
 
-	A more convenient way to resolve the pattern is to use the `resolve` method:	
+	A more convenient way to resolve the pattern is to use the `resolve` method:
 	>>> pattern_resolver.resolve(data_dict))
 	'JohnDoe_01-01-2025/cancer.txt'
 	"""
