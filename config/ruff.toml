@@ -7,7 +7,8 @@ include = [
   "src/readii/cli/**/*.py",
   "src/readii/negative_controls_refactor/**.py",
   "src/readii/io/**/**.py",
-  "src/readii/analyze/**.py"
+  "src/readii/analyze/**.py",
+  "src/readii/process/**.py"
 ]
 
 # extend-exclude is used to exclude directories from the flake8 checks
@@ -124,6 +125,7 @@ ignore = [
   # Ignored because https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules 
   "COM812", # https://docs.astral.sh/ruff/rules/missing-trailing-comma/#missing-trailing-comma-com812
   "D206",
+  "C901" #ignore long function name
 ]
 
 [lint.isort]
@@ -142,6 +144,10 @@ max-complexity = 10
 
 [lint.pydocstyle]
 convention = "numpy"
+
+
+[lint.flake8-builtins]
+builtins-allowed-modules = ["io"]
 
 
 

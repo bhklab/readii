@@ -1,19 +1,19 @@
+from typing import Optional
+
+import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 import numpy as np
 import pydicom
-from radiomics import imageoperations
 import SimpleITK as sitk
+from radiomics import imageoperations
 
-from typing import Optional
-
-from readii.loaders import (
-    loadDicomSITK,
-    loadSegmentation,
-)
-
+# from readii.loaders import (
+#     loadDicomSITK,
+#     loadSegmentation,
+# )
 
 def flattenImage(image: sitk.Image) -> sitk.Image:
-    """Remove axes of image with size one. (ex. shape is [1, 100, 256, 256])
+    """Remove axes of image with size one. (ex. shape is [1, 100, 256, 256]).
 
     Parameters
     ----------
@@ -33,7 +33,7 @@ def flattenImage(image: sitk.Image) -> sitk.Image:
 
 
 def alignImages(originImage: sitk.Image, movingImage: sitk.Image) -> sitk.Image:
-    """Align movingImage to the originImage so origin and direction match
+    """Align movingImage to the originImage so origin and direction match.
 
     Parameters
     ----------
@@ -55,115 +55,120 @@ def alignImages(originImage: sitk.Image, movingImage: sitk.Image) -> sitk.Image:
     return movingImage
 
 
-def padSegToMatchCT(
-    ctDirPath: str,
-    segImagePath: Optional[str] = None,
-    ctImage: Optional[sitk.Image] = None,
-    alignedSegImage: Optional[sitk.Image] = None,
-) -> sitk.Image:
-    """Function to take a segmentation that doesn't have the same slice count as the CT image, maps it to the corresponding
-        CT slices, and pads it with slices containing 0s so it maps properly onto the original image.
+# def padSegToMatchCT(
+#     ctDirPath: str,
+#     segImagePath: Optional[str] = None,
+#     ctImage: Optional[sitk.Image] = None,
+#     alignedSegImage: Optional[sitk.Image] = None,
+# ) -> sitk.Image:
+#     """Take a segmentation that doesn't have the same slice count as the CT image, maps it to the corresponding CT slices, and pads it with slices containing 0s so it maps properly onto the original image.
 
-    Parameters
-    ----------
-    ctDirPath : str
-        Path to DICOM series folder containing all CT image files. Must be a directory.
+#     Parameters
+#     ----------
+#     ctDirPath : str
+#         Path to DICOM series folder containing all CT image files. Must be a directory.
 
-    segImagePath : str
-        Path to the DICOM SEG file that corresponds with CT in ctDirPath that has incorrect slice count.
+#     segImagePath : str
+#         Path to the DICOM SEG file that corresponds with CT in ctDirPath that has incorrect slice count.
 
-    ctImage : sitk.Image
-        Optional argument, base image to align the padded segmentation image to. If None is passed, will be loaded in from ctFolderPath.
+#     ctImage : sitk.Image
+#         Optional argument, base image to align the padded segmentation image to. If None is passed, will be loaded in from ctFolderPath.
 
-    alignedSegImage : sitk.Image
-        Optional argument, if image has already been loaded it can be passed in to be adjusted.
-        Assumes that flattenImage and alignImages has already been run.
-        If not passed, will use segFilePath to load the image.
+#     alignedSegImage : sitk.Image
+#         Optional argument, if image has already been loaded it can be passed in to be adjusted.
+#         Assumes that flattenImage and alignImages has already been run.
+#         If not passed, will use segFilePath to load the image.
 
-    Returns
-    -------
-    sitk.Image
-    Padded segmentation with the same dimensions as the CT.
+#     Returns
+#     -------
+#     sitk.Image
+#     Padded segmentation with the same dimensions as the CT.
 
-    Examples
-    --------
-    >>> paddedSeg = padSegToMatchCT("/path/to/CT", "/path/to/segmentation/1.dcm")
+#     Examples
+#     --------
+#     >>> paddedSeg = padSegToMatchCT("/path/to/CT", "/path/to/segmentation/1.dcm")
 
-    >>> lungCT = loadDicomSITK("/path/to/CT")
-    >>> tumourSeg = loadSegmentation("/path/to/segmentation/1.dcm", 'SEG')
-    >>> paddedSeg = padSegToMatchCT("/path/to/CT", ctImage = lungCT, alignedSegImage = tumourSeg)
-    """
-    from dicom_parser import Series
+#     >>> lungCT = loadDicomSITK("/path/to/CT")
+#     >>> tumourSeg = loadSegmentation("/path/to/segmentation/1.dcm", 'SEG')
+#     >>> paddedSeg = padSegToMatchCT("/path/to/CT", ctImage = lungCT, alignedSegImage = tumourSeg)
+#     """
+#     from dicom_parser import Series
 
-    # Load the CT image to align the segmentation to if not passed as argument
-    if ctImage is None:
-        ctImage = loadDicomSITK(ctDirPath)
+#     # UPDATE THIS TO USE MEDIMAGE LOADERS
 
-    # Load in the segmentation image if not passed as argument
-    if alignedSegImage is None:
-        if segImagePath is None:
-            raise ValueError(
-                "Must pass either a loaded and aligned segmentation or the path to load the segmentation from."
-            )
-        else:
-            segImage = loadSegmentation(segImagePath, modality="SEG")
-            # Segmentation contains extra axis, flatten to 3D by removing it
-            segImage = flattenImage(segImage)
-            # Segmentation has different origin, align it to the CT for proper feature extraction
-            alignedSegImage = alignImages(ctImage, segImage)
+#     # Load the CT image to align the segmentation to if not passed as argument
+#     if ctImage is None:
+#         ctImage = read_dicom_auto(ctDirPath)
+    
+#     if isinstance(ctImage, sitk.Image):
+#         ctImage = MedImage(ctImage)
 
-    # Load in header information for the CT and SEG files
-    ctSeries = Series(ctDirPath)
-    segWithHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
+#     # Load in the segmentation image if not passed as argument
+#     if alignedSegImage is None:
+#         if segImagePath is None:
+#             msg = "Must pass either a loaded and aligned segmentation or the path to load the segmentation from."
+#             raise ValueError(msg)
+#         else:
+#             segImage = loadSegmentation(segImagePath, modality="SEG")
+#             # Segmentation contains extra axis, flatten to 3D by removing it
+#             segImage = flattenImage(segImage)
+#             # Segmentation has different origin, align it to the CT for proper feature extraction
+#             alignedSegImage = alignImages(ctImage, segImage)
 
-    # Get the first and last reference ID for the slices of the CT that are in the SEG file
-    lastSliceRef = (
-        segWithHeader.ReferencedSeriesSequence[0]
-        .ReferencedInstanceSequence[0]
-        .ReferencedSOPInstanceUID
-    )
-    firstSliceRef = (
-        segWithHeader.ReferencedSeriesSequence[0]
-        .ReferencedInstanceSequence[-1]
-        .ReferencedSOPInstanceUID
-    )
+#     # Load in header information for the CT and SEG files
+#     ctSeries = Series(ctDirPath)
+#     segWithHeader = pydicom.dcmread(segImagePath, stop_before_pixels=True)
 
-    # Get the index of the reference IDs in the CT image
-    firstSliceIdx = ctSeries["SOPInstanceUID"].index(firstSliceRef)
-    lastSliceIdx = ctSeries["SOPInstanceUID"].index(lastSliceRef)
+#     # Get the first and last reference ID for the slices of the CT that are in the SEG file
+#     lastSliceRef = (
+#         segWithHeader.ReferencedSeriesSequence[0]
+#         .ReferencedInstanceSequence[0]
+#         .ReferencedSOPInstanceUID
+#     )
+#     firstSliceRef = (
+#         segWithHeader.ReferencedSeriesSequence[0]
+#         .ReferencedInstanceSequence[-1]
+#         .ReferencedSOPInstanceUID
+#     )
 
-    # Convert the segmentation image to an array and pad with 0s so segmentation mask is in the correct indices
-    arrSeg = sitk.GetArrayFromImage(alignedSegImage)
-    padArrSeg = np.pad(
-        arrSeg,
-        (
-            (
-                (firstSliceIdx, (ctSeries.data.shape[-1] - lastSliceIdx - 1)),
-                (0, 0),
-                (0, 0),
-            )
-        ),
-        "constant",
-        constant_values=(0),
-    )
+#     # Get the index of the reference IDs in the CT image
+#     firstSliceIdx = ctSeries["SOPInstanceUID"].index(firstSliceRef)
+#     lastSliceIdx = ctSeries["SOPInstanceUID"].index(lastSliceRef)
 
-    # Convert back to Image object
-    paddedSegImage = sitk.GetImageFromArray(padArrSeg)
-    paddedSegImage = alignImages(ctImage, paddedSegImage)
+#     # Convert the segmentation image to an array and pad with 0s so segmentation mask is in the correct indices
+#     arrSeg = sitk.GetArrayFromImage(alignedSegImage)
+#     padArrSeg = np.pad(
+#         arrSeg,
+#         (
+#             (
+#                 (firstSliceIdx, (ctSeries.data.shape[-1] - lastSliceIdx - 1)),
+#                 (0, 0),
+#                 (0, 0),
+#             )
+#         ),
+#         "constant",
+#         constant_values=(0),
+#     )
 
-    return paddedSegImage
+#     # Convert back to Image object
+#     paddedSegImage = sitk.GetImageFromArray(padArrSeg)
+#     paddedSegImage = alignImages(ctImage, paddedSegImage)
+
+#     return paddedSegImage
 
 
 def displayImageSlice(
     image:sitk.Image, 
     sliceIdx:int,
     sliceDim:Optional[str]="first", 
-    cmap=plt.cm.Greys_r, 
+    cmap:mcolors.Colormap=plt.cm.Greys_r, 
     dispMin:Optional[int]=None, 
-    dispMax:Optional[int]=None
-) -> None:
-    """Function to display a 2D slice from a 3D image
-        By default, displays slice in greyscale with min and max range set to min and max value in the slice.
+    dispMax:Optional[int]=None,
+    ax:Optional[plt.Axes]=None
+) -> plt.Axes:
+    """Display a 2D slice from a 3D image.
+    
+    By default, displays slice in greyscale with min and max range set to min and max value in the slice.
 
     Parameters
     ----------
@@ -179,6 +184,8 @@ def displayImageSlice(
         Value to use as min for cmap in display
     dispMax : int
         Value to use as max for cmap in display
+    ax : plt.Axes
+        Axis to plot the slice on. If None, will create a new axis.
     """
     # If image is a simple ITK image, convert to array for display
     if type(image) == sitk.Image:
@@ -196,23 +203,34 @@ def displayImageSlice(
     if sliceDim == "first": dispSlice = image[sliceIdx, :, :]
     elif sliceDim == "last": dispSlice = image[:, :, sliceIdx]
     else:
-        raise ValueError("sliceDim must be either 'first' or 'last'")
+        msg = f"Invalid sliceDim value: {sliceDim}. Must be either 'first' or 'last'."
+        raise ValueError(msg)
+
+    if ax is None:
+        # Create a new axis
+        fig, ax = plt.subplots()
 
     # Display the slice of the image
-    plt.imshow(dispSlice, cmap=cmap, vmin=dispMin, vmax=dispMax)
-    plt.axis("off")
+    ax.imshow(dispSlice, cmap=cmap, vmin=dispMin, vmax=dispMax)
+    ax.axis("off")
+
+    return ax
 
 
 def displayCTSegOverlay(
-    ctImage,
-    segImage,
-    sliceIdx=-1,
-    cmapCT=plt.cm.Greys_r,
-    cmapSeg=plt.cm.brg,
-    alpha=0.3,
-    crop=False,
-) -> None:
-    """Function to display a 2D slice from a CT with the ROI from a segmentation image overlaid in green
+    ctImage: sitk.Image | np.ndarray,
+    segImage: sitk.Image | np.ndarray,
+    sliceIdx:int=-1,
+    cmapCT:mcolors.Colormap=plt.cm.Greys_r,
+    cmapSeg:mcolors.Colormap=plt.cm.brg,
+    alpha:float=0.3,
+    crop:bool=False,
+    dispMin:Optional[int]=None, 
+    dispMax:Optional[int]=None,
+    ax:Optional[plt.Axes]=None
+) -> plt.Axes:
+    """Display a 2D slice from a CT with the ROI from a segmentation image overlaid in green.
+
     Parameters
     ----------
     ctImage : sitk.Image or nd.array
@@ -230,6 +248,18 @@ def displayCTSegOverlay(
         Value between 0 and 1 indicating transparency of ROI overtop of CT. Default is 0.3
     crop : bool
         Whether to crop the output image to the ROI in the segmentation.
+    dispMin : int
+        Value to use as min for cmap in display
+    dispMax : int
+        Value to use as max for cmap in display
+    ax : plt.Axes
+        Axis to plot the slice on. If None, will create a new axis.
+    dispMin : int
+        Value to use as min for cmap in display
+    dispMax : int
+        Value to use as max for cmap in display
+    ax : plt.Axes
+        Axis to plot the slice on. If None, will create a new axis.
     """
     # If crop indicated, crop the CT and segmentation to just around the ROI
     if crop:
@@ -246,26 +276,37 @@ def displayCTSegOverlay(
     if type(segImage) == sitk.Image:
         segImage = sitk.GetArrayFromImage(segImage)
 
+    if dispMin == None:
+        dispMin = ctImage.min()
+    if dispMax == None:
+        dispMax = ctImage.max()
+
     # Make mask of ROI to ignore background in overlaid plot
     maskSeg = np.ma.masked_where(segImage == 0, segImage)
 
+    if ax is None:
+        # Create a new axis
+        fig, ax = plt.subplots()
+
     # Plot slice of CT
-    plt.imshow(
-        ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=ctImage.min(), vmax=ctImage.max()
+    ax.imshow(
+        ctImage[sliceIdx, :, :], cmap=cmapCT, vmin=dispMin, vmax=dispMax
     )
     # Plot mask of ROI overtop
-    plt.imshow(
+    ax.imshow(
         maskSeg[sliceIdx, :, :],
         cmap=cmapSeg,
         vmin=segImage.min(),
         vmax=segImage.max(),
         alpha=alpha,
     )
-    plt.axis("off")
+    ax.axis("off")
+
+    return ax
 
 
-def getROICenterCoords(segImage: sitk.Image):
-    """A function to find the slice number and coordinates for the center of an ROI in a loaded RTSTRUCT or SEG file.
+def getROICenterCoords(segImage: sitk.Image) -> tuple[int, int, int]:
+    """Find the slice number and coordinates for the center of an ROI in a loaded RTSTRUCT or SEG file.
 
     Parameters
     ----------
@@ -296,8 +337,8 @@ def getROICenterCoords(segImage: sitk.Image):
     return centerSliceIdx, centerColumnPixelIdx, centerRowPixelIdx
 
 
-def getROIVoxelLabel(segImage: sitk.Image):
-    """A function to find the non-zero value that identifies segmentation voxels in a loaded RTSTRUCT or SEG file.
+def getROIVoxelLabel(segImage: sitk.Image) -> int:
+    """Find the non-zero value that identifies segmentation voxels in a loaded RTSTRUCT or SEG file.
 
     Parameters
     ----------
@@ -309,7 +350,6 @@ def getROIVoxelLabel(segImage: sitk.Image):
     labelValue
         int, the label value for the segmentation voxels
     """
-
     # Convert segmentation image to a numpy array
     arrSeg = sitk.GetArrayFromImage(segImage)
     # Get all values that aren't 0 - these will identify the ROI
@@ -319,13 +359,14 @@ def getROIVoxelLabel(segImage: sitk.Image):
         labelValue = roiVoxels[0]
         return int(labelValue)
     else:
+        msg = f"Multiple label values present in this segmentation: {set(roiVoxels)}. Must all be the same."
         raise ValueError(
-            "Multiple label values present in this segmentation. Must all be the same."
+            msg
         )
 
 
-def getCroppedImages(ctImage, segImage, segmentationLabel=None):
-    """A function to crop a CT and segmentation to close to the ROI within the segmentation.
+def getCroppedImages(ctImage: sitk.Image, segImage: sitk.Image, segmentationLabel:int=None)-> tuple[sitk.Image, sitk.Image]:
+    """Find the bounding box around an ROI in a loaded mask file and crop the CT and mask images to that box.
 
     Parameters
     ----------

@@ -1,5 +1,4 @@
 
-import os
 import pytest
 from pathlib import Path
 from readii.io.writers.base_writer import BaseWriter # type: ignore

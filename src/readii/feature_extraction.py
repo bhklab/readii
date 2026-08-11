@@ -5,7 +5,7 @@ from typing import Any, Dict, List, Optional
 
 import pandas as pd
 import SimpleITK as sitk  # noqa
-from imgtools.io import read_dicom_series
+from imgtools.io.readers import read_dicom_auto
 from joblib import Parallel, delayed
 from radiomics import featureextractor, imageoperations, logging
 
@@ -124,7 +124,6 @@ def singleRadiomicFeatureExtraction(
 		except ValueError as e:
 			logger.exception(f"Error getting segmentation label: {e}")
 			raise e
-	
 
 	# Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
 	try:
@@ -220,7 +219,7 @@ def featureExtraction(
 
 		plogger.debug("Loading CT images", ctDirPath=ctDirPath)
 		# Load CT by passing in specific series to find in a directory
-		ctImage = read_dicom_series(path=ctDirPath.as_posix(), series_id=ctSeriesID)
+		ctImage = read_dicom_auto(path=ctDirPath.as_posix(), series_id=ctSeriesID)
 
 		# Get list of segmentations to iterate over
 		segSeriesIDList = ctSeriesInfo["series_seg"].unique()
@@ -420,7 +419,9 @@ def radiomicFeatureExtraction(
 	# Filter out None and ensure each result is a list (even if it's empty)
 	features = [f for f in features if (isinstance(f, list) and len(f) > 0)]
 
-	failed_features = [ctSeriesID for ctSeriesID, f in zip(ctSeriesIDList, features) if not f]
+	failed_features = [
+		ctSeriesID for ctSeriesID, f in zip(ctSeriesIDList, features, strict=False) if not f
+	]
 
 	logger.info("Finished feature extraction.", num_features=len(features))
 
