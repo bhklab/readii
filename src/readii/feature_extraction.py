@@ -7,18 +7,35 @@ import pandas as pd
 import SimpleITK as sitk  # noqa
 from imgtools.io.readers import read_dicom_auto
 from joblib import Parallel, delayed
-from radiomics import featureextractor, imageoperations, logging
+from radiomics import featureextractor, imageoperations, logging, progressReporter, _DummyProgressReporter
+from tqdm import tqdm
+
+import os
+import pandas as pd
+import numpy as np
+import SimpleITK as sitk
+import radiomics
 
 from readii.image_processing import (
-	alignImages,
-	flattenImage,
-	getROIVoxelLabel,
+    flattenImage,
+    alignImages,
+    padSegToMatchCT,
+    getROIVoxelLabel,
+    displayImageSlice,
+    displayCTSegOverlay,
+    getROICenterCoords,
+    getCroppedImages,
 )
 from readii.loaders import (
-	loadSegmentation,
+    loadDicomSITK,
+    loadRTSTRUCTSITK,
+    loadSegmentation,
 )
+
 from readii.metadata import (
-	saveDataframeCSV,
+    saveDataframeCSV,
+    matchCTtoSegmentation,
+    getSegmentationType,
 )
 from readii.negative_controls import (
 	applyNegativeControl,
@@ -72,6 +89,45 @@ def cropImageAndMask(
 	)
 
 	return croppedCT, croppedROI
+
+
+class ProgressReporter(_DummyProgressReporter):
+    """
+    This class represents a functional Progress reporter using tqdm for progress reporting.
+    It is used to report progress when the progressReporter is set and verbosity level allows it.
+
+    PyRadiomics expects that the _getProgressReporter function returns an object that takes an iterable and 'desc'
+    keyword argument at initialization. Furthermore, it should be iterable, where it iterates over the iterable
+    passed at initialization and it should be used in a 'with' statement.
+
+    In this class, the __iter__ function redirects to the __iter__ function of the iterable passed at initialization.
+    The __enter__ and __exit__ functions enable usage in a 'with' statement, and it provides real-time progress updates.
+    """
+
+    def __init__(self, iterable=None, desc="", total=None):
+        self.desc = desc  # Description for the progress bar
+        self.iterable = (
+            iterable if iterable is not None else range(total)
+        )  # Iterable or range based on total
+        self.total = total  # Total number of iterations
+        self.pbar = None
+
+    def __iter__(self):
+        next_val = self.iterable.__iter__()
+        print(next_val)
+        return next_val
+
+    def __enter__(self):
+        self.pbar = tqdm(self.iterable, desc=self.desc, total=self.total)
+        return self.pbar
+
+    def __exit__(self, exc_type, exc_value, tb):
+        if self.pbar is not None:
+            self.pbar.close()
+
+    def update(self, n=1):
+        if self.pbar is not None:
+            self.pbar.update(n)
 
 
 def singleRadiomicFeatureExtraction(
@@ -146,16 +202,18 @@ def singleRadiomicFeatureExtraction(
 		logger.exception(f"Error cropping CT and ROI for feature extraction: {e}")
 		raise e
 
-	# Load PyRadiomics feature extraction parameters to use
-	# Initialize feature extractor with parameters
+    # Load PyRadiomics feature extraction parameters to use
+    # Initialize feature extractor with parameters
 	try:
 		logger.info("Setting up Pyradiomics feature extractor...")
+		radiomics.progressReporter = ProgressReporter
+		radiomics.setVerbosity(logging.INFO)
 		featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
 	except OSError as e:
 		logger.exception(
 			f"Supplied pyradiomics parameter file {pyradiomicsParamFilePath} does not exist or is not at that location: {e}"
 		)
-		raise e
+		raise
 
 	try:
 		logger.info("Starting radiomic feature extraction...")
