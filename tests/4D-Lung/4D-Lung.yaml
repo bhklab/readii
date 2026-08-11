@@ -1,0 +1,20 @@
+# Config file for 4D-Lung for READII
+dataset_name: 4D-Lung 
+
+### CLINICAL VARIABLE INFORMATION ###
+# Event values should be in the order [Alive_value, Dead_value]
+outcome_variables:
+    time_label: 
+    event_label: 
+    convert_to_years: False
+    event_value_mapping: 
+
+exclusion_variables: 
+
+train_test_split:
+    split: False
+    split_variable: 
+    impute: 
+
+
+image_types: ["original", "shuffled_full","shuffled_roi","shuffled_non_roi","randomized_sampled_full","randomized_sampled_roi","randomized_sampled_non_roi"]

@@ -1,0 +1,53 @@
+site_name: READII
+repo_url: https://github.com/bhklab/readii
+repo_name: readii
+site_description: Package documentation for readii
+site_author: bhklab
+
+watch: [docs, src, mkdocs.yaml]
+# The directory where the documentation files are located
+docs_dir: docs
+
+# The directory where the documentation is built (add to .gitignore if changed)
+site_dir: site
+
+# Set a list of CSS files (relative to docs_dir) to be included by the theme
+# typically as <link> tags.
+extra_css: []
+
+# This is the branch where the documentation will pushed to using
+# 'mkdocs gh-deploy' and from where it will be served by GitHub Pages.
+remote_branch: gh-pages
+
+# Address when using 'mkdocs serve', format is 'address:port'
+dev_addr: 127.0.0.1:8001
+
+# The layout of the navigation links
+nav:
+  - Home: index.md
+  - Changelog: changelog.md
+
+plugins:
+  - awesome-pages                     # simplifies configuring page titles and their order
+  - search                            # necessary for search functionality to work
+  - git-authors                       # adds authors to pages using git history
+  - include-markdown                  # allows for including Markdown files into another Markdown file
+  
+theme: 
+  name: material
+  features:
+    - announce.dismiss
+    - content.action.edit
+    - content.action.view
+    - content.code.annotate
+    - content.code.copy
+    - content.tooltips
+    - navigation.footer
+    - navigation.indexes
+    - navigation.sections
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - toc.follow

@@ -1,9 +1,14 @@
-from token import OP
-from venv import logger
-from imgtools.io import read_dicom_series
+from collections import OrderedDict
 from itertools import chain
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import pandas as pd
+import SimpleITK as sitk  # noqa
+from imgtools.io.readers import read_dicom_auto
 from joblib import Parallel, delayed
-from radiomics import featureextractor, imageoperations, logging, progressReporter
+from radiomics import featureextractor, imageoperations, logging, progressReporter, _DummyProgressReporter
+from tqdm import tqdm
 
 import os
 import pandas as pd
@@ -21,7 +26,6 @@ from readii.image_processing import (
     getROICenterCoords,
     getCroppedImages,
 )
-
 from readii.loaders import (
     loadDicomSITK,
     loadRTSTRUCTSITK,
@@ -34,18 +38,57 @@ from readii.metadata import (
     getSegmentationType,
 )
 from readii.negative_controls import (
-    applyNegativeControl,
+	applyNegativeControl,
 )
+from readii.utils import logger
 
-from readii.utils import get_logger
 
-from typing import Optional, Any
-from collections import OrderedDict
+def generateNegativeControl(
+	ctImage: sitk.Image,
+	negativeControl: str,
+	alignedROIImage: sitk.Image,
+	randomSeed: Optional[int],
+) -> sitk.Image:
+	"""Generate a negative control for a CT image based on the type of negative control specified.
 
-logger = get_logger()
+	negativeControlType : str
+		This string is of the format {negativeControlType}_{negativeControlRegion}
+	"""
+	if "non_roi" in negativeControl:
+		negativeControlType = negativeControl.rsplit("_", 2)[0]
+		negativeControlRegion = "non_roi"
+	else:
+		negativeControlComponents = negativeControl.rsplit("_", 1)
+		negativeControlType = negativeControlComponents[0]
+		negativeControlRegion = negativeControlComponents[1]
+	logger.debug(f"Negative control region: {negativeControlRegion}")
+	logger.debug(f"Negative control type: {negativeControlType}")
+	return applyNegativeControl(
+		baseImage=ctImage,
+		negativeControlType=negativeControlType,
+		negativeControlRegion=negativeControlRegion,
+		roiMask=alignedROIImage,
+		randomSeed=randomSeed,
+	)
 
-from tqdm import tqdm
-from radiomics import _DummyProgressReporter, progressReporter
+
+def cropImageAndMask(
+	ctImage: sitk.Image,
+	alignedROIImage: sitk.Image,
+	segBoundingBox: tuple,
+	negativeControl: Optional[str],
+	randomSeed: Optional[int],
+) -> tuple[sitk.Image, sitk.Image]:
+	"""Crop the CT and ROI images to the bounding box of the segmentation."""
+	if negativeControl:
+		logger.info(f"Generating {negativeControl} negative control for CT.")
+		ctImage = generateNegativeControl(ctImage, negativeControl, alignedROIImage, randomSeed)
+
+	croppedCT, croppedROI = imageoperations.cropToTumorMask(
+		ctImage, alignedROIImage, segBoundingBox
+	)
+
+	return croppedCT, croppedROI
 
 
 class ProgressReporter(_DummyProgressReporter):
@@ -88,343 +131,391 @@ class ProgressReporter(_DummyProgressReporter):
 
 
 def singleRadiomicFeatureExtraction(
-    ctImage: sitk.Image,
-    roiImage: sitk.Image,
-    pyradiomicsParamFilePath: Optional[str] = "./src/readii/data/default_pyradiomics.yaml",
-    negativeControl: Optional[str] = None,
-    randomSeed: Optional[int] = None,
+	ctImage: sitk.Image,
+	roiImage: sitk.Image,
+	pyradiomicsParamFilePath: Optional[str | Path] = "./src/readii/data/default_pyradiomics.yaml",
+	segmentationLabel: Optional[int] = None,
+	negativeControl: Optional[str] = None,
+	randomSeed: Optional[int] = None,
 ) -> OrderedDict[Any, Any]:
-    """Function to perform radiomic feature extraction for a single CT image and its corresponding segmentation.
-       CT and segmentation will be aligned and cropped prior to extraction.
+	"""Perform radiomic feature extraction for a single CT image and its corresponding segmentation.
 
-    Parameters
-    ----------
-    ctImage : sitk.Image
-        CT image to perform feature extraction on. Will be cropped and potentially generate a negative control (see negativeControl arg)
-    roiImage : sitk.Image
-        Region of interest (ROI) to extract radiomic features from within the CT.
-    pyradiomicsParamFilePath : str
-        Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
-    negativeControl : str
-        Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
-    randomSeed : int
-        Value to set random seed with for negative control creation to be reproducible.
+	CT and segmentation will be aligned and cropped prior to extraction.
 
-    Returns
-    -------
-    OrderedDict[Any, Any]
-        Dictionary containing image metadata, versions for key packages used for extraction, and radiomic features
-    """
-    # If no pyradiomics paramater file passed, use default
-    if pyradiomicsParamFilePath == None:
-        pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
+	Parameters
+	----------
+	ctImage : sitk.Image
+		CT image to perform feature extraction on. Will be cropped and potentially generate a negative control (see negativeControl arg)
+	roiImage : sitk.Image
+		Region of interest (ROI) to extract radiomic features from within the CT.
+	pyradiomicsParamFilePath : str
+		Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
+	negativeControl : str
+		Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
+	randomSeed : int
+		Value to set random seed with for negative control creation to be reproducible.
 
-    # In case segmentation contains extra axis, flatten to 3D by removing it
-    roiImage = flattenImage(roiImage)
-    # Segmentation has different origin, align it to the CT for proper feature extraction
-    alignedROIImage = alignImages(ctImage, roiImage)
+	Returns
+	-------
+	OrderedDict[Any, Any]
+		Dictionary containing image metadata, versions for key packages used for extraction, and radiomic features
+	"""
+	# If no pyradiomics paramater file passed, use default
+	if pyradiomicsParamFilePath is None:
+		pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
+	elif not Path(pyradiomicsParamFilePath).exists():
+		msg = f"PyRadiomics parameter file not found at {pyradiomicsParamFilePath}"
+		raise FileNotFoundError(msg)
 
-    # Get pixel value for the segmentation
-    segmentationLabel: int = getROIVoxelLabel(alignedROIImage)
+	# In case segmentation contains extra axis, flatten to 3D by removing it
+	roiImage = flattenImage(roiImage)
 
-    # Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
-    segBoundingBox, correctedROIImage = imageoperations.checkMask(
-        ctImage, alignedROIImage, label=segmentationLabel
-    )
+	# Segmentation has different origin, align it to the CT for proper feature extraction
+	alignedROIImage = alignImages(ctImage, roiImage)
 
-    # Update the ROI image if a correction was generated by checkMask
-    if correctedROIImage is not None:
-        alignedROIImage = correctedROIImage
+	if segmentationLabel is None:
+		try:
+			# Get pixel value for the segmentation
+			segmentationLabel: int = getROIVoxelLabel(alignedROIImage)
+		except ValueError as e:
+			logger.exception(f"Error getting segmentation label: {e}")
+			raise e
 
-    try:
-        if negativeControl != None:
-            logger.info(f"Generating {negativeControl} negative control for CT.")
-            # Split negative control type into negative control and region of interest
-            try:
-                if "non_roi" in negativeControl:
-                    negativeControlType = negativeControl.rsplit("_", 2)[0]
-                    negativeControlRegion = "non_roi"
-                else:
-                    negativeControlComponents = negativeControl.rsplit("_", 1)
-                    negativeControlType = negativeControlComponents[0]
-                    negativeControlRegion = negativeControlComponents[1]
-                logger.debug(f"Negative control region: {negativeControlRegion}")
-                logger.debug(f"Negative control type: {negativeControlType}")
-                # Make negative control version of ctImage
-                ctImage_nc: sitk.Image | np.ndarray = applyNegativeControl(
-                    baseImage=ctImage,
-                    negativeControlType=negativeControlType,
-                    negativeControlRegion=negativeControlRegion,
-                    roiMask=alignedROIImage,
-                    randomSeed=randomSeed,
-                )
-            except Exception as e:
-                logger.error(f"Error generating {negativeControl} negative control for CT: {e}")
-                raise
+	# Check that CT and segmentation correspond, segmentationLabel is present, and dimensions match
+	try:
+		segBoundingBox, correctedROIImage = imageoperations.checkMask(
+			ctImage, alignedROIImage, label=segmentationLabel
+		)
+	except Exception as e:
+		logger.exception(f"Error checking segmentation mask: {e}")
+		raise e
 
-            croppedCT, croppedROI = imageoperations.cropToTumorMask(
-                ctImage_nc, alignedROIImage, segBoundingBox
-            )
-        else:
-            # Crop the image and mask to a bounding box around the mask to reduce volume size to process
-            croppedCT, croppedROI = imageoperations.cropToTumorMask(
-                ctImage, alignedROIImage, segBoundingBox
-            )
-    except Exception as e:
-        logger.error(f"Error cropping image and mask: {e}")
-        raise
+	# Update the ROI image if a correction was generated by checkMask
+	if correctedROIImage is not None:
+		alignedROIImage = correctedROIImage
+
+	try:
+		croppedCT, croppedROI = cropImageAndMask(
+			ctImage, alignedROIImage, segBoundingBox, negativeControl, randomSeed
+		)
+	except Exception as e:
+		logger.exception(f"Error cropping CT and ROI for feature extraction: {e}")
+		raise e
 
     # Load PyRadiomics feature extraction parameters to use
     # Initialize feature extractor with parameters
-    try:
-        logger.info("Setting up Pyradiomics feature extractor...")
-        radiomics.progressReporter = ProgressReporter
-        radiomics.setVerbosity(logging.INFO)
-        featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
-    except OSError as e:
-        logger.error(
-            f"Supplied pyradiomics parameter file {pyradiomicsParamFilePath} does not exist or is not at that location: {e}"
-        )
-        raise
+	try:
+		logger.info("Setting up Pyradiomics feature extractor...")
+		radiomics.progressReporter = ProgressReporter
+		radiomics.setVerbosity(logging.INFO)
+		featureExtractor = featureextractor.RadiomicsFeatureExtractor(pyradiomicsParamFilePath)
+	except OSError as e:
+		logger.exception(
+			f"Supplied pyradiomics parameter file {pyradiomicsParamFilePath} does not exist or is not at that location: {e}"
+		)
+		raise
 
-    try:
-        logger.info("Starting radiomic feature extraction...")
-        # Extract radiomic features from CT with segmentation as mask
-        idFeatureVector = featureExtractor.execute(
-            croppedCT, croppedROI, label=segmentationLabel)
-    except Exception as e:
-        logger.error(f"An error occurred while extracting radiomic features: {e}")
-        raise
+	try:
+		logger.info("Starting radiomic feature extraction...")
+		# Extract radiomic features from CT with segmentation as mask
+		idFeatureVector = featureExtractor.execute(croppedCT, croppedROI, label=segmentationLabel)
+	except Exception as e:
+		logger.exception(f"An error occurred while extracting radiomic features: {e}")
+		raise e
 
-    return idFeatureVector
+	return idFeatureVector
+
+
+def featureExtraction(
+	ctSeriesID: str,
+	pdImageInfo: pd.DataFrame,
+	imageDirPath: Path,
+	pyradiomicsParamFilePath: Optional[str] = None,
+	roiNames: Optional[str] = None,
+	negativeControl: Optional[str] = None,
+	randomSeed: Optional[int] = None,
+	keep_running: bool = False,
+) -> List[Dict[str, Any]]:
+	"""Extract PyRadiomics features for all ROIs present in a CT.
+
+	Parameters
+	----------
+	ctSeriesID : str
+			The CT series identifier
+	pdImageInfo : pd.DataFrame
+			DataFrame containing image metadata
+	imageDirPath : Path
+			Base directory containing image data
+	pyradiomics_params_path : Optional[str]
+			Path to PyRadiomics parameters file
+	roiNames : Optional[str]
+			Name pattern for the ROIs
+	negativeControl : Optional[str]
+			Type of negative control to generate
+	random_seed : Optional[int]
+			Random seed for reproducibility
+	keep_running : bool
+			Whether to continue on error
+
+	Returns
+	-------
+	List[Dict[str, Any]]
+			List of dictionaries containing features for each ROI
+	"""
+	dataset_directory = Path(imageDirPath)
+	ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
+	patID = ctSeriesInfo.iloc[0]["patient_ID"]
+
+	# Set up logger for this patient and series
+	plogger = logger.bind(patientID=patID, series_CT=ctSeriesID)
+
+	plogger.info("Starting Feature Extraction")
+
+	# Get absolute path to CT image files
+	try:
+		ctDirPath = dataset_directory / ctSeriesInfo.iloc[0]["folder_CT"]
+
+		plogger.debug("Loading CT images", ctDirPath=ctDirPath)
+		# Load CT by passing in specific series to find in a directory
+		ctImage = read_dicom_auto(path=ctDirPath.as_posix(), series_id=ctSeriesID)
+
+		# Get list of segmentations to iterate over
+		segSeriesIDList = ctSeriesInfo["series_seg"].unique()
+
+		plogger.debug(
+			f"Found {len(segSeriesIDList)} segmentations.", segSeriesIDList=segSeriesIDList
+		)
+
+		# Initialize dictionary to store radiomics data for each segmentation (image metadata + features)
+		ctAllData = []
+
+		# Loop over every segmentation associated with this CT - only loading CT once
+		for _, segSeriesID in enumerate(segSeriesIDList):
+			segSeriesInfo = ctSeriesInfo.loc[ctSeriesInfo["series_seg"] == segSeriesID]
+
+			if (
+				# Check that a single segmentation file is being processed
+				len(segSeriesInfo) > 1
+				# Check that if there are multiple rows that it's not due to a CT with subseries (this is fine, the whole series is loaded)
+				and not segSeriesInfo.duplicated(subset=["series_CT"], keep=False).all()
+			):
+				errmsg = "Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in readii_output."
+				plogger.error(errmsg, segSeriesInfo=segSeriesInfo)
+				raise RuntimeError(errmsg)
+
+			# Get absolute path to segmentation image file
+			segFilePath = dataset_directory / segSeriesInfo.iloc[0]["file_path_seg"]
+
+			# Get dictionary of ROI sitk Images for this segmentation file
+			segImages = loadSegmentation(
+				segFilePath,
+				modality=segSeriesInfo.iloc[0]["modality_seg"],
+				baseImageDirPath=ctDirPath,
+				roiNames=roiNames,
+			)
+
+			# Check that this series has ROIs to extract from (dictionary isn't empty)
+			if not segImages:
+				log_msg = f"CT {ctSeriesID} and segmentation {segSeriesID} has no ROIs or no ROIs with the label {roiNames}. Moving to next segmentation."
+				plogger.warning(log_msg)
+				continue
+
+			# Loop over each ROI contained in the segmentation to perform radiomic feature extraction
+			for i, roiImageName in enumerate(segImages):
+				# Extract features listed in the parameter file
+				plogger.info(f"Calculating radiomic features for segmentation: {roiImageName}")
+
+				# Get sitk Image object for this ROI
+				roiImage = segImages[roiImageName]
+
+				# Check if segmentation just has an extra axis with a size of 1 and remove it
+				if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:  # noqa
+					roiImage = flattenImage(roiImage)
+
+				# Check that image and segmentation mask have the same dimensions
+				if ctImage.GetSize() != roiImage.GetSize():
+					# Checking if number of segmentation slices is less than CT
+					msg = "CT and ROI dimensions do not match."
+					plogger.warning(
+						msg,
+						patientID=patID,
+						ctImage_size=ctImage.GetSize(),
+						roiImage_size=roiImage.GetSize(),
+					)
+					continue
+
+				# Extract radiomic features from this CT/segmentation pair
+				idFeatureVector = singleRadiomicFeatureExtraction(
+					ctImage=ctImage,
+					roiImage=roiImage,
+					pyradiomicsParamFilePath=pyradiomicsParamFilePath,
+					negativeControl=negativeControl,
+					randomSeed=randomSeed,
+				)
+
+				# Create dictionary of image metadata to append to front of output table
+				sampleROIData = {
+					"patient_ID": patID,
+					"study_description": segSeriesInfo.iloc[0]["study_description_CT"],
+					"series_UID": segSeriesInfo.iloc[0]["series_CT"],
+					"series_description": segSeriesInfo.iloc[0]["series_description_CT"],
+					"image_modality": segSeriesInfo.iloc[0]["modality_CT"],
+					"instances": segSeriesInfo.iloc[0]["instances_CT"],
+					"seg_series_UID": segSeriesInfo.iloc[0]["series_seg"],
+					"seg_modality": segSeriesInfo.iloc[0]["modality_seg"],
+					"seg_ref_image": segSeriesInfo.iloc[0]["reference_ct_seg"],
+					"roi": roiImageName,
+					"roi_number": i + 1,
+					"negative_control": negativeControl,
+				}
+
+				# Concatenate image metadata with PyRadiomics features
+				sampleROIData.update(idFeatureVector)
+				# Store this ROI's info in the segmentation level list
+				ctAllData.append(sampleROIData)
+
+		return ctAllData
+		###### END featureExtraction #######
+	except Exception as e:
+		errmsg = f"Error processing patient {patID}, series {ctSeriesID}: {e}"
+		if keep_running:
+			plogger.error(errmsg)
+		else:
+			plogger.exception(errmsg)
+			raise RuntimeError(errmsg) from e
 
 
 def radiomicFeatureExtraction(
-    imageMetadataPath: str,
-    imageDirPath: str,
-    roiNames: Optional[str] = None,
-    pyradiomicsParamFilePath: Optional[str] = "src/readii/data/default_pyradiomics.yaml",
-    outputDirPath: Optional[str] = None,
-    negativeControl: Optional[str] = None,
-    randomSeed: Optional[int] = None,
-    parallel: bool = False,
-    keep_running: bool = False,
+	imageMetadataPath: str,
+	imageDirPath: str,
+	roiNames: Optional[str] = None,
+	pyradiomicsParamFilePath: Optional[str] = "src/readii/data/default_pyradiomics.yaml",
+	outputDirPath: Optional[str] = None,
+	negativeControl: Optional[str] = None,
+	randomSeed: Optional[int] = None,
+	parallel: bool = False,
+	keep_running: bool = False,
 ) -> pd.DataFrame:
-    """Perform radiomic feature extraction using PyRadiomics on CT images with a corresponding segmentation.
-       Utilizes outputs from med-imagetools (https://github.com/bhklab/med-imagetools) run on the image dataset.
+	"""Perform radiomic feature extraction using PyRadiomics on CT images with a corresponding segmentation.
 
-    Parameters
-    ----------
-    imageMetadataPath : str
-        Path to csv file created by matchCTtoSegmentation function that contains a CT and matching segmentation in each row.
-    imageDirPath : str
-        Path to the directory containing the directory of CT and segmentation images. This directory should contain the .imgtools directory from the med-imagetools run
-        and be the same as the input path used in med-imagetools
-    roiNames : str
-        Name pattern for the ROIs to load for the RTSTRUCTs. Can be None for DICOM SEG segmentations.
-    pyradiomicsParamFilePath : str
-        Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
-    outputDirPath : str
-        Path to directory save the dataframe of extracted features to as a csv
-    negativeControl : str
-        Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
-    randomSeed : int
-        Value to set random seed with for negative control creation to be reproducible.
-    parallel : bool
-        Flag to decide whether to run extraction in parallel.
-    keep_running : bool
-        Flag to keep pipeline running even when feature extraction for a patient fails.
-    Returns
-    -------
-    pd.DataFrame
-        Dataframe containing the image metadata and extracted radiomic features.
-    """
-    # Setting pyradiomics verbosity lower
-    radiomics_logger: logging.Logger = logging.getLogger("radiomics")
-    radiomics_logger.setLevel(logging.ERROR)
+	Utilizes outputs from med-imagetools (https://github.com/bhklab/med-imagetools) run on the image dataset.
 
-    # If no pyradiomics paramater file passed, use default
-    if pyradiomicsParamFilePath == None:
-        pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
+	Parameters
+	----------
+	imageMetadataPath : str
+		Path to csv file created by matchCTtoSegmentation function that contains a CT and matching segmentation in each row.
+	imageDirPath : str
+		Path to the directory containing the directory of CT and segmentation images. This directory should contain the .imgtools directory from the med-imagetools run
+		and be the same as the input path used in med-imagetools
+	roiNames : str
+		Name pattern for the ROIs to load for the RTSTRUCTs. Can be None for DICOM SEG segmentations.
+	pyradiomicsParamFilePath : str
+		Path to file containing configuration settings for pyradiomics feature extraction. Will use the provided config file in 'data/' by default if no file passed in.
+	outputDirPath : str
+		Path to directory save the dataframe of extracted features to as a csv
+	negativeControl : str
+		Name of negative control to generate from the CT to perform feature extraction on. If set to None, will extract features from original CT image.
+	randomSeed : int
+		Value to set random seed with for negative control creation to be reproducible.
+	parallel : bool
+		Flag to decide whether to run extraction in parallel.
+	keep_running : bool
+		Flag to keep pipeline running even when feature extraction for a patient fails.
 
-    # Load in summary file generated by radiogenomic_pipeline
-    pdImageInfo = pd.read_csv(imageMetadataPath, header=0)
+	Returns
+	-------
+	pd.DataFrame
+		Dataframe containing the image metadata and extracted radiomic features.
+	"""
+	# Setting pyradiomics verbosity lower
+	radiomics_logger: logging.Logger = logging.getLogger("radiomics")
+	radiomics_logger.setLevel(logging.ERROR)
 
-    # Get array of unique CT series' IDs to iterate over
-    ctSeriesIDList = pdImageInfo["series_CT"].unique()
+	# If no pyradiomics paramater file passed, use default
+	if pyradiomicsParamFilePath == None:
+		pyradiomicsParamFilePath = "./src/readii/data/default_pyradiomics.yaml"
 
-    def featureExtraction(ctSeriesID):
-        """Function to extract PyRadiomics features for all ROIs present in a CT. Inner function so it can be run in parallel with joblib."""
-        # Get all info rows for this ctSeries
+	# Load in summary file generated by radiogenomic_pipeline
+	pdImageInfo = pd.read_csv(imageMetadataPath, header=0)
 
-        try:
-            ctSeriesInfo = pdImageInfo.loc[pdImageInfo["series_CT"] == ctSeriesID]
-            patID = ctSeriesInfo.iloc[0]["patient_ID"]
+	# Get array of unique CT series' IDs to iterate over
+	ctSeriesIDList = pdImageInfo["series_CT"].unique()
 
-            logger.info(f"Processing {patID}")
+	# Extract radiomic features for each CT, get a list of dictionaries
+	# Each dictionary contains features for each ROI in a single CT
+	if not parallel:
+		# Run feature extraction over samples in sequence - will be slower
+		features = [
+			featureExtraction(
+				ctSeriesID=ctSeriesID,
+				pdImageInfo=pdImageInfo,
+				imageDirPath=Path(imageDirPath),
+				pyradiomicsParamFilePath=pyradiomicsParamFilePath,
+				roiNames=roiNames,
+				negativeControl=negativeControl,
+				randomSeed=randomSeed,
+				keep_running=keep_running,
+			)
+			for ctSeriesID in ctSeriesIDList
+		]
+	else:
+		# Run feature extraction in parallel
+		features = Parallel(n_jobs=-1, require="sharedmem")(
+			delayed(featureExtraction)(
+				ctSeriesID=ctSeriesID,
+				pdImageInfo=pdImageInfo,
+				imageDirPath=Path(imageDirPath),
+				pyradiomicsParamFilePath=pyradiomicsParamFilePath,
+				roiNames=roiNames,
+				negativeControl=negativeControl,
+				randomSeed=randomSeed,
+				keep_running=keep_running,
+			)
+			for ctSeriesID in ctSeriesIDList
+		)
 
-            # Get absolute path to CT image files
-            ctDirPath = os.path.join(imageDirPath, ctSeriesInfo.iloc[0]["folder_CT"])
-            # Load CT by passing in specific series to find in a directory
-            ctImage = read_dicom_series(path=ctDirPath, series_id=ctSeriesID)
+	# Filter out None and ensure each result is a list (even if it's empty)
+	features = [f for f in features if (isinstance(f, list) and len(f) > 0)]
 
-            # Get list of segmentations to iterate over
-            segSeriesIDList = ctSeriesInfo["series_seg"].unique()
+	failed_features = [
+		ctSeriesID for ctSeriesID, f in zip(ctSeriesIDList, features, strict=False) if not f
+	]
 
-            # Initialize dictionary to store radiomics data for each segmentation (image metadata + features)
-            ctAllData = []
+	logger.info("Finished feature extraction.", num_features=len(features))
 
-            # Loop over every segmentation associated with this CT - only loading CT once
-            for segCount, segSeriesID in enumerate(segSeriesIDList):
-                segSeriesInfo = ctSeriesInfo.loc[ctSeriesInfo["series_seg"] == segSeriesID]
+	if failed_features:
+		logger.warning(
+			f"Feature extraction failed for {len(failed_features)} samples. Series IDs: {failed_features}"
+		)
 
-                # Check that a single segmentation file is being processed
-                if len(segSeriesInfo) > 1:
-                    # Check that if there are multiple rows that it's not due to a CT with subseries (this is fine, the whole series is loaded)
-                    if not segSeriesInfo.duplicated(subset=["series_CT"], keep=False).all():
-                        raise RuntimeError(
-                            "Some kind of duplication of segmentation and CT matches not being caught. Check seg_and_ct_dicom_list in radiogenomic_output."
-                        )
+	# Flatten the list of dictionaries (happens when there are multiple ROIs or SEGs associated with a single CT)
+	flatFeatures = list(chain.from_iterable(features))
+	# Convert list of feature sets into a pandas dataframe to save out
+	featuresTable = pd.DataFrame(flatFeatures)
 
-                # Get absolute path to segmentation image file
-                segFilePath = os.path.join(imageDirPath, segSeriesInfo.iloc[0]["file_path_seg"])
-                # Get dictionary of ROI sitk Images for this segmentation file
-                segImages = loadSegmentation(
-                    segFilePath,
-                    modality=segSeriesInfo.iloc[0]["modality_seg"],
-                    baseImageDirPath=ctDirPath,
-                    roiNames=roiNames,
-                )
+	if outputDirPath is None:
+		logger.info("No output directory specified. Returning features table.")
+		return featuresTable
 
-                # Check that this series has ROIs to extract from (dictionary isn't empty)
-                if not segImages:
-                    log_msg = f"CT {ctSeriesID} and segmentation {segSeriesID} has no ROIs or no ROIs with the label {roiNames}. Moving to next segmentation."
-                    logger.warning(log_msg)
+	# Save out the features to a csv file
+	outputDir = Path(outputDirPath)
 
-                else:
-                    # Loop over each ROI contained in the segmentation to perform radiomic feature extraction
-                    for roiCount, roiImageName in enumerate(segImages):
-                        # ROI counter for image metadata output
-                        roiNum = roiCount + 1
+	if outputDir.exists():
+		logger.warning(f"Directory {outputDirPath} already exists. Will overwrite contents.")
+	else:
+		logger.info(f"Directory {outputDirPath} does not exist. Creating...")
+		outputDir.mkdir(parents=True)
 
-                        # Extract features listed in the parameter file
-                        logger.info(
-                            f"Calculating radiomic features for segmentation: {roiImageName}"
-                        )
+	datasetName = imageMetadataPath.partition("match_list_")[2]
 
-                        # Get sitk Image object for this ROI
-                        roiImage = segImages[roiImageName]
+	# Setup output file name with the dataset name as a suffix
+	outFileName = f"radiomicfeatures_{negativeControl or 'original'}_{datasetName}"
 
-                        # Exception catch for if the segmentation dimensions do not match that original image
-                        try:
-                            # Check if segmentation just has an extra axis with a size of 1 and remove it
-                            if roiImage.GetDimension() > 3 and roiImage.GetSize()[3] == 1:
-                                roiImage = flattenImage(roiImage)
+	outputFilePath = outputDir / "features" / outFileName
 
-                            # Check that image and segmentation mask have the same dimensions
-                            if ctImage.GetSize() != roiImage.GetSize():
-                                # Checking if number of segmentation slices is less than CT
-                                if ctImage.GetSize()[2] > roiImage.GetSize()[2]:
-                                    logger.warning(
-                                        f"Slice number mismatch between CT and segmentation for {patID}."
-                                        f"ctImage.GetSize(): {ctImage.GetSize()}"
-                                        f"roiImage.GetSize(): {roiImage.GetSize()}"
-                                        "Padding segmentation to match."
-                                    )
-                                    roiImage = padSegToMatchCT(
-                                        ctDirPath, segFilePath, ctImage, roiImage
-                                    )
-                                    logger.warning(
-                                        f"Padded segmentation to match CT for {patID}."
-                                        "roiImage.GetSize() after padding: {roiImage.GetSize()}"
-                                    )
-                                else:
-                                    raise RuntimeError("CT and ROI dimensions do not match.")
+	logger.info("Saving output to file.", output_file=outputFilePath)
 
-                        # Catching CT and segmentation size mismatch error
-                        except RuntimeError as e:
-                            logger.error(str(e))
+	# Save out the features
+	saveDataframeCSV(featuresTable, outputFilePath)
 
-                        # Extract radiomic features from this CT/segmentation pair
-                        idFeatureVector = singleRadiomicFeatureExtraction(
-                            ctImage,
-                            roiImage=roiImage,
-                            pyradiomicsParamFilePath=pyradiomicsParamFilePath,
-                            negativeControl=negativeControl,
-                            randomSeed=randomSeed,
-                        )
-
-                        # Create dictionary of image metadata to append to front of output table
-                        sampleROIData = {
-                            "patient_ID": patID,
-                            "study_description": segSeriesInfo.iloc[0]["study_description_CT"],
-                            "series_UID": segSeriesInfo.iloc[0]["series_CT"],
-                            "series_description": segSeriesInfo.iloc[0]["series_description_CT"],
-                            "image_modality": segSeriesInfo.iloc[0]["modality_CT"],
-                            "instances": segSeriesInfo.iloc[0]["instances_CT"],
-                            "seg_series_UID": segSeriesInfo.iloc[0]["series_seg"],
-                            "seg_modality": segSeriesInfo.iloc[0]["modality_seg"],
-                            "seg_ref_image": segSeriesInfo.iloc[0]["reference_ct_seg"],
-                            "roi": roiImageName,
-                            "roi_number": roiNum,
-                            "negative_control": negativeControl,
-                        }
-
-                        # Concatenate image metadata with PyRadiomics features
-                        sampleROIData.update(idFeatureVector)
-                        # Store this ROI's info in the segmentation level list
-                        ctAllData.append(sampleROIData)
-
-            return ctAllData
-            ###### END featureExtraction #######
-        except Exception as e:
-            if keep_running:
-                logger.error(f"Error processing patient {patID}, series {ctSeriesID}: {e}")
-                # Log the error and continue without raising the exception
-            else:
-                # Raise the exception if keep_running is False
-                raise e
-
-    # Extract radiomic features for each CT, get a list of dictionaries
-    # Each dictioary contains features for each ROI in a single CT
-    if not parallel:
-        # Run feature extraction over samples in sequence - will be slower
-        features = [featureExtraction(ctSeriesID) for ctSeriesID in ctSeriesIDList]
-    else:
-        # Run feature extraction in parallel
-        features = Parallel(n_jobs=-1, require="sharedmem")(
-            delayed(featureExtraction)(ctSeriesID) for ctSeriesID in ctSeriesIDList
-        )
-
-    logger.info("Finished feature extraction.")
-
-    # Filter out None and ensure each result is a list (even if it's empty)
-    features = [f if isinstance(f, list) else [f] for f in features if f is not None]
-
-    # Flatten the list of dictionaries (happens when there are multiple ROIs or SEGs associated with a single CT)
-    flatFeatures = list(chain.from_iterable(features))
-    # Convert list of feature sets into a pandas dataframe to save out
-    featuresTable = pd.DataFrame(flatFeatures)
-
-    if outputDirPath != None:
-        if not os.path.exists(outputDirPath):
-            logger.info(f"Directory {outputDirPath} does not exist. Creating...")
-            os.makedirs(outputDirPath)
-        else:
-            logger.warning(f"Directory {outputDirPath} already exists. Will overwrite contents.")
-
-        logger.info("Saving output to file...")
-        datasetName = imageMetadataPath.partition("match_list_")[2]
-        # Setup output file name with the dataset name as a suffix
-        if negativeControl == None:
-            outFileName = "radiomicfeatures_original_" + datasetName
-        else:
-            # Add negative control identifier to output file name
-            outFileName = "radiomicfeatures_" + negativeControl + "_" + datasetName
-
-        # Join outputDirPath, a features directory, and the output file name
-        outputFilePath = os.path.join(outputDirPath, "features/", outFileName)
-        # Save out the features
-        saveDataframeCSV(featuresTable, outputFilePath)
-
-    return featuresTable
+	return featuresTable
