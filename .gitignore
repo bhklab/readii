@@ -150,5 +150,8 @@ tests/output/*
 # pixi environments
 .pixi
 *.egg-info
+
+data/
+!src/readii/data/
 .old
-src/readii/_dont_conmmit.txt
+trash
