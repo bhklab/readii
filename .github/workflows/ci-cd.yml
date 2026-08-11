@@ -23,15 +23,15 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
+        uses: prefix-dev/setup-pixi@v0.10.1
         with:
           environments: ${{ matrix.env }}
-          pixi-version: v0.39.0
+          pixi-version: v0.76.2
           cache: true
 
       - name: Run pytest
         run: |
-          pixi run -e ${{ matrix.env }} test
+          pixi run -e ${{ matrix.env }} test -s -vv
 
       - name: Upload coverage report artifact to be used by Codecov
         # only upload if matrix.os is ubuntu-latest and matrix.python-version is 3.12
@@ -40,7 +40,14 @@ jobs:
         with:
           name: coverage-report
           path: coverage-report
-
+  
+      - name: JUnit Test Summary
+        id: pytest-summary
+        uses: test-summary/action@v2
+        with: 
+          paths: .cache/test-results/**/*.xml
+          show: "fail,skip"
+        if: always()
   ################################################################################################
   # Codecov: Run codecov to check coverage
   ################################################################################################
@@ -80,10 +87,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install Pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
+        uses: prefix-dev/setup-pixi@v0.10.1
         with:
           environments: ${{ env.PIXI_ENV }}
-          pixi-version: v0.39.0
+          pixi-version: v0.76.2
           cache: true
           locked: false
 
@@ -133,12 +140,12 @@ jobs:
           fetch-depth: 0
 
       - name: Install Pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
+        uses: prefix-dev/setup-pixi@v0.10.1
         env:
           RUNNER_DEBUG: true
         with:
           environments: ${{ env.PIXI_ENV }}
-          pixi-version: v0.39.0
+          pixi-version: v0.76.2
           cache: true
           locked: false
           # cache-key: pixi-ENV_${{ env.PIXI_ENV }}-
@@ -180,10 +187,10 @@ jobs:
           ref: ${{ needs.Semantic-Release.outputs.tag }}
 
       - name: Install Pixi
-        uses: prefix-dev/setup-pixi@v0.8.1
+        uses: prefix-dev/setup-pixi@v0.10.1
         with:
           environments: ${{ env.PIXI_ENV }}
-          pixi-version: v0.39.0
+          pixi-version: v0.76.2
           cache: true
           locked: false # wont be the same because of the tag
 

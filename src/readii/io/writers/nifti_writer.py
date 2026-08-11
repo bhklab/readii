@@ -120,7 +120,7 @@ class NIFTIWriter(BaseWriter):
 			return out_path
 
 
-if __name__ == "__main__": # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
 	from rich import print  # noqa
 
 	nifti_writer = NIFTIWriter(

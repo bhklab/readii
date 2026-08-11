@@ -1,20 +1,12 @@
 import pytest
-import SimpleITK as sitk
 
-from readii.image_processing import loadDicomSITK, loadSegmentation
+import SimpleITK as sitk
+from readii.loaders import loadDicomSITK, loadSegmentation
 from readii.process.images.crop import (
-    apply_bounding_box_limits,
-    check_bounding_box_single_dimension,
-    crop_image_to_mask,
-    crop_to_bounding_box,
-    crop_to_centroid,
-    crop_to_maxdim_cube,
+    crop_and_resize_image_and_mask,
     find_bounding_box,
     find_centroid,
-    resize_image,
-    validate_new_dimensions,
 )
-
 
 @pytest.fixture
 def nsclcCT():
@@ -52,28 +44,48 @@ def lung4D_mask(lung4D_ct_path, lung4D_rt_path):
     return segDictionary["Tumor_c40"]
 
 
+def test_default_crop_and_resize_image(lung4D_image, lung4D_mask):
+    expected_size = (93, 93, 93)
+    cropped_image, cropped_mask = crop_and_resize_image_and_mask(lung4D_image, lung4D_mask)
+    assert cropped_image.GetSize() == expected_size, \
+        f"Cropped image size is incorrect, expected {expected_size}, got {cropped_image.GetSize()}"
+    assert cropped_mask.GetSize() == expected_size, \
+        f"Cropped mask size is incorrect, expected {expected_size}, got {cropped_mask.GetSize()}"
+
 @pytest.mark.parametrize(
-    "crop_method, expected_size",
+    "crop_method, resize_dimension, expected_size",
     [
-        ("bbox", (50, 50, 50)),
-        ("centroid", (50, 50, 50)),
-        ("cube", (50, 50, 50)),
-        # ("pyradiomics", (22, 28, 14)),
+        # No resizing
+        ("bounding_box", None, (52, 93, 28)),
+        ("centroid", None, (50, 50, 50)),
+        ("cube", None, (93, 93, 93)),
+        # Resize down to 50x50x50
+        ("bounding_box", 50, (50, 50, 50)),
+        ("centroid", 50, (50, 50, 50)),
+        ("cube", 50, (50, 50, 50)),
+        # Resize to odd value
+        ("bounding_box", 49, (49, 49, 49)),
+        ("centroid", 49, (49, 49, 49)),
+        ("cube", 49, (49, 49, 49)),
+        # Resize up to 98x98x98
+        ("bounding_box", 98, (98, 98, 98)),
+        ("centroid", 98, (98, 98, 98)),
+        ("cube", 98, (98, 98, 98)),
     ],
 )
-def test_crop_image_to_mask_methods(
+def test_crop_and_resize_image_and_mask_methods_and_resize_dimension(
     lung4D_image,
     lung4D_mask,
     crop_method,
+    resize_dimension,
     expected_size,
-    resize_dimensions=(50, 50, 50),
 ):
     """Test cropping image to mask with different methods"""
-    cropped_image, cropped_mask = crop_image_to_mask(
+    cropped_image, cropped_mask = crop_and_resize_image_and_mask(
         lung4D_image,
         lung4D_mask,
-        crop_method,
-        resize_dimensions,
+        crop_method = crop_method,
+        resize_dimension = resize_dimension,
     )
     assert (
         cropped_image.GetSize() == expected_size

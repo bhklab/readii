@@ -1,7 +1,6 @@
 import pytest
 import SimpleITK as sitk
 import numpy as np
-from pathlib import Path
 from readii.io.writers.nifti_writer import NIFTIWriter, NiftiWriterValidationError, NiftiWriterIOError # type: ignore
 
 @pytest.fixture

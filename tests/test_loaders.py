@@ -53,27 +53,34 @@ def test_loadSegmentationSEG(nsclcSEGPath):
         "Wrong origin"
 
 
-def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath):
+
+@pytest.mark.parametrize(
+    "roiNames, expected",
+    [
+        (["Tumor_c40"], "Tumor_c40"),
+    ]
+)
+def test_loadSegmentationRTSTRUCT(lung4DRTSTRUCTPath, lung4DCTPath, roiNames, expected):
     """Test loading a RTSTRUCT file"""
     actual = loadSegmentation(segImagePath = lung4DRTSTRUCTPath,
                               modality = 'RTSTRUCT',
                               baseImageDirPath = lung4DCTPath,
-                              roiNames = 'Tumor_c.*')
+                              roiNames = roiNames)
 
     assert isinstance(actual, dict), \
         "Wrong object type, should be dictionary"
-    assert list(actual.keys()) == ['Tumor_c40'], \
-        "Segmentation label is wrong, should be Heart"
+    assert list(actual.keys()) == [expected], \
+        f"Segmentation label is wrong, should be GTV, getting {list(actual.keys())}"
     
-    actualImage = actual['Tumor_c40']
+    actualImage = actual[expected]
 
     assert isinstance(actualImage, sitk.Image), \
         "Wrong object type"
     assert actualImage.GetSize() == (512, 512, 99), \
         "Wrong image size"
-    assert actualImage.GetSpacing() == (0.9766, 0.9766, 3.0), \
+    assert actualImage.GetSpacing() == (1.0, 1.0, 1.0), \
         "Wrong spacing"
-    assert actualImage.GetOrigin() == (-250.0, -163.019, -1132.0), \
+    assert actualImage.GetOrigin() == (0,0,0), \
         "Wrong origin"
 
 
