@@ -7,7 +7,7 @@ from .abstract_classes import PermutationStrategy
 
 
 @dataclass
-class ShuffledControl(PermutationStrategy):
+class ShufflePermutation(PermutationStrategy):
 	"""Shuffle pixel values within the image."""
 
 	negative_control_name = "shuffled"
@@ -37,7 +37,7 @@ class ShuffledControl(PermutationStrategy):
 
 
 @dataclass
-class SampledControl(PermutationStrategy):
+class SamplePermutation(PermutationStrategy):
 	"""Randomly sample pixel values with replacement from the distribution of existing pixel values within the image."""
 
 	negative_control_name = "sampled"
@@ -67,7 +67,7 @@ class SampledControl(PermutationStrategy):
 
 
 @dataclass
-class RandomizedControl(PermutationStrategy):
+class RandomPermutation(PermutationStrategy):
 	"""Randomly generate pixel values within the range of the original image pixel values."""
 
 	negative_control_name = "randomized"

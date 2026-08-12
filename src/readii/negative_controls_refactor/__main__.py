@@ -5,9 +5,9 @@ from rich import print as rprint
 from readii.loaders import loadDicomSITK, loadRTSTRUCTSITK
 from readii.negative_controls_refactor.manager import NegativeControlManager  # noqa
 from readii.negative_controls_refactor.permutations import (
-	RandomizedControl,
-	SampledControl,  # noqa
-	ShuffledControl,  # noqa
+	RandomPermutation,
+	SamplePermutation,  # noqa
+	ShufflePermutation,  # noqa
 )  # noqa
 from readii.negative_controls_refactor.regions import FullRegion, NonROIRegion, ROIRegion  # noqa
 
@@ -42,15 +42,15 @@ def main() -> None:
 	################################################################################################
 
 	# EXAMPLE 1: Using the concrete classes directly
-	permutation_strategy = RandomizedControl(random_seed=RANDOM_SEED)
+	permutation_strategy = RandomPermutation(random_seed=RANDOM_SEED)
 	region_strategy = ROIRegion()
 
-	# this calls the `__call__` method of the NegativeControlStrategy class
+	# this calls the `__call__` method of the PermutationStrategy class
 	neg_image1 = permutation_strategy(image=ct, mask=rt, region=region_strategy)
 	rprint(f"Negative control image 1: {neg_image1.GetSize()}")
 
 	# EXAMPLE 2: alternatively, you can use them without instantiating the classes as variables
-	neg_image2 = RandomizedControl(random_seed=RANDOM_SEED)(image=ct, mask=rt, region=ROIRegion())
+	neg_image2 = RandomPermutation(random_seed=RANDOM_SEED)(image=ct, mask=rt, region=ROIRegion())
 	rprint(f"Negative control image 2: {neg_image2.GetSize()}")
 
 	# EXAMPLE 3: Using the manager class and the `apply_single` method
@@ -78,7 +78,7 @@ def main() -> None:
 	rprint(f"There are {len(manager_2)} combinations of permutation and region strategies")
 	rprint(manager_2)
 
-	# Apply all combinations of negative control and region strategies
+	# Apply all combinations of permutation and region strategies
 	for neg_image, permutation_strategy_name, region_strategy_name in manager_2.apply(ct, rt):
 		rprint(
 			f"Negative control image generated: {neg_image.GetSize()} using {permutation_strategy_name} and {region_strategy_name}"

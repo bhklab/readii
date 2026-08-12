@@ -6,7 +6,7 @@ import numpy as np
 import SimpleITK as sitk
 
 from .abstract_classes import PermutationStrategy, RegionStrategy
-from .permutations import RandomizedControl, SampledControl, ShuffledControl
+from .permutations import RandomPermutation, SamplePermutation, ShufflePermutation
 from .regions import FullRegion, NonROIRegion, ROIRegion
 
 # Define a TypeVar for image-like inputs
@@ -16,7 +16,7 @@ ImageInput = TypeVar("ImageInput", sitk.Image, np.ndarray)
 REGION_REGISTRY = {cls.region_name: cls for cls in [FullRegion, ROIRegion, NonROIRegion]}
 
 PERMUTATION_REGISTRY = {
-	cls.permutation_name: cls for cls in [ShuffledControl, SampledControl, RandomizedControl]
+	cls.permutation_name: cls for cls in [ShufflePermutation, SamplePermutation, RandomPermutation]
 }
 
 
@@ -101,17 +101,17 @@ class NegativeControlManager:
 		KeyError
 			If a string strategy name is not found in the respective registry.
 		"""
-		if isinstance(control_strategy, str):
-			control_strategy = PERMUTATION_REGISTRY[control_strategy]()
+		if isinstance(permutation_strategy, str):
+			permutation_strategy = PERMUTATION_REGISTRY[permutation_strategy]()
 		if isinstance(region_strategy, str):
 			region_strategy = REGION_REGISTRY[region_strategy]()
 
 		if random_seed is not None:
-			control_strategy.random_seed = random_seed
+			permutation_strategy.random_seed = random_seed
 
 		return (
-			control_strategy(base_image, mask, region_strategy),
-			control_strategy.name(),
+			permutation_strategy(base_image, mask, region_strategy),
+			permutation_strategy.name(),
 			region_strategy.name(),
 		)
 
