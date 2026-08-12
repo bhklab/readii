@@ -9,7 +9,7 @@ from readii.negative_controls_refactor.permutations import (
 	SamplePermutation,  # noqa
 	ShufflePermutation,  # noqa
 )  # noqa
-from readii.negative_controls_refactor.regions import FullRegion, NonROIRegion, ROIRegion  # noqa
+from readii.negative_controls_refactor.regions import FullRegion, BackgroundRegion, ROIRegion  # noqa
 
 RANDOM_SEED = 10
 

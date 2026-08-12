@@ -70,14 +70,14 @@ class ROIRegion(RegionStrategy):
 		return region_mask
 
 
-class NonROIRegion(RegionStrategy):
+class BackgroundRegion(RegionStrategy):
 	"""Region strategy to apply control outside the ROI.
 
 	A strategy that creates a mask selecting all pixels outside
 	the region of interest.
 	"""
 
-	region_name: Final[str] = "non_roi"
+	region_name: Final[str] = "background"
 
 	def __call__(self, image_array: np.ndarray, mask_array: np.ndarray) -> np.ndarray:
 		"""Apply the region mask to the image array.

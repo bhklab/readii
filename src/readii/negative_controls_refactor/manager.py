@@ -7,13 +7,13 @@ import SimpleITK as sitk
 
 from .abstract_classes import PermutationStrategy, RegionStrategy
 from .permutations import RandomPermutation, SamplePermutation, ShufflePermutation
-from .regions import FullRegion, NonROIRegion, ROIRegion
+from .regions import FullRegion, BackgroundRegion, ROIRegion
 
 # Define a TypeVar for image-like inputs
 ImageInput = TypeVar("ImageInput", sitk.Image, np.ndarray)
 
 
-REGION_REGISTRY = {cls.region_name: cls for cls in [FullRegion, ROIRegion, NonROIRegion]}
+REGION_REGISTRY = {cls.region_name: cls for cls in [FullRegion, ROIRegion, BackgroundRegion]}
 
 PERMUTATION_REGISTRY = {
 	cls.permutation_name: cls for cls in [ShufflePermutation, SamplePermutation, RandomPermutation]
