@@ -3,11 +3,11 @@ from typing import Optional
 
 import numpy as np
 
-from .abstract_classes import NegativeControlStrategy
+from .abstract_classes import PermutationStrategy
 
 
 @dataclass
-class ShuffledControl(NegativeControlStrategy):
+class ShuffledControl(PermutationStrategy):
 	"""Shuffle pixel values within the image."""
 
 	negative_control_name = "shuffled"
@@ -37,7 +37,7 @@ class ShuffledControl(NegativeControlStrategy):
 
 
 @dataclass
-class SampledControl(NegativeControlStrategy):
+class SampledControl(PermutationStrategy):
 	"""Randomly sample pixel values with replacement from the distribution of existing pixel values within the image."""
 
 	negative_control_name = "sampled"
@@ -67,7 +67,7 @@ class SampledControl(NegativeControlStrategy):
 
 
 @dataclass
-class RandomizedControl(NegativeControlStrategy):
+class RandomizedControl(PermutationStrategy):
 	"""Randomly generate pixel values within the range of the original image pixel values."""
 
 	negative_control_name = "randomized"

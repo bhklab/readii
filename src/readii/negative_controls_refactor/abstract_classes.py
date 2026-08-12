@@ -52,16 +52,16 @@ class RegionStrategy(ABC):
 
 
 @dataclass
-class NegativeControlStrategy(ABC):
-	"""Abstract class for negative control strategies.
+class PermutationStrategy(ABC):
+	"""Abstract class for permutation strategies.
 
-	This class defines the interface for negative control strategies.
+	This class defines the interface for permutation strategies.
 	Subclasses should implement the abstract methods to provide the specific implementation
-	for the negative control strategy.
+	for the permutation strategy.
 	"""
 
-	# Add this class attribute to define the negative control name contract for subclasses
-	negative_control_name: str = field(init=False)
+	# Add this class attribute to define the permutation name contract for subclasses
+	permutation_name: str = field(init=False)
 
 	@abstractmethod
 	def transform(self, image_array: np.ndarray) -> np.ndarray:
@@ -77,14 +77,14 @@ class NegativeControlStrategy(ABC):
 
 	@classmethod
 	def name(cls) -> str:
-		"""Return the name of the negative control strategy.
+		"""Return the name of the permutation strategy.
 
 		Returns
 		-------
 		str
 			The name defined in the class.
 		"""
-		return cls.negative_control_name
+		return cls.permutation_name
 
 	def __call__(
 		self,
@@ -92,7 +92,7 @@ class NegativeControlStrategy(ABC):
 		mask: Optional[ImageInput] = None,
 		region: Optional[RegionStrategy] = None,
 	) -> ImageInput:
-		"""Apply the negative control strategy to the input image.
+		"""Apply the permutation strategy to the input image.
 
 		Parameters
 		----------

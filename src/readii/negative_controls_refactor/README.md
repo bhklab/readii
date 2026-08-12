@@ -2,7 +2,7 @@
 
 Given an **image** and a **mask**, the creation of a negative control image 
 involves a sequence of operations that utilize the provided `RegionStrategy` 
-and `NegativeControlStrategy`. Here's a step-by-step explanation of the process:
+and `PermutationStrategy`. Here's a step-by-step explanation of the process:
 
 ---
 
@@ -12,21 +12,21 @@ You provide:
   numpy `ndarray`.
 - **mask**: An optional mask (numpy array or SimpleITK image) defining 
   regions of interest (ROI) within the image.
-- **region strategy**: Defines where the negative control is applied (e.g., full image,
+- **region strategy**: Defines where the permutation is applied (e.g., full image,
   ROI only, outside ROI).
-- **negative control strategy**: Specifies how pixel values in the image 
+- **permutation strategy**: Specifies how pixel values in the image 
   are transformed (e.g., shuffled, randomized).
 
 ---
 
-### 2. The `__call__` Method of `NegativeControlStrategy`
-- You invoke the negative control strategy object like a function:
+### 2. The `__call__` Method of `PermutationStrategy`
+- You invoke the permutation strategy object like a function:
   
     ```python
-    negative_control(image, mask=mask, region=region)
+    permutation(image, mask=mask, region=region)
     ```
   
-- This triggers the `__call__` method of the `NegativeControlStrategy` class.
+- This triggers the `__call__` method of the `PermutationStrategy` class.
 
 ---
 
@@ -49,8 +49,8 @@ You provide:
 ---
 
 ### 5. Selecting Pixels Based on the Region
-- Non-zero pixels in `region_mask` indicate the region where the negative 
-  control will be applied. The corresponding pixel indices are extracted:
+- Non-zero pixels in `region_mask` indicate the region where the permutation
+  will be applied. The corresponding pixel indices are extracted:
   
     ```python
     mask_indices = np.nonzero(region_mask)
@@ -65,8 +65,8 @@ You provide:
 
 ---
 
-### 6. Applying the Negative Control Transformation
-- The `transform()` method of the `NegativeControlStrategy` subclass 
+### 6. Applying the Permutation
+- The `transform()` method of the `PermutationStrategy` subclass 
   is called:
   
     ```python
@@ -112,11 +112,11 @@ You provide:
 
 ### Summary
 - `RegionStrategy`: Defines which part of the image to transform.
-- `NegativeControlStrategy`: Defines how pixel values are altered.
+- `PermutationStrategy`: Defines how pixel values are altered.
 - The sequence:
   1. Extract region using `region`.
-  2. Apply transformation using `negative_control`.
+  2. Apply transformation using `permutation`.
   3. Update the original image with transformed values.
 
 This modular design ensures flexibility, allowing easy addition of new 
-region or negative control strategies.
+region or permutation strategies.
