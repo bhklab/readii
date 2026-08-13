@@ -66,13 +66,15 @@ def process_one(
         filepath = scan_metadata['filepath'],
         metadata = scan_metadata
     )
+    # TODO: apply flatten and align here
     mask = Mask.from_file(
         filepath = mask_metadata[mask_metadata],
         metadata = mask_metadata
     )
+    # TODO: apply flatten and align here
 
     for proc_scan, permutation, region in nc_manager.apply(scan, mask):
-        # Here would be the crop/resize 
+        #TODO: here would be the crop/resize 
 
 
 
