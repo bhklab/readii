@@ -2,13 +2,117 @@
 
 import multiprocessing
 from pathlib import Path 
-import SimpleITK as sitk
+from imgtools.coretypes import MedImage
 import numpy as np
+import SimpleITK as sitk
 
 from pydantic import (
     BaseModel,
     Field,
 )
+
+from imgtools.coretypes.spatial_types import (
+    Coordinate3D,
+    Direction,
+    Spacing3D
+)
+
+from typing import TYPE_CHECKING, Any, Type
+
+if TYPE_CHECKING:
+    from pathlib import Path
+
+    import numpy as np
+
+
+def align(
+    image: MedImage | sitk.Image,
+    direction:Direction | tuple[float],
+    origin:Coordinate3D | tuple[float],
+    spacing:Spacing3D | tuple[float]
+    ) -> MedImage | sitk.Image:
+
+    if isinstance(direction, Direction):
+        dir_arr = np.array(direction.to_matrix()).flatten()
+        direction = tuple(dir_arr.tolist())
+
+    origin = origin.to_tuple() if isinstance(origin, Coordinate3D) else origin
+    spacing = spacing.to_tuple() if isinstance(spacing, Spacing3D) else spacing
+
+    image.SetDirection(direction)
+    image.SetOrigin(direction)
+    image.SetSpacing(spacing)
+            
+    return image
+
+
+def flatten(image:MedImage,
+            ) -> sitk.Image:
+    # Drop any dimensions with size 1
+    array, geometry = image.to_numpy()
+
+    flat_image = sitk.GetImageFromArray(np.squeeze(array))
+    aligned_image = align(flat_image,
+                          direction = geometry.direction,
+                          origin = geometry.origin,
+                          spacing = geometry.spacing)
+
+    return MedImage(aligned_image, metadata = image.serialized_fingerprint)
+
+
+class Scan(MedImage):
+    """A wrapper around med-imagetools MedImage.
+
+    Extends MedImage with additional properties and methods for
+    negative control generation and radiomic analysis.
+    """
+    metadata: dict[str, Any]
+
+    @classmethod
+    def from_file(
+        cls, filepath: str | "Path", metadata: dict[str, Any] | None = None
+    ) -> "Scan":
+        """Create a Scan from a file path with optional metadata.
+
+        This method filters out any fingerprint-related keys from the provided metadata
+        and removes any dimensions with size 1.
+
+        Parameters
+        ----------
+        filepath : str | Path
+            Path to the image file
+        metadata : dict[str, Any] | None, optional
+            Optional metadata dictionary, by default None
+
+        Returns
+        -------
+        Scan
+            A new Scan instance
+        """
+        raw_scan = MedImage.from_file(filepath, metadata)
+
+        scan: MedImage = flatten(raw_scan,
+                                 direction = raw_scan.direction,
+                                 origin = raw_scan.origin,
+                                 spacing = raw_scan.spacing)
+
+        instance = cls(scan)
+
+
+
+        
+        
+
+        # Apply the 
+
+        return scan
+
+    
+
+    
+
+        
+
 
 
 class ScanInput(BaseModel):
